@@ -51,7 +51,7 @@ jobs:
 
       # 6. 上传 Allure 报告为 artifact，便于下载
       - name: Upload Allure Report Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: allure-report
           path: allure-report
