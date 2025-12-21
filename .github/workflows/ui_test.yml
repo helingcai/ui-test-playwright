@@ -51,6 +51,7 @@ jobs:
 
       # 6. 上传 Allure 原始数据（最稳妥）
       - name: Upload Allure Report Artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: allure-results
