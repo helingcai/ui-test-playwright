@@ -11,7 +11,7 @@ def save_login_state():
     """
     with sync_playwright() as p:
         # 启动浏览器
-        browser = p.chromium.launch(headless=False)
+        browser = p.chromium.launch(headless=True)
         context = browser.new_context()
 
         # 打开一个新页面
@@ -37,3 +37,4 @@ def save_login_state():
 
         context.close()
         browser.close()
+
