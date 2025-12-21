@@ -14,7 +14,7 @@ def playwright_instance():
 @pytest.fixture(scope="session")
 def browser(playwright_instance):
     """浏览器只启动一次"""
-    browser = playwright_instance.chromium.launch(headless=False)
+    browser = playwright_instance.chromium.launch(headless=True)
     yield browser
     print("🔥 browser started", id(browser))
     browser.close()
@@ -258,3 +258,4 @@ cd {project_root} && npx playwright show-trace {rel_posix}
         name="Open Playwright Trace",
         attachment_type=allure.attachment_type.TEXT
     )
+
