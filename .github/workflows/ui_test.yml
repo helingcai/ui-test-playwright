@@ -36,6 +36,7 @@ jobs:
           playwright install --with-deps
 
       # 4. 安装 Allure CLI
+      # 用于执行命令allure generate
       - name: Install Allure CLI
         run: |
           # 下载最新版本
