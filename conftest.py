@@ -126,9 +126,6 @@ def context(browser, request):
     # Attach trace
     trace = target_dir / "trace.zip"
     if trace.exists():
-        viewer_dir=extract_trace(trace)
-        attach_trace_viewer_html(viewer_dir)
-        
         allure.attach.file(
             trace,
             name="Playwright-Trace.zip"
@@ -292,46 +289,6 @@ def attach_open_trace_command(trace_path: Path):
         name="Open Playwright Trace Command (Copy)",
         attachment_type=allure.attachment_type.HTML
     )
-    
-def attach_trace_viewer_html(trace_dir: Path):
-    html = f"""
-<!DOCTYPE html>
-<html>
-    <body style="font-family: Arial;">
-      <h3>Playwright Trace Viewer</h3>
-      <p>This trace is already extracted.</p>
-    
-      <p><b>Open with Python:</b></p>
-      <pre>cd {trace_dir} && python -m http.server 9323</pre>
-    
-      <p>Then open:</p>
-      <pre>http://localhost:9323</pre>
-    </body>
-</html>
-    """
-
-    allure.attach(
-        html,
-        name="Open Trace Viewer (No npx)",
-        attachment_type=allure.attachment_type.HTML
-    )
-
-
-def extract_trace(trace_zip: Path):
-    """自动解压 trace.zip"""
-    viewer_dir = trace_zip.parent / "trace-viewer"
-    viewer_dir.mkdir(exist_ok=True)
-
-    with zipfile.ZipFile(trace_zip, 'r') as z:
-        z.extractall(viewer_dir)
-
-    return viewer_dir
-
-
-
-
-
-
 
 
 
