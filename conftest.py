@@ -261,12 +261,12 @@ def attach_open_trace_command(trace_path: Path):
 
           <script>
              function copy(id) {{
-                  const el = document.getElementById(id);
-                  el.style.display = 'block';
-                  el.select();
-                  document.execCommand('copy');
-                  el.style.display = 'none';
-                  alert('Command copied!');
+                const el = document.getElementById(id);
+                el.style.display = 'block';
+                el.select();
+                document.execCommand('copy');
+                el.style.display = 'none';
+                alert('Command copied!');
         }}
       </script>
         </body>
@@ -277,6 +277,7 @@ def attach_open_trace_command(trace_path: Path):
         name="Open Playwright Trace Command (Copy)",
         attachment_type=allure.attachment_type.HTML
     )
+
 
 
 
