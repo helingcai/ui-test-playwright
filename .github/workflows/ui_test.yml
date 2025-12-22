@@ -49,6 +49,7 @@ jobs:
       # 5. 运行测试并生成 Allure 原始数据
       # --alluredir=allure-results：生成原始测试数据
       - name: Run tests with Allure
+        continue-on-error: true  # ❗ 确保失败也继续执行后续步骤
         run: |
           pytest --alluredir=allure-results
 
