@@ -59,14 +59,14 @@ jobs:
         run: |
           allure generate allure-results --clean -o allure-report
 
-      # 7. 上传 Allure HTML 报告作为 Artifact
+      # 7. 上传 Allure HTML 报告到Actions/ Artifact
       - name: Upload Allure Report Artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: allure-report
           path: allure-report
-          
+      # 上传 trace.zip 报告到Actions/ Artifact
       - name: Upload Playwright Trace
         if: always()
         uses: actions/upload-artifact@v4
@@ -75,7 +75,7 @@ jobs:
           path: |
             **/trace.zip
             
-      # 将artifacts下trace.zip拷贝到Actions->artifacts中
+      # 将artifacts下trace.zip拷贝到allure-report HTML报告中供下载
       - name: Copy trace into allure report
         if: always()
         run: |
