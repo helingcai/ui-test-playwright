@@ -244,26 +244,25 @@ def attach_open_trace_command(trace_path: Path):
         <body style="font-family: Arial, sans-serif;">
           <h3>Open Playwright Trace</h3>
 
-          <p><b>Windows PowerShell</b></p>
-          <pre id="powershell-win">{windows_powershell}</pre>
-          <button onclick="copy('powershell-win')">📋 Copy Windows PowerShell Command</button>
-          
-          <p><b>Windows cmd</b></p>
-          <pre id="cmd-win">{windows_cmd}</pre>
-          <button onclick="copy('cmd-win')">📋 Copy Windows cmd Command</button>
+        <!-- 隐藏的命令内容 -->
+          <textarea id="powershell-win" style="display:none;">{windows_powershell}</textarea>
+          <textarea id="cmd-win" style="display:none;">{windows_cmd}</textarea>
+          <textarea id="cmd-unix" style="display:none;">{macos_linux}</textarea>
 
-          <p><b>macOS / Linux</b></p>
-          <pre id="cmd-unix">{macos_linux}</pre>
+          <button onclick="copy('powershell-win')">📋 Copy Windows PowerShell Command</button>
+          <button onclick="copy('cmd-win')">📋 Copy Windows cmd Command</button>
           <button onclick="copy('cmd-unix')">📋 Copy macOS/Linux Command</button>
 
           <script>
-            function copy(id) {{
-              const text = document.getElementById(id).innerText;
-              navigator.clipboard.writeText(text).then(() => {{
-                alert("Command copied to clipboard!");
-              }});
-            }}
-          </script>
+             function copy(id) {{
+                  const el = document.getElementById(id);
+                  el.style.display = 'block';
+                  el.select();
+                  document.execCommand('copy');
+                  el.style.display = 'none';
+                  alert('Command copied!');
+        }}
+      </script>
         </body>
         </html>
         """
@@ -272,6 +271,7 @@ def attach_open_trace_command(trace_path: Path):
         name="Open Playwright Trace Command (One Click)",
         attachment_type=allure.attachment_type.HTML
     )
+
 
 
 
