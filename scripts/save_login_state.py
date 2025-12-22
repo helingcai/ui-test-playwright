@@ -11,8 +11,8 @@ def save_login_state():
     """
     with sync_playwright() as p:
         # 启动浏览器
-        headless = bool(os.getenv("CI", False)) # CI特殊配置
-        browser = p.chromium.launch(headless=headless)
+        # headless = bool(os.getenv("CI", False)) # CI特殊配置
+        browser = p.chromium.launch(headless=True)
         context = browser.new_context()
 
         # 打开一个新页面
@@ -38,5 +38,6 @@ def save_login_state():
 
         context.close()
         browser.close()
+
 
 
