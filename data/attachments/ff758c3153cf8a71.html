@@ -1,0 +1,27 @@
+
+        <html>
+        <body style="font-family: Arial, sans-serif;">
+          <h3>Open Playwright Trace</h3>
+
+        <!-- 隐藏的命令内容 -->
+          <textarea id="powershell-win" style="display:none;">cd /home/runner/work/ui-test-playwright/ui-test-playwright; npx playwright show-trace artifacts/check_out_test/TestCheckOut/test_finish_submit_order/attempt_3/trace.zip</textarea>
+          <textarea id="cmd-win" style="display:none;">cd /d /home/runner/work/ui-test-playwright/ui-test-playwright && npx playwright show-trace artifacts/check_out_test/TestCheckOut/test_finish_submit_order/attempt_3/trace.zip</textarea>
+          <textarea id="cmd-unix" style="display:none;">cd /home/runner/work/ui-test-playwright/ui-test-playwright && npx playwright show-trace artifacts/check_out_test/TestCheckOut/test_finish_submit_order/attempt_3/trace.zip</textarea>
+
+          <button onclick="copy('powershell-win')">📋 Copy Windows PowerShell Command</button>
+          <button onclick="copy('cmd-win')">📋 Copy Windows cmd Command</button>
+          <button onclick="copy('cmd-unix')">📋 Copy macOS/Linux Command</button>
+
+          <script>
+             function copy(id) {
+                  const el = document.getElementById(id);
+                  el.style.display = 'block';
+                  el.select();
+                  document.execCommand('copy');
+                  el.style.display = 'none';
+                  alert('Command copied!');
+        }
+      </script>
+        </body>
+        </html>
+        
