@@ -249,9 +249,15 @@ def attach_open_trace_command(trace_path: Path):
           <textarea id="cmd-win" style="display:none;">{windows_cmd}</textarea>
           <textarea id="cmd-unix" style="display:none;">{macos_linux}</textarea>
 
-          <button onclick="copy('powershell-win')">📋 Copy Windows PowerShell Command</button>
-          <button onclick="copy('cmd-win')">📋 Copy Windows cmd Command</button>
-          <button onclick="copy('cmd-unix')">📋 Copy macOS/Linux Command</button>
+          <div style="margin-bottom: 8px;">
+            <button onclick="copy('powershell-win')">📋 Copy Windows PowerShell Command</button>
+          </div>
+          <div style="margin-bottom: 8px;">
+            <button onclick="copy('cmd-win')">📋 Copy Windows cmd Command</button>
+          </div>
+          <div style="margin-bottom: 8px;">
+            <button onclick="copy('cmd-unix')">📋 Copy macOS/Linux Command</button>
+          </div
 
           <script>
              function copy(id) {{
@@ -268,9 +274,10 @@ def attach_open_trace_command(trace_path: Path):
         """
     allure.attach(
         html,
-        name="Open Playwright Trace Command (One Click)",
+        name="Open Playwright Trace Command (Copy)",
         attachment_type=allure.attachment_type.HTML
     )
+
 
 
 
