@@ -125,7 +125,7 @@ def context(browser, request):
         allure.attach.file(
             trace,
             name="Playwright-Trace"
-            # attachment_type=allure.attachment_type.ZIP # Allure会自动识别.zip后缀文件
+            attachment_type=allure.attachment_type.ZIP # Allure会自动识别.zip后缀文件
         )
         attach_open_trace_command(trace)
 
@@ -258,5 +258,6 @@ cd {project_root} && npx playwright show-trace {rel_posix}
         name="Open Playwright Trace",
         attachment_type=allure.attachment_type.TEXT
     )
+
 
 
