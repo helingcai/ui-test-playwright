@@ -14,8 +14,8 @@ def playwright_instance():
 @pytest.fixture(scope="session")
 def browser(playwright_instance):
     """浏览器只启动一次"""
-    headless = bool(os.getenv("CI", False)) # CI特殊配置
-    browser = playwright_instance.chromium.launch(headless=headless)
+    # headless = bool(os.getenv("CI", False)) # CI特殊配置
+    browser = playwright_instance.chromium.launch(headless=True)
     yield browser
     print("🔥 browser started", id(browser))
     browser.close()
@@ -326,6 +326,7 @@ def extract_trace(trace_zip: Path):
         z.extractall(viewer_dir)
 
     return viewer_dir
+
 
 
 
