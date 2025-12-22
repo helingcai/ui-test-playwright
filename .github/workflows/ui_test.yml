@@ -66,6 +66,13 @@ jobs:
         with:
           name: allure-report
           path: allure-report
+      - name: Upload Playwright Trace
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Playwright Trace
+          path: |
+            artifacts/**/trace.zip
       # 将artifacts下trace.zip拷贝到Actions->artifacts中
       - name: Copy trace into allure report
         if: always()
