@@ -252,34 +252,48 @@ def attach_open_trace_command(trace_path: Path):
     <h3>Open Playwright Trace</h3>
 
     <!-- Hidden command holders -->
-    <textarea id="ps" style="display:none;">{windows_powershell}</textarea>
-    <textarea id="cmd" style="display:none;">{windows_cmd}</textarea>
-    <textarea id="unix" style="display:none;">{macos_linux}</textarea>
+    <textarea id="ps" style="display:none;">{{windows_powershell}}</textarea>
+    <textarea id="cmd" style="display:none;">{{windows_cmd}}</textarea>
+    <textarea id="unix" style="display:none;">{{macos_linux}}</textarea>
 
     <div style="margin-bottom:8px;">
-      <button onclick="copyCmd('ps')">📋 Copy Windows PowerShell Command</button>
+      <button data-label="📋 Copy Windows PowerShell Command" onclick="copyCmd(this,'ps')">
+          📋 Copy Windows PowerShell Command
+        </button>
     </div>
 
     <div style="margin-bottom:8px;">
-      <button onclick="copyCmd('cmd')">📋 Copy Windows CMD Command</button>
+      <button data-label="📋 Copy Windows CMD Command" onclick="copyCmd(this,'cmd')">
+          📋 Copy Windows CMD Command
+      </button>
     </div>
 
     <div style="margin-bottom:8px;">
-      <button onclick="copyCmd('unix')">📋 Copy macOS / Linux Command</button>
+      <button data-label="📋 Copy macOS / Linux Command" onclick="copyCmd(this,'unix')">
+          📋 Copy macOS / Linux Command
+      </button>
     </div>
 
     <script type="text/javascript">
-      function copyCmd(id, btn) {{
+      function copyCmd(button,id) {
         const el = document.getElementById(id);
+        
         el.style.display = 'block';
         el.select();
         document.execCommand('copy');
         el.style.display = 'none';
-        
-        const old = btn.innerText;
-        btn.innerText = '✅ Copied';
-        setTimeout(() => btn.innerText = old, 1200);
-      }}
+
+        // 修改按钮状态
+        const original = button.getAttribute('data-label');
+        button.innerText = '✅ Copied';
+        button.disabled = true;
+      
+        // 2 秒后恢复
+        setTimeout(() => {
+        button.innerText = original;
+        button.disabled = false;
+      }, 2000);
+      }
     </script>
   </body>
 </html>
@@ -289,6 +303,7 @@ def attach_open_trace_command(trace_path: Path):
         name="Open Playwright Trace Command (Copy)",
         attachment_type=allure.attachment_type.HTML
     )
+
 
 
 
