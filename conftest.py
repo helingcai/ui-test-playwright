@@ -240,43 +240,48 @@ def attach_open_trace_command(trace_path: Path):
     macos_linux = f'cd {project_root} && npx playwright show-trace {rel_posix}'
 
     html = f"""
-        <html>
-        <body style="font-family: Arial, sans-serif;">
-          <h3>Open Playwright Trace</h3>
+<!DOCTYPE html>
+<html>
+  <body style="font-family: Arial, sans-serif;">
 
-        <!-- 隐藏的命令内容 -->
-          <textarea id="powershell-win" style="display:none;">{windows_powershell}</textarea>
-          <textarea id="cmd-win" style="display:none;">{windows_cmd}</textarea>
-          <textarea id="cmd-unix" style="display:none;">{macos_linux}</textarea>
+    <h3>Open Playwright Trace</h3>
 
-          <div style="margin-bottom: 8px;">
-            <button onclick="copy('powershell-win')">📋 Copy Windows PowerShell Command</button>
-          </div>
-          <div style="margin-bottom: 8px;">
-            <button onclick="copy('cmd-win')">📋 Copy Windows cmd Command</button>
-          </div>
-          <div style="margin-bottom: 8px;">
-            <button onclick="copy('cmd-unix')">📋 Copy macOS/Linux Command</button>
-          </div
+    <!-- Hidden command holders -->
+    <textarea id="ps" style="display:none;">{windows_powershell}</textarea>
+    <textarea id="cmd" style="display:none;">{windows_cmd}</textarea>
+    <textarea id="unix" style="display:none;">{macos_linux}</textarea>
 
-          <script>
-             function copy(id) {{
-                const el = document.getElementById(id);
-                el.style.display = 'block';
-                el.select();
-                document.execCommand('copy');
-                el.style.display = 'none';
-                alert('Command copied!');
-        }}
-      </script>
-        </body>
-        </html>
-        """
+    <div style="margin-bottom:8px;">
+      <button onclick="copyCmd('ps')">📋 Copy Windows PowerShell Command</button>
+    </div>
+
+    <div style="margin-bottom:8px;">
+      <button onclick="copyCmd('cmd')">📋 Copy Windows CMD Command</button>
+    </div>
+
+    <div style="margin-bottom:8px;">
+      <button onclick="copyCmd('unix')">📋 Copy macOS / Linux Command</button>
+    </div>
+
+    <script type="text/javascript">
+      function copyCmd(id) {{
+        const el = document.getElementById(id);
+        el.style.display = 'block';
+        el.select();
+        document.execCommand('copy');
+        el.style.display = 'none';
+      }}
+    </script>
+
+  </body>
+</html>
+"""
     allure.attach(
         html,
         name="Open Playwright Trace Command (Copy)",
         attachment_type=allure.attachment_type.HTML
     )
+
 
 
 
