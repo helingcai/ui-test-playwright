@@ -235,27 +235,42 @@ def attach_open_trace_command(trace_path: Path):
     #### 三端通吃####
     rel_posix = rel_trace.as_posix()
     rel_win = str(rel_trace)
+    windows_powershell = f'cd {project_root}; npx playwright show-trace {rel_posix}'
+    windows_cmd = f'cd /d {project_root} && npx playwright show-trace {rel_win}'
+    macos_linux = f'cd {project_root} && npx playwright show-trace {rel_posix}'
 
-    content = f"""Windows PowerShell:
-cd {project_root}; npx playwright show-trace {rel_posix}
+    html = f"""
+        <html>
+        <body style="font-family: Arial, sans-serif;">
+          <h3>Open Playwright Trace</h3>
 
-Windows CMD:
-cd /d {project_root} && npx playwright show-trace {rel_win}
+          <p><b>Windows PowerShell</b></p>
+          <pre id="powershell-win">{windows_powershell}</pre>
+          <button onclick="copy('powershell-win')">📋 Copy Windows PowerShell Command</button>
+          
+          <p><b>Windows cmd</b></p>
+          <pre id="cmd-win">{windows_cmd}</pre>
+          <button onclick="copy('cmd-win')">📋 Copy Windows cmd Command</button>
 
-macOS / Linux:
-cd {project_root} && npx playwright show-trace {rel_posix}
-"""
+          <p><b>macOS / Linux</b></p>
+          <pre id="cmd-unix">{macos_linux}</pre>
+          <button onclick="copy('cmd-unix')">📋 Copy macOS/Linux Command</button>
 
-    #### 仅支持Windows CMD、macOS/Linux ####
-    # cmd = (
-    #     f"cd /d {project_root} && "
-    #     f"npx playwright show-trace {rel_trace.as_posix()}"
-    # )
-
+          <script>
+            function copy(id) {{
+              const text = document.getElementById(id).innerText;
+              navigator.clipboard.writeText(text).then(() => {{
+                alert("Command copied to clipboard!");
+              }});
+            }}
+          </script>
+        </body>
+        </html>
+        """
     allure.attach(
-        content,
-        name="Open Playwright Trace Command",
-        attachment_type=allure.attachment_type.TEXT
+        html,
+        name="Open Playwright Trace Command (One Click)",
+        attachment_type=allure.attachment_type.HTML
     )
 
 
