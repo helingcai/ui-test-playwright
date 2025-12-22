@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html>
+  <body style="font-family: Arial, sans-serif;">
+
+    <h3>Open Playwright Trace</h3>
+
+    <!-- Hidden command holders -->
+    <textarea id="ps" style="display:none;">cd /home/runner/work/ui-test-playwright/ui-test-playwright; npx playwright show-trace artifacts/check_out_test/TestCheckOut/test_finish_submit_order/attempt_2/trace.zip</textarea>
+    <textarea id="cmd" style="display:none;">cd /d /home/runner/work/ui-test-playwright/ui-test-playwright && npx playwright show-trace artifacts/check_out_test/TestCheckOut/test_finish_submit_order/attempt_2/trace.zip</textarea>
+    <textarea id="unix" style="display:none;">cd /home/runner/work/ui-test-playwright/ui-test-playwright && npx playwright show-trace artifacts/check_out_test/TestCheckOut/test_finish_submit_order/attempt_2/trace.zip</textarea>
+
+    <div style="margin-bottom:8px;">
+      <button onclick="copyCmd('ps')">📋 Copy Windows PowerShell Command</button>
+    </div>
+
+    <div style="margin-bottom:8px;">
+      <button onclick="copyCmd('cmd')">📋 Copy Windows CMD Command</button>
+    </div>
+
+    <div style="margin-bottom:8px;">
+      <button onclick="copyCmd('unix')">📋 Copy macOS / Linux Command</button>
+    </div>
+
+    <script type="text/javascript">
+      function copyCmd(id) {
+        const el = document.getElementById(id);
+        el.style.display = 'block';
+        el.select();
+        document.execCommand('copy');
+        el.style.display = 'none';
+      }
+    </script>
+
+  </body>
+</html>
