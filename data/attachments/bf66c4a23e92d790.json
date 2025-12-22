@@ -1,7 +1,0 @@
-[
-  {
-    "type": "error",
-    "text": "Failed to load resource: the server responded with a status of 404 ()",
-    "location": "{'url': 'https://www.saucedemo.com/inventory.html', 'lineNumber': 0, 'columnNumber': 0}"
-  }
-]
