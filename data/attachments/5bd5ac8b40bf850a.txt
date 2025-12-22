@@ -1,8 +1,0 @@
-Windows PowerShell:
-cd /home/runner/work/ui-test-playwright/ui-test-playwright; npx playwright show-trace artifacts/check_out_test/TestCheckOut/test_finish_submit_order/attempt_1/trace.zip
-
-Windows CMD:
-cd /d /home/runner/work/ui-test-playwright/ui-test-playwright && npx playwright show-trace artifacts/check_out_test/TestCheckOut/test_finish_submit_order/attempt_1/trace.zip
-
-macOS / Linux:
-cd /home/runner/work/ui-test-playwright/ui-test-playwright && npx playwright show-trace artifacts/check_out_test/TestCheckOut/test_finish_submit_order/attempt_1/trace.zip
