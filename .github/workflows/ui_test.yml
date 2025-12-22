@@ -66,6 +66,7 @@ jobs:
         with:
           name: allure-report
           path: allure-report
+          
       # 上传 trace.zip 报告到Actions/ Artifact
       - name: Upload Playwright Trace
         if: always()
@@ -74,13 +75,6 @@ jobs:
           name: Playwright-Trace
           path: |
             **/trace.zip
-            
-      # 将artifacts下trace.zip拷贝到allure-report HTML报告中供下载
-      # - name: Copy trace into allure report
-      #   if: always()
-      #   run: |
-      #     mkdir -p allure-report/trace
-      #     cp **/trace.zip allure-report/trace/ || true
           
       # 8. 部署 Allure HTML 报告到 GitHub Pages
       - name: Deploy Allure Report to GitHub Pages
