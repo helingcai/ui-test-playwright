@@ -66,6 +66,12 @@ jobs:
         with:
           name: allure-report
           path: allure-report
+      # 将artifacts下trace.zip拷贝到Actions->artifacts中
+      - name: Copy trace into allure report
+        if: always()
+        run: |
+          mkdir -p allure-report/trace
+          cp artifacts/**/trace.zip allure-report/trace/ || true
           
       # 8. 部署 Allure HTML 报告到 GitHub Pages
       - name: Deploy Allure Report to GitHub Pages
