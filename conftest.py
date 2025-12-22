@@ -275,7 +275,7 @@ def attach_open_trace_command(trace_path: Path):
     </div>
 
     <script type="text/javascript">
-      function copyCmd(button,id) {
+      function copyCmd(button,id) {{
         const el = document.getElementById(id);
         
         el.style.display = 'block';
@@ -291,9 +291,8 @@ def attach_open_trace_command(trace_path: Path):
         // 2 秒后恢复
         setTimeout(() => {
         button.innerText = original;
-        button.disabled = false;
-      }, 2000);
-      }
+        button.disabled = false;}, 2000);
+      }}
     </script>
   </body>
 </html>
@@ -303,6 +302,7 @@ def attach_open_trace_command(trace_path: Path):
         name="Open Playwright Trace Command (Copy)",
         attachment_type=allure.attachment_type.HTML
     )
+
 
 
 
