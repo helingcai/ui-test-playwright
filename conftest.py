@@ -1,3 +1,4 @@
+import zipfile
 from playwright.sync_api import sync_playwright
 from pathlib import Path
 import pytest, shutil, json, allure
@@ -14,7 +15,6 @@ def playwright_instance():
 @pytest.fixture(scope="session")
 def browser(playwright_instance):
     """浏览器只启动一次"""
-    # headless = bool(os.getenv("CI", False)) # CI特殊配置
     browser = playwright_instance.chromium.launch(headless=True)
     yield browser
     print("🔥 browser started", id(browser))
@@ -326,6 +326,7 @@ def extract_trace(trace_zip: Path):
         z.extractall(viewer_dir)
 
     return viewer_dir
+
 
 
 
