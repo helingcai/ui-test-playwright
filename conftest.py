@@ -100,7 +100,7 @@ def context(browser, request):
     cls = request.node.cls.__name__ if request.node.cls else "no_class"
     name = request.node.name
 
-    target_dir = Path("artifacts") / module / cls / name / attempt_dir"
+    target_dir = Path("artifacts") / module / cls / name / attempt_dir
     target_dir.mkdir(parents=True, exist_ok=True)
 
     # 移动视频
@@ -183,7 +183,7 @@ def pytest_runtest_makereport(item, call):
     attempt = getattr(item, "execution_count", 1)
     attempt_dir = f"attempt_{attempt}"
 
-    base_dir = Path("artifacts") / module_name / class_name / test_name / attempt_dir"
+    base_dir = Path("artifacts") / module_name / class_name / test_name / attempt_dir
     base_dir.mkdir(parents=True, exist_ok=True)
 
     # 生成失败用例截图
@@ -326,6 +326,7 @@ def extract_trace(trace_zip: Path):
         z.extractall(viewer_dir)
 
     return viewer_dir
+
 
 
 
