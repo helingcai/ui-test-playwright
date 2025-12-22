@@ -34,35 +34,40 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           playwright install --with-deps
-#          pip install allure-pytest
-#          pip install ghp-import
 
-      # 4. 运行测试并生成 Allure 原始数据
+      # 4. 安装 Allure CLI
+      - name: Install Allure CLI
+        run: |
+          # 下载最新版本
+          ALLURE_VERSION=2.27.0
+          wget https://github.com/allure-framework/allure2/releases/download/$ALLURE_VERSION/allure-$ALLURE_VERSION.tgz
+          tar -zxvf allure-$ALLURE_VERSION.tgz
+          sudo mv allure-$ALLURE_VERSION /opt/allure
+          sudo ln -s /opt/allure/bin/allure /usr/bin/allure
+          allure --version
+          
+      # 5. 运行测试并生成 Allure 原始数据
       # --alluredir=allure-results：生成原始测试数据
       - name: Run tests with Allure
         run: |
           pytest --alluredir=allure-results
 
-      # 5. 生成 Allure 报告
-      # allure generate 将结果生成 HTML 报告
+      # 6. 生成 Allure HTML 报告
       - name: Generate Allure Report
         run: |
           allure generate allure-results --clean -o allure-report
 
-      # 6. 上传 Allure 报告为 artifact，便于下载
+      # 7. 上传 Allure HTML 报告作为 Artifact
       - name: Upload Allure Report Artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: allure-report
           path: allure-report
-        # 7. 发布 Allure 报告到 GitHub Pages
+          
+      # 8. 部署 Allure HTML 报告到 GitHub Pages
       - name: Deploy Allure Report to GitHub Pages
         if: always()
-      #        env:
-      #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #        run: |
-      #          ghp-import -n -p -f allure-report
         uses: peaceiris/actions-gh-pages@v6
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
