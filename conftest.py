@@ -115,7 +115,7 @@ def context(browser, request):
     for video in target_dir.glob("*.webm"):
         allure.attach.file(
             video,
-            name="Playwright Video",
+            name="Playwright-Video",
             attachment_type=allure.attachment_type.WEBM
         )
 
@@ -124,7 +124,7 @@ def context(browser, request):
     if trace.exists():
         allure.attach.file(
             trace,
-            name="Playwright Trace"
+            name="Playwright-Trace"
             # attachment_type=allure.attachment_type.ZIP # Allure会自动识别.zip后缀文件
         )
         attach_open_trace_command(trace)
@@ -200,7 +200,7 @@ def pytest_runtest_makereport(item, call):
     if screenshot.exists():
         allure.attach.file(
             screenshot,
-            name="Failure Screenshot",
+            name="Failure-Screenshot",
             attachment_type=allure.attachment_type.PNG
         )
 
@@ -209,7 +209,7 @@ def pytest_runtest_makereport(item, call):
     if url.exists():
         allure.attach(
             url.read_text(encoding="utf-8"),
-            name="Page Url",
+            name="Page-Url",
             attachment_type=allure.attachment_type.TEXT
         )
 
@@ -218,7 +218,7 @@ def pytest_runtest_makereport(item, call):
     if console.exists():
         allure.attach.file(
             console,
-            name="Console Errors",
+            name="Console-Errors",
             attachment_type=allure.attachment_type.JSON
         )
 
@@ -258,4 +258,5 @@ cd {project_root} && npx playwright show-trace {rel_posix}
         name="Open Playwright Trace",
         attachment_type=allure.attachment_type.TEXT
     )
+
 
