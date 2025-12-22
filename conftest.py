@@ -14,7 +14,8 @@ def playwright_instance():
 @pytest.fixture(scope="session")
 def browser(playwright_instance):
     """浏览器只启动一次"""
-    browser = playwright_instance.chromium.launch(headless=True)
+    headless = bool(os.getenv("CI", False)) # CI特殊配置
+    browser = playwright_instance.chromium.launch(headless=headless)
     yield browser
     print("🔥 browser started", id(browser))
     browser.close()
@@ -53,8 +54,9 @@ def context(browser, request):
     - 视频 + tracing 每个 attempt 单独目录
     """
     attempt = getattr(request.node, "execution_count", 1)
-    record_video_dir = Path(f"videos/attempt_{attempt}")
-    record_tracing_dir = Path(f"tracing/attempt_{attempt}")
+    attempt_dir = f"attempt_{attempt}"
+    record_video_dir = Path("videos/attempt_dir")
+    record_tracing_dir = Path("tracing/attempt_dir")
     record_video_dir.mkdir(parents=True, exist_ok=True)
     record_tracing_dir.mkdir(parents=True, exist_ok=True)
 
@@ -72,7 +74,7 @@ def context(browser, request):
     #  因为Playwright不会自动帮你管理tracing文件
     # 你需要 start→stop→ 指定zip路径
     context.tracing.start(
-        name=f"attempt_{attempt}",
+        name=attempt_dir,
         screenshots=True,
         snapshots=True,
         sources=True)
@@ -81,8 +83,10 @@ def context(browser, request):
 
     #  ======== teardown阶段:(video、trace即将生成；page已close) ========
     trace_path = record_tracing_dir / "trace.zip"
-    context.tracing.stop(path=trace_path)  # stop tracing，trace.zip 在这里真正生成
-    context.close()  # 一定要先close：释放video文件句柄、video真正写入磁盘
+    try:
+        context.tracing.stop(path=trace_path)  # stop tracing，trace.zip 在这里真正生成
+    finally:
+        context.close()  # 一定要先close：释放video文件句柄、video真正写入磁盘
 
     #  ======== 执行成功用例删除video、trace ========
     failed = getattr(request.node, "_failed", False)
@@ -96,7 +100,7 @@ def context(browser, request):
     cls = request.node.cls.__name__ if request.node.cls else "no_class"
     name = request.node.name
 
-    target_dir = Path("artifacts") / module / cls / name / f"attempt_{attempt}"
+    target_dir = Path("artifacts") / module / cls / name / attempt_dir"
     target_dir.mkdir(parents=True, exist_ok=True)
 
     # 移动视频
@@ -122,6 +126,9 @@ def context(browser, request):
     # Attach trace
     trace = target_dir / "trace.zip"
     if trace.exists():
+        viewer_dir=extract_trace(trace)
+        attach_trace_viewer_html(viewer_dir)
+        
         allure.attach.file(
             trace,
             name="Playwright-Trace.zip"
@@ -174,8 +181,9 @@ def pytest_runtest_makereport(item, call):
     class_name = item.cls.__name__ if item.cls else "no_class"
     test_name = item.name
     attempt = getattr(item, "execution_count", 1)
+    attempt_dir = f"attempt_{attempt}"
 
-    base_dir = Path("artifacts") / module_name / class_name / test_name / f"attempt_{attempt}"
+    base_dir = Path("artifacts") / module_name / class_name / test_name / attempt_dir"
     base_dir.mkdir(parents=True, exist_ok=True)
 
     # 生成失败用例截图
@@ -264,15 +272,18 @@ def attach_open_trace_command(trace_path: Path):
     </div>
 
     <script type="text/javascript">
-      function copyCmd(id) {{
+      function copyCmd(id, btn) {{
         const el = document.getElementById(id);
         el.style.display = 'block';
         el.select();
         document.execCommand('copy');
         el.style.display = 'none';
+        
+        const old = btn.innerText;
+        btn.innerText = '✅ Copied';
+        setTimeout(() => btn.innerText = old, 1200);
       }}
     </script>
-
   </body>
 </html>
 """
@@ -281,6 +292,41 @@ def attach_open_trace_command(trace_path: Path):
         name="Open Playwright Trace Command (Copy)",
         attachment_type=allure.attachment_type.HTML
     )
+    
+def attach_trace_viewer_html(trace_dir: Path):
+    html = f"""
+<!DOCTYPE html>
+<html>
+    <body style="font-family: Arial;">
+      <h3>Playwright Trace Viewer</h3>
+      <p>This trace is already extracted.</p>
+    
+      <p><b>Open with Python:</b></p>
+      <pre>cd {trace_dir} && python -m http.server 9323</pre>
+    
+      <p>Then open:</p>
+      <pre>http://localhost:9323</pre>
+    </body>
+</html>
+    """
+
+    allure.attach(
+        html,
+        name="Open Trace Viewer (No npx)",
+        attachment_type=allure.attachment_type.HTML
+    )
+
+
+def extract_trace(trace_zip: Path):
+    """自动解压 trace.zip"""
+    viewer_dir = trace_zip.parent / "trace-viewer"
+    viewer_dir.mkdir(exist_ok=True)
+
+    with zipfile.ZipFile(trace_zip, 'r') as z:
+        z.extractall(viewer_dir)
+
+    return viewer_dir
+
 
 
 
