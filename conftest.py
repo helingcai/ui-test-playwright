@@ -55,8 +55,8 @@ def context(browser, request):
     """
     attempt = getattr(request.node, "execution_count", 1)
     attempt_dir = f"attempt_{attempt}"
-    record_video_dir = Path("videos/attempt_dir")
-    record_tracing_dir = Path("tracing/attempt_dir")
+    record_video_dir = Path("videos")/attempt_dir
+    record_tracing_dir = Path("tracing")/attempt_dir
     record_video_dir.mkdir(parents=True, exist_ok=True)
     record_tracing_dir.mkdir(parents=True, exist_ok=True)
 
@@ -252,9 +252,9 @@ def attach_open_trace_command(trace_path: Path):
     <h3>Open Playwright Trace</h3>
 
     <!-- Hidden command holders -->
-    <textarea id="ps" style="display:none;">{{windows_powershell}}</textarea>
-    <textarea id="cmd" style="display:none;">{{windows_cmd}}</textarea>
-    <textarea id="unix" style="display:none;">{{macos_linux}}</textarea>
+    <textarea id="ps" style="display:none;">{windows_powershell}</textarea>
+    <textarea id="cmd" style="display:none;">{windows_cmd}</textarea>
+    <textarea id="unix" style="display:none;">{macos_linux}</textarea>
 
     <div style="margin-bottom:8px;">
       <button data-label="📋 Copy Windows PowerShell Command" onclick="copyCmd(this,'ps')">
@@ -289,9 +289,9 @@ def attach_open_trace_command(trace_path: Path):
         button.disabled = true;
       
         // 2 秒后恢复
-        setTimeout(() => {
+        setTimeout(() => {{
         button.innerText = original;
-        button.disabled = false;}, 2000);
+        button.disabled = false;}}, 2000);
       }}
     </script>
   </body>
@@ -302,6 +302,7 @@ def attach_open_trace_command(trace_path: Path):
         name="Open Playwright Trace Command (Copy)",
         attachment_type=allure.attachment_type.HTML
     )
+
 
 
 
