@@ -125,7 +125,6 @@ def context(browser, request):
         allure.attach.file(
             trace,
             name="Playwright-Trace.zip"
-            # attachment_type=allure.attachment_type.BINARY # Allure会自动识别.zip后缀文件
         )
         attach_open_trace_command(trace)
 
@@ -224,7 +223,7 @@ def pytest_runtest_makereport(item, call):
 
 
 def attach_open_trace_command(trace_path: Path):
-    """生成打开trace.zip命令模板S"""
+    """生成打开trace.zip命令模板"""
     project_root = Path.cwd()
 
     # 生成相对路径（Allure 中更稳定）
@@ -255,9 +254,10 @@ cd {project_root} && npx playwright show-trace {rel_posix}
 
     allure.attach(
         content,
-        name="Open Playwright Trace",
+        name="Open Playwright Trace Command",
         attachment_type=allure.attachment_type.TEXT
     )
+
 
 
 
