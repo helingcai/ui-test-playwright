@@ -25,14 +25,20 @@ function show(id){
 <div class="chain">Attempt 1 ❌ → Attempt 2 ❌ → Attempt 3 ❌</div>
 
 <div>
+        <br/>
+        <br/>
         <button class="tab " onclick="show(1)">
           Attempt 1
         </button>
         
+        <br/>
+        <br/>
         <button class="tab " onclick="show(2)">
           Attempt 2
         </button>
         
+        <br/>
+        <br/>
         <button class="tab active" onclick="show(3)">
           Attempt 3
         </button>
@@ -40,13 +46,12 @@ function show(id){
 
 
         <div id="attempt-1" class="card ">
-          <br/>
-          <br/>
+          <br/> 
           <h3>Attempt 1 ❌ FAILED</h3>
           <hr style="border-top: 1px dashed #ccc;" />
-          🕑 <b>Duration</b>: 0.03s<br/><br/>
-          💥 <b>Error</b>: self = <tests.check_out_test.TestCheckOut object at 0x7f9e1cad0cd0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f9e1cabb670>
+          🕑 <b>Duration</b>: 0.04s<br/>
+          💥 <b>Error</b>: self = <tests.check_out_test.TestCheckOut object at 0x7fee7ab805b0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fee7aa577c0>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -73,8 +78,8 @@ actual_msg = 'Thank you for your order!', expect_msg = '哈哈哈!'
 >       assert expect_msg in actual_msg, f"预期提示信息：{expect_msg}，不存在于{actual_msg}"
 E       AssertionError: 预期提示信息：哈哈哈!，不存在于Thank you for your order!
 
-assertions/check_out_assert.py:10: AssertionError<br/><br/>
-          🌏 <b>URL</b>：True<br/><br/><br/>
+assertions/check_out_assert.py:10: AssertionError<br/>
+          🌏 <b>URL</b>：True<br/><br/>
 
           <b>Artifacts</b><br/>
           ✔️ Screenshot<br/>
@@ -89,13 +94,12 @@ assertions/check_out_assert.py:10: AssertionError<br/><br/>
         </div>
         
         <div id="attempt-2" class="card ">
-          <br/>
-          <br/>
+          <br/> 
           <h3>Attempt 2 ❌ FAILED</h3>
           <hr style="border-top: 1px dashed #ccc;" />
-          🕑 <b>Duration</b>: 0.01s<br/><br/>
-          💥 <b>Error</b>: self = <tests.check_out_test.TestCheckOut object at 0x7f9e1cad0cd0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f9e1caba560>
+          🕑 <b>Duration</b>: 0.01s<br/>
+          💥 <b>Error</b>: self = <tests.check_out_test.TestCheckOut object at 0x7fee7ab805b0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fee7ab83940>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -122,8 +126,8 @@ actual_msg = 'Thank you for your order!', expect_msg = '哈哈哈!'
 >       assert expect_msg in actual_msg, f"预期提示信息：{expect_msg}，不存在于{actual_msg}"
 E       AssertionError: 预期提示信息：哈哈哈!，不存在于Thank you for your order!
 
-assertions/check_out_assert.py:10: AssertionError<br/><br/>
-          🌏 <b>URL</b>：True<br/><br/><br/>
+assertions/check_out_assert.py:10: AssertionError<br/>
+          🌏 <b>URL</b>：True<br/><br/>
 
           <b>Artifacts</b><br/>
           ✔️ Screenshot<br/>
@@ -138,13 +142,12 @@ assertions/check_out_assert.py:10: AssertionError<br/><br/>
         </div>
         
         <div id="attempt-3" class="card active">
-          <br/>
-          <br/>
+          <br/> 
           <h3>Attempt 3 ❌ FAILED</h3>
           <hr style="border-top: 1px dashed #ccc;" />
-          🕑 <b>Duration</b>: 0.01s<br/><br/>
-          💥 <b>Error</b>: self = <tests.check_out_test.TestCheckOut object at 0x7f9e1cad0cd0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f9e1a35f280>
+          🕑 <b>Duration</b>: 0.01s<br/>
+          💥 <b>Error</b>: self = <tests.check_out_test.TestCheckOut object at 0x7fee7ab805b0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fee7ab8ccd0>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -171,8 +174,8 @@ actual_msg = 'Thank you for your order!', expect_msg = '哈哈哈!'
 >       assert expect_msg in actual_msg, f"预期提示信息：{expect_msg}，不存在于{actual_msg}"
 E       AssertionError: 预期提示信息：哈哈哈!，不存在于Thank you for your order!
 
-assertions/check_out_assert.py:10: AssertionError<br/><br/>
-          🌏 <b>URL</b>：True<br/><br/><br/>
+assertions/check_out_assert.py:10: AssertionError<br/>
+          🌏 <b>URL</b>：True<br/><br/>
 
           <b>Artifacts</b><br/>
           ✔️ Screenshot<br/>
