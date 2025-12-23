@@ -130,7 +130,7 @@ def context(browser, request):
     if trace.exists():
         allure.attach.file(
             trace,
-            name="📎 Playwright-Trace.zip"
+            name="📎 Playwright-Trace.zip (used by Failure Panel)"
         )
         attach_open_trace_command(trace)
     attach_failure_panel(target_dir, attempt)
@@ -230,7 +230,7 @@ def pytest_runtest_makereport(item, call):
     #     )
 
 
-def attach_open_trace_command(trace_path: Path):
+def render_trace_open_block(trace_path: Path)->str:
     """生成打开trace.zip命令模板"""
     project_root = Path.cwd()
 
@@ -243,69 +243,60 @@ def attach_open_trace_command(trace_path: Path):
     #### 三端通吃####
     rel_posix = rel_trace.as_posix()
     rel_win = str(rel_trace)
+
     windows_powershell = f'cd {project_root}; npx playwright show-trace {rel_posix}'
     windows_cmd = f'cd /d {project_root} && npx playwright show-trace {rel_win}'
     macos_linux = f'cd {project_root} && npx playwright show-trace {rel_posix}'
+    
+    return f"""
+    <details>
+      <summary><b>🧭 Playwright Trace</b></summary>
+      <p class="hint">
+        <b>Click📎 Playwright-Trace.zip (used by Failure Panel)</b>, Then <b>Download attachment</b> and run:
+      </p>
+      <!-- Hidden command holders -->
+      <textarea id="ps" style="display:none;">{windows_powershell}</textarea>
+      <textarea id="cmd" style="display:none;">{windows_cmd}</textarea>
+      <textarea id="unix" style="display:none;">{macos_linux}</textarea>
 
-    html = f"""
-<!DOCTYPE html>
-<html>
-  <body style="font-family: Arial, sans-serif;">
-
-    <h3>Open Playwright Trace</h3>
-
-    <!-- Hidden command holders -->
-    <textarea id="ps" style="display:none;">{windows_powershell}</textarea>
-    <textarea id="cmd" style="display:none;">{windows_cmd}</textarea>
-    <textarea id="unix" style="display:none;">{macos_linux}</textarea>
-
-    <div style="margin-bottom:8px;">
-      <button data-label="📋 Copy Windows PowerShell Command" onclick="copyCmd(this,'ps')">
+      <div style="margin-bottom:8px;">
+        <button data-label="📋 Windows PowerShell Command" onclick="copyCmd(this,'ps')">
           📋 Copy Windows PowerShell Command
         </button>
-    </div>
-
-    <div style="margin-bottom:8px;">
-      <button data-label="📋 Copy Windows CMD Command" onclick="copyCmd(this,'cmd')">
+      </div>
+      <div style="margin-bottom:8px;">
+        <button data-label="📋 Windows CMD Command" onclick="copyCmd(this,'cmd')">
           📋 Copy Windows CMD Command
-      </button>
-    </div>
-
-    <div style="margin-bottom:8px;">
-      <button data-label="📋 Copy macOS / Linux Command" onclick="copyCmd(this,'unix')">
+        </button>
+      </div>
+      <div style="margin-bottom:8px;">
+        <button data-label="📋 macOS / Linux Command" onclick="copyCmd(this,'unix')">
           📋 Copy macOS / Linux Command
-      </button>
-    </div>
+        </button>
+      </div>
 
-    <script type="text/javascript">
-      function copyCmd(button,id) {{
-        const el = document.getElementById(id);
+      <script type="text/javascript">
+        function copyCmd(button,id) {{
+          const el = document.getElementById(id);
 
-        el.style.display = 'block';
-        el.select();
-        document.execCommand('copy');
-        el.style.display = 'none';
+          el.style.display = 'block';
+          el.select();
+          document.execCommand('copy');
+          el.style.display = 'none';
 
-        // 修改按钮状态
-        const original = button.getAttribute('data-label');
-        button.innerText = '✅ Copied';
-        button.disabled = true;
+          // 修改按钮状态
+          const original = button.getAttribute('data-label');
+          button.innerText = '✅ Copied';
+          button.disabled = true;
 
-        // 2 秒后恢复
-        setTimeout(() => {{
-        button.innerText = original;
-        button.disabled = false;}}, 2000);
-      }}
-    </script>
-  </body>
-</html>
-"""
-    allure.attach(
-        html,
-        name="Open Playwright Trace Command (Copy)",
-        attachment_type=allure.attachment_type.HTML
-    )
-
+          // 2 秒后恢复
+          setTimeout(() => {{
+          button.innerText = original;
+          button.disabled = false;}}, 2000);
+        }}
+      </script>
+    </details>
+    """
 
 def attach_failure_panel(base_dir: Path, attempt: int):
     page_url = (base_dir / "url.txt").read_text(encoding="utf-8")
@@ -327,7 +318,7 @@ def attach_failure_panel(base_dir: Path, attempt: int):
 
     # ===== Trace block =====
     trace_block = (
-        "<pre>npx playwright show-trace Playwright-Trace.zip</pre>"
+        render_trace_open_block(trace)
         if trace.exists()
         else "<i>Trace not available</i>"
     )
@@ -371,7 +362,6 @@ def attach_failure_panel(base_dir: Path, attempt: int):
     <div class="section">
       <details open>
         <summary><b>📸 Screenshot</b></summary>
-        # <p>See attachment below</p>
         <img src="data:image/png;base64,{screenshot_base64}" />
       </details>
     </div>
@@ -386,13 +376,7 @@ def attach_failure_panel(base_dir: Path, attempt: int):
     </div>
 
     <div class="section">
-      <details>
-        <summary><b>🧭 Trace</b></summary>
-        <p class="hint">
-          Download <b>Playwright-Trace.zip</b> and run:
-        </p>
         {trace_block}
-      </details>
     </div>
 
     </body>
@@ -403,3 +387,4 @@ def attach_failure_panel(base_dir: Path, attempt: int):
         name=f"Failure Panel (Attempt {attempt})",
         attachment_type=allure.attachment_type.HTML
     )
+
