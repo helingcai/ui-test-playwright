@@ -132,7 +132,6 @@ def context(browser, request):
             trace,
             name="📎 Playwright-Trace.zip (used by Failure Panel)"
         )
-        attach_open_trace_command(trace)
     attach_failure_panel(target_dir, attempt)
 
 
@@ -387,4 +386,5 @@ def attach_failure_panel(base_dir: Path, attempt: int):
         name=f"Failure Panel (Attempt {attempt})",
         attachment_type=allure.attachment_type.HTML
     )
+
 
