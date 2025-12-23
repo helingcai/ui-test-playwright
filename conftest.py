@@ -258,9 +258,7 @@ def render_trace_open_block(trace_path: Path)->str:
         2️⃣ Download <b>Playwright-Trace.zip</b><br/>
         3️⃣ Run in terminal:
       </p>
-      <textarea id="trace-cmd" style="display:none;">
-        npx playwright show-trace Playwright-Trace.zip
-      </textarea>
+      <textarea id="trace-cmd" style="display:none;">npx playwright show-trace Playwright-Trace.zip</textarea>
       <button data-label="📋 Copy show-trace Command" onclick="copyCmd(this,'trace-cmd')">
         📋 Copy show-trace Command
       </button>
@@ -335,21 +333,21 @@ def attach_failure_panel(base_dir: Path, attempt: int):
     </p>
 
     <div class="section">
-      <details open>
+      <details>
         <summary><b>📍 Page URL</b></summary>
         <pre>{page_url}</pre>
       </details>
     </div>
 
     <div class="section">
-      <details open>
+      <details>
         <summary><b>❌ Console Errors</b></summary>
         <pre>{console_pretty}</pre>
       </details>
     </div>
 
     <div class="section">
-      <details open>
+      <details>
         <summary><b>📸 Screenshot</b></summary>
         <img src="data:image/png;base64,{screenshot_base64}" />
       </details>
