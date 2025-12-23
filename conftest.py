@@ -199,33 +199,33 @@ def pytest_runtest_makereport(item, call):
     # 标记失败（跨fixture通信的关键，告诉 context： 👉 这是一次失败执行）
     item._failed = True
 
-    # ========= Allure Attach =========
-    # Attach 失败用例截图
-    screenshot = base_dir / "failure.png"
-    if screenshot.exists():
-        allure.attach.file(
-            screenshot,
-            name="Failure-Screenshot",
-            attachment_type=allure.attachment_type.PNG
-        )
+    # # ========= Allure Attach =========
+    # # Attach 失败用例截图
+    # screenshot = base_dir / "failure.png"
+    # if screenshot.exists():
+    #     allure.attach.file(
+    #         screenshot,
+    #         name="Failure-Screenshot",
+    #         attachment_type=allure.attachment_type.PNG
+    #     )
 
-    # Attach 失败用例页面url
-    url = base_dir / "url.txt"
-    if url.exists():
-        allure.attach(
-            url.read_text(encoding="utf-8"),
-            name="Page-Url",
-            attachment_type=allure.attachment_type.TEXT
-        )
+    # # Attach 失败用例页面url
+    # url = base_dir / "url.txt"
+    # if url.exists():
+    #     allure.attach(
+    #         url.read_text(encoding="utf-8"),
+    #         name="Page-Url",
+    #         attachment_type=allure.attachment_type.TEXT
+    #     )
 
-    # Attach 失败用例控制台报错
-    console = base_dir / "console_errors.json"
-    if console.exists():
-        allure.attach.file(
-            console,
-            name="Console-Errors",
-            attachment_type=allure.attachment_type.JSON
-        )
+    # # Attach 失败用例控制台报错
+    # console = base_dir / "console_errors.json"
+    # if console.exists():
+    #     allure.attach.file(
+    #         console,
+    #         name="Console-Errors",
+    #         attachment_type=allure.attachment_type.JSON
+    #     )
 
 
 def attach_open_trace_command(trace_path: Path):
@@ -374,6 +374,7 @@ def attach_failure_panel(base_dir: Path, attempt: int):
         name=f"Failure Panel (Attempt {attempt})",
         attachment_type=allure.attachment_type.HTML
     )
+
 
 
 
