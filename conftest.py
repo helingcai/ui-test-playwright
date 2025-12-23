@@ -230,50 +230,40 @@ def pytest_runtest_makereport(item, call):
 
 
 def render_trace_open_block(trace_path: Path)->str:
-    """生成打开trace.zip命令模板"""
-    project_root = Path.cwd()
+    """生成打开trace.zip的命令模板（三端通吃）"""
+    # project_root = Path.cwd()
 
-    # 生成相对路径（Allure 中更稳定）
-    try:
-        rel_trace = trace_path.relative_to(project_root)
-    except ValueError:
-        rel_trace = trace_path  # 兜底
+    # # 生成相对路径（Allure 中更稳定）
+    # try:
+    #     rel_trace = trace_path.relative_to(project_root)
+    # except ValueError:
+    #     rel_trace = trace_path  # 兜底
 
-    #### 三端通吃####
-    rel_posix = rel_trace.as_posix()
-    rel_win = str(rel_trace)
+    # rel_posix = rel_trace.as_posix()
+    # rel_win = str(rel_trace)
 
-    windows_powershell = f'cd {project_root}; npx playwright show-trace {rel_posix}'
-    windows_cmd = f'cd /d {project_root} && npx playwright show-trace {rel_win}'
-    macos_linux = f'cd {project_root} && npx playwright show-trace {rel_posix}'
+    # windows_powershell = f'cd {project_root}; npx playwright show-trace {rel_posix}'
+    # windows_cmd = f'cd /d {project_root} && npx playwright show-trace {rel_win}'
+    # macos_linux = f'cd {project_root} && npx playwright show-trace {rel_posix}'
+    # <!-- Hidden command holders -->
+    #   <textarea id="ps" style="display:none;">{windows_powershell}</textarea>
+    #   <textarea id="cmd" style="display:none;">{windows_cmd}</textarea>
+    #   <textarea id="unix" style="display:none;">{macos_linux}</textarea>
     
     return f"""
     <details>
       <summary><b>🧭 Playwright Trace</b></summary>
       <p class="hint">
-        <b>Click📎 Playwright-Trace.zip (used by Failure Panel)</b>, Then <b>Download attachment</b> and run:
+        1️⃣ Click<b>📎 Playwright-Trace.zip (used by Failure Panel)</b><br/>
+        2️⃣ Download <b>Playwright-Trace.zip</b><br/>
+        3️⃣ Run in terminal:
       </p>
-      <!-- Hidden command holders -->
-      <textarea id="ps" style="display:none;">{windows_powershell}</textarea>
-      <textarea id="cmd" style="display:none;">{windows_cmd}</textarea>
-      <textarea id="unix" style="display:none;">{macos_linux}</textarea>
-
-      <div style="margin-bottom:8px;">
-        <button data-label="📋 Windows PowerShell Command" onclick="copyCmd(this,'ps')">
-          📋 Copy Windows PowerShell Command
-        </button>
-      </div>
-      <div style="margin-bottom:8px;">
-        <button data-label="📋 Windows CMD Command" onclick="copyCmd(this,'cmd')">
-          📋 Copy Windows CMD Command
-        </button>
-      </div>
-      <div style="margin-bottom:8px;">
-        <button data-label="📋 macOS / Linux Command" onclick="copyCmd(this,'unix')">
-          📋 Copy macOS / Linux Command
-        </button>
-      </div>
-
+      <textarea id="trace-cmd" style="display:none;">
+        npx playwright show-trace Playwright-Trace.zip
+      </textarea>
+      <button data-label="📋 Copy show-trace Command" onclick="copyCmd(this,'trace-cmd')">
+        📋 Copy show-trace Command
+      </button>
       <script type="text/javascript">
         function copyCmd(button,id) {{
           const el = document.getElementById(id);
@@ -386,5 +376,6 @@ def attach_failure_panel(base_dir: Path, attempt: int):
         name=f"Failure Panel (Attempt {attempt})",
         attachment_type=allure.attachment_type.HTML
     )
+
 
 
