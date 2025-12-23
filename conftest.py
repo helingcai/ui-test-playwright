@@ -116,10 +116,11 @@ def context(browser, request):
     attempts = getattr(request.node, "_attempts", [])
     current = attempts[-1]
 
-    current.update({  #current 不是一个拷贝，它就是 _attempts[-1] 的引用
+    current.update({  # current 不是一个拷贝，它就是 _attempts[-1] 的引用
         "has_screenshot": (target_dir / "failure.png").exists(),
         "has_video": any(target_dir.glob("*.webm")),
         "has_trace": (target_dir / "trace.zip").exists(),
+        "url": (target_dir / "url.txt").exists(),
         "base_dir": str(target_dir)
     })
 
@@ -179,7 +180,7 @@ def pytest_runtest_makereport(item, call):
     - URL
     - Console errors
     """
-    start = time.time() # 测试用例开始执行时间
+    start = time.time()  # 测试用例开始执行时间
     outcome = yield
     rep = outcome.get_result()
     duration = round(time.time() - start, 2)
@@ -218,9 +219,9 @@ def pytest_runtest_makereport(item, call):
     base_dir.mkdir(parents=True, exist_ok=True)
 
     page.screenshot(path=base_dir / "failure.png", full_page=True)  # 生成失败用例截图
-    (base_dir / "url.txt").write_text(page.url, encoding="utf-8") # 生成失败用例URL文件
-    (base_dir / "console_errors.json").write_text( # 生成失败用例Console errors文件
-        json.dumps(getattr(page, "_console_errors", []), indent=2, ensure_ascii=False),encoding="utf-8")
+    (base_dir / "url.txt").write_text(page.url, encoding="utf-8")  # 生成失败用例URL文件
+    (base_dir / "console_errors.json").write_text(  # 生成失败用例Console errors文件
+        json.dumps(getattr(page, "_console_errors", []), indent=2, ensure_ascii=False), encoding="utf-8")
 
     # # ========= 此处attach的报告，在Allure Report 的Test Body位置显示 =========
     # # Attach 失败用例截图
@@ -349,10 +350,10 @@ def attach_failure_panel(base_dir: Path, attempt: int):
     </head>
     <body>
 
+    <a id="failure-panel-{attempt}"></a>
     <h2>❌ Failure Panel (Attempt {attempt})</h2>
     <p class="hint">
-    This panel aggregates all failure information.<br/>
-    Other attachments are raw data and normally do not need to be opened.
+    This panel aggregates all failure information for Attempt {attempt}.
     </p>
 
     <div class="section">
@@ -402,7 +403,7 @@ def attach_failure_panel(base_dir: Path, attempt: int):
 def attach_attempt_summary(attempts: list[dict]):
     # retry attempt调用链路
     chain = " → ".join(
-        f"Attempt {a['attempt']} {'❌' if a['status']=='FAILED' else '✔️'}"
+        f"Attempt {a['attempt']} {'❌' if a['status'] == 'FAILED' else '✔️'}"
         for a in attempts
     )
 
@@ -421,19 +422,24 @@ def attach_attempt_summary(attempts: list[dict]):
 
         cards += f"""
         <div id="attempt-{aid}" class="card {active}">
-          <h3>Attempt {aid} {'❌ FAILED' if a['status']=='FAILED' else '✅ PASSED'}</h3>
-          <hr/>
-          ⏱ Duration: {a['duration']}s<br/>
-          💥 Error: {a['error'] or '-'}<br/><br/>
+          <br/>
+          <br/>
+          <h3>Attempt {aid} {'❌ FAILED' if a['status'] == 'FAILED' else '✅ PASSED'}</h3>
+          <hr style="border-top: 1px dashed #ccc;" />
+          🕑 <b>Duration</b>: {a['duration']}s<br/><br/>
+          💥 <b>Error</b>: {a['error'] or '-'}<br/><br/>
+          🌏 <b>URL</b>：{a['url']}<br/><br/><br/>
 
           <b>Artifacts</b><br/>
-          {'✔' if a['has_screenshot'] else '✖'} Screenshot<br/>
-          {'✔' if a['has_video'] else '✖'} Video<br/>
-          {'✔' if a['has_trace'] else '✖'} Trace<br/><br/>
+          {'✔️' if a['has_screenshot'] else '❌'} Screenshot<br/>
+          {'✔️' if a['has_video'] else '❌'} Video<br/>
+          {'✔️' if a['has_trace'] else '❌'} Trace<br/><br/>
 
-          <a href="#failure-panel-{aid}">
-            ➡ <b>View Failure Panel</b>
-          </a>
+          <b>➡️ View Failure Panel</b><br/>
+          <span style="color:#666;font-size:12px;">
+            Open attachment:
+            <b>Failure Panel (Attempt {aid})</b>
+          </span>
         </div>
         """
 
