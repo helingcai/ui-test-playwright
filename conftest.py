@@ -1,6 +1,5 @@
-import zipfile
-
 import base64
+import time
 from playwright.sync_api import sync_playwright
 from pathlib import Path
 import pytest, shutil, json, allure
@@ -19,7 +18,7 @@ def browser(playwright_instance):
     """浏览器只启动一次"""
     browser = playwright_instance.chromium.launch(headless=True)
     yield browser
-    print("🔥 browser started", id(browser))
+    # print("🔥 browser started", id(browser))
     browser.close()
 
 
@@ -83,7 +82,8 @@ def context(browser, request):
 
     yield context
 
-    #  ======== teardown阶段:(video、trace即将生成；page已close) ========
+    #  ======== teardown阶段 ========
+    # video、trace即将生成；page已close
     trace_path = record_tracing_dir / "trace.zip"
     try:
         context.tracing.stop(path=trace_path)  # stop tracing，trace.zip 在这里真正生成
@@ -108,16 +108,27 @@ def context(browser, request):
     # 移动视频
     for video_file in record_video_dir.glob("*.webm"):
         shutil.move(str(video_file), target_dir / video_file.name)
-    # 移动 trace
+    # 移动trace
     if trace_path.exists():
         shutil.move(str(trace_path), target_dir / "trace.zip")
+
+    # 将hook阶段收集的 item._attempts 信息补充到artifacts中
+    attempts = getattr(request.node, "_attempts", [])
+    current = attempts[-1]
+
+    current.update({  #current 不是一个拷贝，它就是 _attempts[-1] 的引用
+        "has_screenshot": (target_dir / "failure.png").exists(),
+        "has_video": any(target_dir.glob("*.webm")),
+        "has_trace": (target_dir / "trace.zip").exists(),
+        "base_dir": str(target_dir)
+    })
+
 
     #  ======== 捕获执行失败的video、trace ========
     # ❤️重要：video和trace捕获为什么要放在teardown阶段：
     # 因为pytest_runtest_makereport hook触发早于context fixture teardown，hook阶段video和trace文件尚未生成，此时捕获会失败
     # 所以video和trace捕获动作要放在teardown阶段
 
-    # Attach 视频（精确文件）
     for video in target_dir.glob("*.webm"):
         allure.attach.file(
             video,
@@ -125,7 +136,6 @@ def context(browser, request):
             attachment_type=allure.attachment_type.WEBM
         )
 
-    # Attach trace
     trace = target_dir / "trace.zip"
     if trace.exists():
         allure.attach.file(
@@ -164,8 +174,10 @@ def pytest_runtest_makereport(item, call):
     - URL
     - Console errors
     """
+    start = time.time() # 测试用例开始执行时间
     outcome = yield
     rep = outcome.get_result()
+    duration = round(time.time() - start, 2)
 
     # 只处理 call 阶段失败
     if rep.when != "call" or not rep.failed:
@@ -175,32 +187,47 @@ def pytest_runtest_makereport(item, call):
     if not page:
         return
 
-    # artifacts 目录结构
+    # 收集失败数据
+    attempt = getattr(item, "execution_count", 1)
+    if not hasattr(item, "_attempts"):
+        item._attempts = []
+    record = {
+        "attempt": attempt,
+        "status": "FAILED" if rep.failed else "PASSED",
+        "duration": duration,
+        "error": str(rep.longrepr) if rep.failed else "",
+        "url": None  # 稍后在 teardown 补
+    }
+    item._attempts.append(record)
+
+    # 标记失败（跨fixture通信的关键，告诉 context： 👉 这是一次失败执行）
+    item._failed = True
+
+    # 构建artifacts 目录,报错错误证据
     module_name = item.module.__name__.split(".")[-1]
     class_name = item.cls.__name__ if item.cls else "no_class"
     test_name = item.name
-    attempt = getattr(item, "execution_count", 1)
     attempt_dir = f"attempt_{attempt}"
 
     base_dir = Path("artifacts") / module_name / class_name / test_name / attempt_dir
     base_dir.mkdir(parents=True, exist_ok=True)
 
-    # 生成失败用例截图
-    page.screenshot(path=base_dir / "failure.png", full_page=True)
+    page.screenshot(path=base_dir / "failure.png", full_page=True)  # 生成失败用例截图
+    (base_dir / "url.txt").write_text(page.url, encoding="utf-8") # 生成失败用例URL文件
+    (base_dir / "console_errors.json").write_text( # 生成失败用例Console errors文件
+        json.dumps(getattr(page, "_console_errors", []), indent=2, ensure_ascii=False),encoding="utf-8")
 
-    # 生成失败用例URL文件
-    (base_dir / "url.txt").write_text(page.url, encoding="utf-8")
+    # 判断是否是attempt最后一次，如果是形成Attempt Summary数据
+    # 最后一次成功
+    if rep.passed and attempt > 1:
+        attach_attempt_summary(item._attempts)
 
-    # 生成失败用例Console errors文件
-    (base_dir / "console_errors.json").write_text(
-        json.dumps(getattr(page, "_console_errors", []), indent=2, ensure_ascii=False),
-        encoding="utf-8"
-    )
+    # retry 全部失败
+    max_attempts = getattr(item.config.option, "reruns", 0) + 1
+    if rep.failed and attempt == max_attempts:
+        attach_attempt_summary(item._attempts)
 
-    # 标记失败（跨fixture通信的关键，告诉 context： 👉 这是一次失败执行）
-    item._failed = True
-
-    # # ========= Allure Attach =========
+    # # ========= 此处attach的报告，在Allure Report 的Test Body位置显示 =========
     # # Attach 失败用例截图
     # screenshot = base_dir / "failure.png"
     # if screenshot.exists():
@@ -229,7 +256,7 @@ def pytest_runtest_makereport(item, call):
     #     )
 
 
-def render_trace_open_block(trace_path: Path)->str:
+def render_trace_open_block(trace_path: Path) -> str:
     """生成打开trace.zip的命令模板（三端通吃）"""
     # project_root = Path.cwd()
 
@@ -249,7 +276,7 @@ def render_trace_open_block(trace_path: Path)->str:
     #   <textarea id="ps" style="display:none;">{windows_powershell}</textarea>
     #   <textarea id="cmd" style="display:none;">{windows_cmd}</textarea>
     #   <textarea id="unix" style="display:none;">{macos_linux}</textarea>
-    
+
     return f"""
     <details>
       <summary><b>🧭 Playwright Trace</b></summary>
@@ -284,6 +311,7 @@ def render_trace_open_block(trace_path: Path)->str:
       </script>
     </details>
     """
+
 
 def attach_failure_panel(base_dir: Path, attempt: int):
     page_url = (base_dir / "url.txt").read_text(encoding="utf-8")
@@ -376,4 +404,79 @@ def attach_failure_panel(base_dir: Path, attempt: int):
     )
 
 
+def attach_attempt_summary(attempts: list[dict]):
+    # retry attempt调用链路
+    chain = " → ".join(
+        f"Attempt {a['attempt']} {'❌' if a['status']=='FAILED' else '✔️'}"
+        for a in attempts
+    )
 
+    tabs = ""
+    cards = ""
+
+    for i, a in enumerate(attempts):
+        active = "active" if i == len(attempts) - 1 else ""
+        aid = a["attempt"]
+
+        tabs += f"""
+        <button class="tab {active}" onclick="show({aid})">
+          Attempt {aid}
+        </button>
+        """
+
+        cards += f"""
+        <div id="attempt-{aid}" class="card {active}">
+          <h3>Attempt {aid} {'❌ FAILED' if a['status']=='FAILED' else '✅ PASSED'}</h3>
+          <hr/>
+          ⏱ Duration: {a['duration']}s<br/>
+          💥 Error: {a['error'] or '-'}<br/><br/>
+
+          <b>Artifacts</b><br/>
+          {'✔' if a['has_screenshot'] else '✖'} Screenshot<br/>
+          {'✔' if a['has_video'] else '✖'} Video<br/>
+          {'✔' if a['has_trace'] else '✖'} Trace<br/><br/>
+
+          <a href="#failure-panel-{aid}">
+            ➡ <b>View Failure Panel</b>
+          </a>
+        </div>
+        """
+
+    html = f"""
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {{ font-family: Arial; }}
+  .chain {{ margin-bottom:12px; font-weight:bold; }}
+  .tab {{ margin-right:6px; }}
+  .tab.active {{ font-weight:bold; }}
+  .card {{ display:none; margin-top:12px; }}
+  .card.active {{ display:block; }}
+</style>
+<script>
+function show(id){{
+  document.querySelectorAll('.card').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));
+  document.getElementById('attempt-'+id).classList.add('active');
+}}
+</script>
+</head>
+<body>
+
+<h2>🔁 Attempt Summary</h2>
+
+<div class="chain">{chain}</div>
+
+<div>{tabs}</div>
+
+{cards}
+
+</body>
+</html>
+"""
+    allure.attach(
+        html,
+        name="Attempt Summary",
+        attachment_type=allure.attachment_type.HTML
+    )
