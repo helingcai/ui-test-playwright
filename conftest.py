@@ -148,7 +148,7 @@ def context(browser, request):
             trace,
             name="📎 Playwright-Trace.zip (used by Failure Panel)"
         )
-    attach_failure_panel(target_dir, attempt)
+    render_failure_panel(target_dir, attempt)
 
 
 @pytest.fixture(scope="function")
@@ -400,8 +400,6 @@ def attach_attempt_summary(attempts: list[dict]):
             )
 
         tabs += f"""
-        <br/>
-        <br/>
         <button class="tab {active}" onclick="show({aid})">
           Attempt {aid}
         </button>
@@ -480,3 +478,4 @@ function togglePanel(id) {{
         name="Attempt Summary",
         attachment_type=allure.attachment_type.HTML
     )
+
