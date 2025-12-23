@@ -307,11 +307,11 @@ def attach_open_trace_command(trace_path: Path):
 def attach_failure_panel(base_dir: Path, attempt: int):
     page_url = (base_dir / "url.txt").read_text(encoding="utf-8")
     console_errors = (base_dir / "console_errors.json").read_text(encoding="utf-8")
-    screenshot = base_dir / "failure.png"
-    video = next(base_dir.glob("*.webm"), None)
+    # screenshot = base_dir / "failure.png"
+    # video = next(base_dir.glob("*.webm"), None)
     trace = base_dir / "trace.zip"
     trace_block = (
-        "<pre>npx playwright show-trace trace.zip</pre>"
+        "<pre>npx playwright show-trace Playwright-Trace.zip</pre>"
         if trace.exists()
         else "<i>Trace not available</i>"
     )
@@ -331,8 +331,10 @@ def attach_failure_panel(base_dir: Path, attempt: int):
     <h2>❌ Failure Panel (Attempt {attempt})</h2>
 
     <div class="section">
-      <b>📍 Page URL</b>
-      <pre>{page_url}</pre>
+      <details open>
+        <summary><b>📍 Page URL</b></summary>
+        <pre>{page_url}</pre>
+      </details>
     </div>
 
     <div class="section">
@@ -345,22 +347,21 @@ def attach_failure_panel(base_dir: Path, attempt: int):
     <div class="section">
       <details open>
         <summary><b>📸 Screenshot</b></summary>
-        <img src="{screenshot}" style="max-width:100%; border:1px solid #ccc;" />
+        <p>See attachment below</p>
       </details>
     </div>
 
     <div class="section">
       <details>
         <summary><b>🎥 Video</b></summary>
-        <video controls width="800">
-          <source src="{video.name if video else ''}" type="video/webm">
-        </video>
+        <p>See attachment below</p>
       </details>
     </div>
 
     <div class="section">
       <details>
         <summary><b>🧭 Trace</b></summary>
+        <p>Download <b>Playwright-Trace.zip</b> and run:</p>
         {trace_block}
       </details>
     </div>
@@ -373,7 +374,6 @@ def attach_failure_panel(base_dir: Path, attempt: int):
         name=f"Failure Panel (Attempt {attempt})",
         attachment_type=allure.attachment_type.HTML
     )
-
 
 
 
