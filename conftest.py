@@ -131,6 +131,7 @@ def context(browser, request):
             name="Playwright-Trace.zip"
         )
         attach_open_trace_command(trace)
+    attach_failure_panel(target_dir,attempt)
 
 
 @pytest.fixture(scope="function")
@@ -302,6 +303,77 @@ def attach_open_trace_command(trace_path: Path):
         name="Open Playwright Trace Command (Copy)",
         attachment_type=allure.attachment_type.HTML
     )
+
+def attach_failure_panel(base_dir: Path, attempt: int):
+    page_url = (base_dir / "url.txt").read_text(encoding="utf-8")
+    console_errors = (base_dir / "console_errors.json").read_text(encoding="utf-8")
+    screenshot = base_dir / "failure.png"
+    video = next(base_dir.glob("*.webm"), None)
+    trace = base_dir / "trace.zip"
+    trace_block = (
+        "<pre>npx playwright show-trace trace.zip</pre>"
+        if trace.exists()
+        else "<i>Trace not available</i>"
+    )
+
+    html = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <style>
+      body {{ font-family: Arial; }}
+      .section {{ margin-bottom: 16px; }}
+      details {{ margin-left: 10px; }}
+    </style>
+    </head>
+    <body>
+
+    <h2>❌ Failure Panel (Attempt {attempt})</h2>
+
+    <div class="section">
+      <b>📍 Page URL</b>
+      <pre>{page_url}</pre>
+    </div>
+
+    <div class="section">
+      <details open>
+        <summary><b>❌ Console Errors</b></summary>
+        <pre>{console_errors}</pre>
+      </details>
+    </div>
+
+    <div class="section">
+      <details open>
+        <summary><b>📸 Screenshot</b></summary>
+        <img src="{screenshot}" style="max-width:100%; border:1px solid #ccc;" />
+      </details>
+    </div>
+
+    <div class="section">
+      <details>
+        <summary><b>🎥 Video</b></summary>
+        <video controls width="800">
+          <source src="{video.name if video else ''}" type="video/webm">
+        </video>
+      </details>
+    </div>
+
+    <div class="section">
+      <details>
+        <summary><b>🧭 Trace</b></summary>
+        {trace_block}
+      </details>
+    </div>
+
+    </body>
+    </html>
+    """
+    allure.attach(
+        html,
+        name=f"Failure Panel (Attempt {attempt})",
+        attachment_type=allure.attachment_type.HTML
+    )
+
 
 
 
