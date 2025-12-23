@@ -123,6 +123,11 @@ def context(browser, request):
         "base_dir": str(target_dir)
     })
 
+    # ======== 只在最后一次 attempt attach Attempt Summary ========
+    max_attempts = getattr(request.node.config.option, "reruns", 0) + 1
+    if attempt == max_attempts:
+        # 最后一次attempt
+        attach_attempt_summary(attempts)
 
     #  ======== 捕获执行失败的video、trace ========
     # ❤️重要：video和trace捕获为什么要放在teardown阶段：
@@ -216,16 +221,6 @@ def pytest_runtest_makereport(item, call):
     (base_dir / "url.txt").write_text(page.url, encoding="utf-8") # 生成失败用例URL文件
     (base_dir / "console_errors.json").write_text( # 生成失败用例Console errors文件
         json.dumps(getattr(page, "_console_errors", []), indent=2, ensure_ascii=False),encoding="utf-8")
-
-    # 判断是否是attempt最后一次，如果是形成Attempt Summary数据
-    # 最后一次成功
-    if rep.passed and attempt > 1:
-        attach_attempt_summary(item._attempts)
-
-    # retry 全部失败
-    max_attempts = getattr(item.config.option, "reruns", 0) + 1
-    if rep.failed and attempt == max_attempts:
-        attach_attempt_summary(item._attempts)
 
     # # ========= 此处attach的报告，在Allure Report 的Test Body位置显示 =========
     # # Attach 失败用例截图
