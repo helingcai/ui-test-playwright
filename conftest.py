@@ -1,4 +1,6 @@
 import zipfile
+
+import base64
 from playwright.sync_api import sync_playwright
 from pathlib import Path
 import pytest, shutil, json, allure
@@ -24,7 +26,7 @@ def browser(playwright_instance):
 @pytest.fixture(scope="session", autouse=True)
 def clean_screenshot():
     """测试session启动前，清空artifacts、videos、tracing、allure-results"""
-    for path in ["artifacts", "videos", "tracing", "allure-results","storage"]:
+    for path in ["artifacts", "videos", "tracing", "allure-results", "storage"]:
         p = Path(path)
         if p.exists():
             shutil.rmtree(p)  # 删除目录 p 及其包含的所有文件和子目录。
@@ -55,8 +57,8 @@ def context(browser, request):
     """
     attempt = getattr(request.node, "execution_count", 1)
     attempt_dir = f"attempt_{attempt}"
-    record_video_dir = Path("videos")/attempt_dir
-    record_tracing_dir = Path("tracing")/attempt_dir
+    record_video_dir = Path("videos") / attempt_dir
+    record_tracing_dir = Path("tracing") / attempt_dir
     record_video_dir.mkdir(parents=True, exist_ok=True)
     record_tracing_dir.mkdir(parents=True, exist_ok=True)
 
@@ -119,7 +121,7 @@ def context(browser, request):
     for video in target_dir.glob("*.webm"):
         allure.attach.file(
             video,
-            name="Playwright-Video",
+            name="📎 Video (used by Failure Panel)",
             attachment_type=allure.attachment_type.WEBM
         )
 
@@ -128,10 +130,10 @@ def context(browser, request):
     if trace.exists():
         allure.attach.file(
             trace,
-            name="Playwright-Trace.zip"
+            name="📎 Playwright-Trace.zip"
         )
         attach_open_trace_command(trace)
-    attach_failure_panel(target_dir,attempt)
+    attach_failure_panel(target_dir, attempt)
 
 
 @pytest.fixture(scope="function")
@@ -278,7 +280,7 @@ def attach_open_trace_command(trace_path: Path):
     <script type="text/javascript">
       function copyCmd(button,id) {{
         const el = document.getElementById(id);
-        
+
         el.style.display = 'block';
         el.select();
         document.execCommand('copy');
@@ -288,7 +290,7 @@ def attach_open_trace_command(trace_path: Path):
         const original = button.getAttribute('data-label');
         button.innerText = '✅ Copied';
         button.disabled = true;
-      
+
         // 2 秒后恢复
         setTimeout(() => {{
         button.innerText = original;
@@ -304,12 +306,26 @@ def attach_open_trace_command(trace_path: Path):
         attachment_type=allure.attachment_type.HTML
     )
 
+
 def attach_failure_panel(base_dir: Path, attempt: int):
     page_url = (base_dir / "url.txt").read_text(encoding="utf-8")
-    console_errors = (base_dir / "console_errors.json").read_text(encoding="utf-8")
-    # screenshot = base_dir / "failure.png"
-    # video = next(base_dir.glob("*.webm"), None)
+    console_errors = json.loads((base_dir / "console_errors.json").read_text(encoding="utf-8"))
+
+    screenshot = base_dir / "failure.png"
+    video = next(base_dir.glob("*.webm"), None)
     trace = base_dir / "trace.zip"
+
+    # ===== Screenshot → base64 =====
+    screenshot_base64 = ""
+    if screenshot.exists():
+        screenshot_base64 = base64.b64encode(
+            screenshot.read_bytes()
+        ).decode("utf-8")
+
+    # ===== Console pretty =====
+    console_pretty = json.dumps(console_errors, indent=2, ensure_ascii=False)
+
+    # ===== Trace block =====
     trace_block = (
         "<pre>npx playwright show-trace Playwright-Trace.zip</pre>"
         if trace.exists()
@@ -321,14 +337,22 @@ def attach_failure_panel(base_dir: Path, attempt: int):
     <html>
     <head>
     <style>
-      body {{ font-family: Arial; }}
-      .section {{ margin-bottom: 16px; }}
+      body {{ font-family: Arial, sans-serif; }}
+      h2 {{ color: #b00020; }}
+      .section {{ margin-bottom: 20px; }}
       details {{ margin-left: 10px; }}
+      pre {{ background: #f6f8fa; padding: 10px; }}
+      img {{ max-width: 100%; border: 1px solid #ccc; }}
+      .hint {{ color: #666; font-size: 12px; }}
     </style>
     </head>
     <body>
 
     <h2>❌ Failure Panel (Attempt {attempt})</h2>
+    <p class="hint">
+    This panel aggregates all failure information.<br/>
+    Other attachments are raw data and normally do not need to be opened.
+    </p>
 
     <div class="section">
       <details open>
@@ -340,28 +364,33 @@ def attach_failure_panel(base_dir: Path, attempt: int):
     <div class="section">
       <details open>
         <summary><b>❌ Console Errors</b></summary>
-        <pre>{console_errors}</pre>
+        <pre>{console_pretty}</pre>
       </details>
     </div>
 
     <div class="section">
       <details open>
         <summary><b>📸 Screenshot</b></summary>
-        <p>See attachment below</p>
+        # <p>See attachment below</p>
+        <img src="data:image/png;base64,{screenshot_base64}" />
       </details>
     </div>
 
     <div class="section">
       <details>
         <summary><b>🎥 Video</b></summary>
-        <p>See attachment below</p>
+        <p class="hint">
+          See attachment: <b>📎 Video (used by Failure Panel)</b>
+        </p>
       </details>
     </div>
 
     <div class="section">
       <details>
         <summary><b>🧭 Trace</b></summary>
-        <p>Download <b>Playwright-Trace.zip</b> and run:</p>
+        <p class="hint">
+          Download <b>Playwright-Trace.zip</b> and run:
+        </p>
         {trace_block}
       </details>
     </div>
@@ -374,18 +403,3 @@ def attach_failure_panel(base_dir: Path, attempt: int):
         name=f"Failure Panel (Attempt {attempt})",
         attachment_type=allure.attachment_type.HTML
     )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
