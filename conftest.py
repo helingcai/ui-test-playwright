@@ -415,6 +415,8 @@ def attach_attempt_summary(attempts: list[dict]):
         aid = a["attempt"]
 
         tabs += f"""
+        <br/>
+        <br/>
         <button class="tab {active}" onclick="show({aid})">
           Attempt {aid}
         </button>
@@ -422,13 +424,12 @@ def attach_attempt_summary(attempts: list[dict]):
 
         cards += f"""
         <div id="attempt-{aid}" class="card {active}">
-          <br/>
-          <br/>
+          <br/> 
           <h3>Attempt {aid} {'❌ FAILED' if a['status'] == 'FAILED' else '✅ PASSED'}</h3>
           <hr style="border-top: 1px dashed #ccc;" />
-          🕑 <b>Duration</b>: {a['duration']}s<br/><br/>
-          💥 <b>Error</b>: {a['error'] or '-'}<br/><br/>
-          🌏 <b>URL</b>：{a['url']}<br/><br/><br/>
+          🕑 <b>Duration</b>: {a['duration']}s<br/>
+          💥 <b>Error</b>: {a['error'] or '-'}<br/>
+          🌏 <b>URL</b>：{a['url']}<br/><br/>
 
           <b>Artifacts</b><br/>
           {'✔️' if a['has_screenshot'] else '❌'} Screenshot<br/>
