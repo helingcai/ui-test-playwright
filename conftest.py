@@ -309,7 +309,7 @@ def render_trace_open_block(trace_path: Path) -> str:
     """
 
 
-def attach_failure_panel(base_dir: Path, attempt: int):
+def render_failure_panel(base_dir: Path, attempt: int)->str:
     page_url = (base_dir / "url.txt").read_text(encoding="utf-8")
     console_errors = json.loads((base_dir / "console_errors.json").read_text(encoding="utf-8"))
 
@@ -334,27 +334,9 @@ def attach_failure_panel(base_dir: Path, attempt: int):
         else "<i>Trace not available</i>"
     )
 
-    html = f"""
-    <!DOCTYPE html>
-    <html>
-    <head>
-    <style>
-      body {{ font-family: Arial, sans-serif; }}
-      h2 {{ color: #b00020; }}
-      .section {{ margin-bottom: 20px; }}
-      details {{ margin-left: 10px; }}
-      pre {{ background: #f6f8fa; padding: 10px; }}
-      img {{ max-width: 100%; border: 1px solid #ccc; }}
-      .hint {{ color: #666; font-size: 12px; }}
-    </style>
-    </head>
-    <body>
-
-    <a id="failure-panel-{attempt}"></a>
-    <h2>❌ Failure Panel (Attempt {attempt})</h2>
-    <p class="hint">
-    This panel aggregates all failure information for Attempt {attempt}.
-    </p>
+    return f"""
+    <div class="failure-panel">
+      <h4>❌ Failure Panel (Attempt {attempt})</h4>
 
     <div class="section">
       <details>
@@ -389,15 +371,12 @@ def attach_failure_panel(base_dir: Path, attempt: int):
     <div class="section">
         {trace_block}
     </div>
-
-    </body>
-    </html>
     """
-    allure.attach(
-        html,
-        name=f"Failure Panel (Attempt {attempt})",
-        attachment_type=allure.attachment_type.HTML
-    )
+    # allure.attach(
+    #     html,
+    #     name=f"Failure Panel (Attempt {attempt})",
+    #     attachment_type=allure.attachment_type.HTML
+    # )
 
 
 def attach_attempt_summary(attempts: list[dict]):
@@ -414,6 +393,12 @@ def attach_attempt_summary(attempts: list[dict]):
         active = "active" if i == len(attempts) - 1 else ""
         aid = a["attempt"]
 
+        failure_panel_html = ""
+        if a["status"] == "FAILED":
+            failure_panel_html = render_failure_panel(
+                Path(a["base_dir"]), aid
+            )
+
         tabs += f"""
         <br/>
         <br/>
@@ -426,7 +411,7 @@ def attach_attempt_summary(attempts: list[dict]):
         <div id="attempt-{aid}" class="card {active}">
           <br/> 
           <h3>Attempt {aid} {'❌ FAILED' if a['status'] == 'FAILED' else '✅ PASSED'}</h3>
-          <hr style="border-top: 1px dashed #ccc;" />
+          <hr class="dashed"/>
           🕑 <b>Duration</b>: {a['duration']}s<br/>
           💥 <b>Error</b>: {a['error'] or '-'}<br/>
           🌏 <b>URL</b>：{a['url']}<br/><br/>
@@ -436,11 +421,10 @@ def attach_attempt_summary(attempts: list[dict]):
           {'✔️' if a['has_video'] else '❌'} Video<br/>
           {'✔️' if a['has_trace'] else '❌'} Trace<br/><br/>
 
-          <b>➡️ View Failure Panel</b><br/>
-          <span style="color:#666;font-size:12px;">
-            Open attachment:
-            <b>Failure Panel (Attempt {aid})</b>
-          </span>
+          {'<button onclick="togglePanel('+str(aid)+')">➡ View Failure Panel (Attempt '+str(aid)+')</button>' if a['status']=='FAILED' else ''}
+          <div id="panel-{aid}" class="panel">
+            {failure_panel_html}
+          </div>
         </div>
         """
 
@@ -455,12 +439,26 @@ def attach_attempt_summary(attempts: list[dict]):
   .tab.active {{ font-weight:bold; }}
   .card {{ display:none; margin-top:12px; }}
   .card.active {{ display:block; }}
+  .panel {{ display:none; margin-top:16px; padding:12px; border:1px solid #ddd; background:#fafafa; }}
+
+  hr.dashed {{
+    border: none;
+    border-top: 1px dashed #aaa;
+    margin: 10px 0;
+  }}
+  img {{ max-width:100%; border:1px solid #ccc; }}
 </style>
+
 <script>
 function show(id){{
   document.querySelectorAll('.card').forEach(e=>e.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));
   document.getElementById('attempt-'+id).classList.add('active');
+}}
+
+function togglePanel(id) {{
+  const panel = document.getElementById('panel-'+id);
+  panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
 }}
 </script>
 </head>
