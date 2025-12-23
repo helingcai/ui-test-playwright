@@ -124,11 +124,11 @@ def context(browser, request):
         "base_dir": str(target_dir)
     })
 
-    # ======== 只在最后一次 attempt attach Attempt Summary ========
-    max_attempts = getattr(request.node.config.option, "reruns", 0) + 1
-    if attempt == max_attempts:
-        # 最后一次attempt
-        attach_attempt_summary(attempts)
+    # # ======== 只在最后一次 attempt attach Attempt Summary ========
+    # max_attempts = getattr(request.node.config.option, "reruns", 0) + 1
+    # if attempt == max_attempts:
+    #     # 最后一次attempt
+    #     attach_attempt_summary(attempts)
 
     #  ======== 捕获执行失败的video、trace ========
     # ❤️重要：video和trace捕获为什么要放在teardown阶段：
@@ -251,6 +251,21 @@ def pytest_runtest_makereport(item, call):
     #         attachment_type=allure.attachment_type.JSON
     #     )
 
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_teardown(item, nextitem):
+    yield
+
+    attempts = getattr(item, "_attempts", [])
+    if not attempts:
+        return
+
+    # 只有失败用例才生成 Attempt Summary
+    if not getattr(item, "_failed", False):
+        return
+
+    # ✅ 此时：所有 attempt 的 context teardown 都已完成
+    attach_attempt_summary(attempts)
+
 
 def render_trace_open_block(trace_path: Path) -> str:
     """生成打开trace.zip的命令模板（三端通吃）"""
@@ -336,7 +351,7 @@ def render_failure_panel(base_dir: Path, attempt: int)->str:
 
     return f"""
     <div class="failure-panel">
-      <h4>❌ Failure Panel (Attempt {attempt})</h4>
+      <h4>❌ Failure Panel </h4>
 
     <div class="section">
       <details>
@@ -347,7 +362,7 @@ def render_failure_panel(base_dir: Path, attempt: int)->str:
 
     <div class="section">
       <details>
-        <summary><b>❌ Console Errors</b></summary>
+        <summary><b>💥 Console Errors</b></summary>
         <pre>{console_pretty}</pre>
       </details>
     </div>
@@ -419,7 +434,7 @@ def attach_attempt_summary(attempts: list[dict]):
           {'✔️' if a['has_video'] else '❌'} Video<br/>
           {'✔️' if a['has_trace'] else '❌'} Trace<br/><br/>
 
-          {'<button onclick="togglePanel('+str(aid)+')">➡ View Failure Panel (Attempt '+str(aid)+')</button>' if a['status']=='FAILED' else ''}
+          {'<button onclick="togglePanel('+str(aid)+')">🖲️ View Failure Panel (Attempt '+str(aid)+')</button>' if a['status']=='FAILED' else ''}
           <div id="panel-{aid}" class="panel">
             {failure_panel_html}
           </div>
@@ -478,4 +493,3 @@ function togglePanel(id) {{
         name="Attempt Summary",
         attachment_type=allure.attachment_type.HTML
     )
-
