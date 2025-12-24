@@ -124,11 +124,6 @@ def context(browser, request):
         "base_dir": str(target_dir)
     })
 
-    # ======== 只在最后一次 attempt attach Attempt Summary ========
-    max_attempts = getattr(request.node.config.option, "reruns", 0) + 1
-    if attempt == max_attempts:
-        # 最后一次attempt
-        attach_attempt_summary(attempts)
 
     #  ======== 捕获执行失败的video、trace ========
     # ❤️重要：video和trace捕获为什么要放在teardown阶段：
@@ -148,6 +143,13 @@ def context(browser, request):
             trace,
             name="📎 Playwright-Trace.zip (used by Failure Panel)"
         )
+
+    # ======== 只在最后一次 attempt attach Attempt Summary ========
+    max_attempts = getattr(request.node.config.option, "reruns", 0) + 1
+    if attempt == max_attempts:
+        # 最后一次attempt
+        attach_attempt_summary(attempts)
+
     # render_failure_panel(target_dir, attempt)
 
 
@@ -351,7 +353,7 @@ def render_failure_panel(base_dir: Path, attempt: int)->str:
 
     return f"""
     <div class="failure-panel">
-      <h4>❌ Failure Panel </h4>
+      <h4>❌ Failure Panel (Attempt{attempt}) </h4>
 
     <div class="section">
       <details>
