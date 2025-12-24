@@ -54,6 +54,7 @@ def context(browser, request):
     - 登录态隔离 都基于 login.json
     - 视频 + tracing 每个 attempt 单独目录
     """
+    print("🟡 CONTEXT SETUP ATTEMPT", getattr(request.node, "execution_count", 1))
     attempt = getattr(request.node, "execution_count", 1)
     attempt_dir = f"attempt_{attempt}"
     record_video_dir = Path("videos") / attempt_dir
@@ -196,6 +197,8 @@ def pytest_runtest_makereport(item, call):
 
     # 收集失败数据
     attempt = getattr(item, "execution_count", 1)
+    print("🔴 MAKEREPORT ATTEMPT", attempt)
+
     if not hasattr(item, "_attempts"):
         item._attempts = []
     record = {
@@ -490,3 +493,4 @@ window.onload = function () {{
         name="Attempt Summary",
         attachment_type=allure.attachment_type.HTML
     )
+
