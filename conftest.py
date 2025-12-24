@@ -124,7 +124,6 @@ def context(browser, request):
         "base_dir": str(target_dir)
     })
 
-
     #  ======== 捕获执行失败的video、trace ========
     # ❤️重要：video和trace捕获为什么要放在teardown阶段：
     # 因为pytest_runtest_makereport hook触发早于context fixture teardown，hook阶段video和trace文件尚未生成，此时捕获会失败
@@ -253,6 +252,7 @@ def pytest_runtest_makereport(item, call):
     #         attachment_type=allure.attachment_type.JSON
     #     )
 
+
 # @pytest.hookimpl(hookwrapper=True)
 # def pytest_runtest_teardown(item, nextitem):
 #     yield
@@ -269,7 +269,8 @@ def pytest_runtest_makereport(item, call):
 #     attach_attempt_summary(attempts)
 
 
-def render_trace_open_block(trace_path: Path) -> str:
+# def render_trace_open_block(trace_path: Path) -> str:
+def render_trace_open_block() -> str:
     """生成打开trace.zip的命令模板（三端通吃）"""
     # project_root = Path.cwd()
 
@@ -326,7 +327,7 @@ def render_trace_open_block(trace_path: Path) -> str:
     """
 
 
-def render_failure_panel(base_dir: Path, attempt: int)->str:
+def render_failure_panel(base_dir: Path, attempt: int) -> str:
     page_url = (base_dir / "url.txt").read_text(encoding="utf-8")
     console_errors = json.loads((base_dir / "console_errors.json").read_text(encoding="utf-8"))
 
@@ -346,9 +347,10 @@ def render_failure_panel(base_dir: Path, attempt: int)->str:
 
     # ===== Trace block =====
     trace_block = (
-        render_trace_open_block(trace)
-        if trace.exists()
-        else "<i>Trace not available</i>"
+        render_trace_open_block()
+        # render_trace_open_block(trace)
+        # if trace.exists()
+        # else "<i>Trace not available</i>"
     )
 
     return f"""
@@ -412,9 +414,7 @@ def attach_attempt_summary(attempts: list[dict]):
 
         failure_panel_html = ""
         if a["status"] == "FAILED":
-            failure_panel_html = render_failure_panel(
-                Path(a["base_dir"]), aid
-            )
+            failure_panel_html = render_failure_panel(Path(a["base_dir"]), aid)
 
         tabs += f"""
         <button class="tab {active}" onclick="show({aid})">
@@ -436,7 +436,7 @@ def attach_attempt_summary(attempts: list[dict]):
           {'✔️' if a['has_video'] else '❌'} Video<br/>
           {'✔️' if a['has_trace'] else '❌'} Trace<br/><br/>
 
-          {'<button onclick="togglePanel('+str(aid)+')">🖲️ View Failure Panel (Attempt '+str(aid)+')</button>' if a['status']=='FAILED' else ''}
+          {'<button onclick="togglePanel(' + str(aid) + ')">🖲️ View Failure Panel (Attempt ' + str(aid) + ')</button>' if a['status'] == 'FAILED' else ''}
           <div id="panel-{aid}" class="panel">
             {failure_panel_html}
           </div>
