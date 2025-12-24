@@ -39,15 +39,15 @@ function togglePanel(id) {
 <div class="chain">Attempt 1 ❌ → Attempt 2 ❌ → Attempt 3 ❌</div>
 
 <div>
-        <button class="tab " onclick="show(1)">
+        <button type="button" class="tab " onclick="show(1);return false;">
           Attempt 1
         </button>
         
-        <button class="tab " onclick="show(2)">
+        <button type="button" class="tab " onclick="show(2);return false;">
           Attempt 2
         </button>
         
-        <button class="tab active" onclick="show(3)">
+        <button type="button" class="tab active" onclick="show(3);return false;">
           Attempt 3
         </button>
         </div>
@@ -58,8 +58,8 @@ function togglePanel(id) {
           <h3>Attempt 1 ❌ FAILED</h3>
           <hr class="dashed"/>
           🕑 <b>Duration</b>: 0.04s<br/>
-          💥 <b>Error</b>: self = <tests.check_out_test.TestCheckOut object at 0x7f34a28d0c70>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f34a2712350>
+          💥 <b>Error</b>: self = <tests.check_out_test.TestCheckOut object at 0x7ff4ef984be0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7ff4ef7ee2f0>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -94,7 +94,7 @@ assertions/check_out_assert.py:10: AssertionError<br/>
           ✔️ Video<br/>
           ✔️ Trace<br/><br/>
 
-          <button onclick="togglePanel(1)">🖲️ View Failure Panel (Attempt 1)</button>
+          <button type="button" onclick="togglePanel(1);return false;">🖲️ View Failure Panel (Attempt 1)</button>
           <div id="panel-1" class="panel">
             
     <div class="failure-panel">
@@ -146,7 +146,7 @@ assertions/check_out_assert.py:10: AssertionError<br/>
         3️⃣ Run in terminal:
       </p>
       <textarea id="trace-cmd" style="display:none;">npx playwright show-trace Playwright-Trace.zip</textarea>
-      <button data-label="📋 Copy show-trace Command" onclick="copyCmd(this,'trace-cmd')">
+      <button type="button" data-label="📋 Copy show-trace Command" onclick="copyCmd(this,'trace-cmd');return false;">
         📋 Copy show-trace Command
       </button>
       <script type="text/javascript">
@@ -181,8 +181,8 @@ assertions/check_out_assert.py:10: AssertionError<br/>
           <h3>Attempt 2 ❌ FAILED</h3>
           <hr class="dashed"/>
           🕑 <b>Duration</b>: 0.01s<br/>
-          💥 <b>Error</b>: self = <tests.check_out_test.TestCheckOut object at 0x7f34a28d0c70>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f34a277f3a0>
+          💥 <b>Error</b>: self = <tests.check_out_test.TestCheckOut object at 0x7ff4ef984be0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7ff4ef85bfa0>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -217,7 +217,7 @@ assertions/check_out_assert.py:10: AssertionError<br/>
           ✔️ Video<br/>
           ✔️ Trace<br/><br/>
 
-          <button onclick="togglePanel(2)">🖲️ View Failure Panel (Attempt 2)</button>
+          <button type="button" onclick="togglePanel(2);return false;">🖲️ View Failure Panel (Attempt 2)</button>
           <div id="panel-2" class="panel">
             
     <div class="failure-panel">
@@ -269,7 +269,7 @@ assertions/check_out_assert.py:10: AssertionError<br/>
         3️⃣ Run in terminal:
       </p>
       <textarea id="trace-cmd" style="display:none;">npx playwright show-trace Playwright-Trace.zip</textarea>
-      <button data-label="📋 Copy show-trace Command" onclick="copyCmd(this,'trace-cmd')">
+      <button type="button" data-label="📋 Copy show-trace Command" onclick="copyCmd(this,'trace-cmd');return false;">
         📋 Copy show-trace Command
       </button>
       <script type="text/javascript">
@@ -304,8 +304,8 @@ assertions/check_out_assert.py:10: AssertionError<br/>
           <h3>Attempt 3 ❌ FAILED</h3>
           <hr class="dashed"/>
           🕑 <b>Duration</b>: 0.01s<br/>
-          💥 <b>Error</b>: self = <tests.check_out_test.TestCheckOut object at 0x7f34a28d0c70>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f34a2718f70>
+          💥 <b>Error</b>: self = <tests.check_out_test.TestCheckOut object at 0x7ff4ef984be0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7ff4ed252410>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -340,7 +340,7 @@ assertions/check_out_assert.py:10: AssertionError<br/>
           ✔️ Video<br/>
           ✔️ Trace<br/><br/>
 
-          <button onclick="togglePanel(3)">🖲️ View Failure Panel (Attempt 3)</button>
+          <button type="button" onclick="togglePanel(3);return false;">🖲️ View Failure Panel (Attempt 3)</button>
           <div id="panel-3" class="panel">
             
     <div class="failure-panel">
@@ -392,7 +392,7 @@ assertions/check_out_assert.py:10: AssertionError<br/>
         3️⃣ Run in terminal:
       </p>
       <textarea id="trace-cmd" style="display:none;">npx playwright show-trace Playwright-Trace.zip</textarea>
-      <button data-label="📋 Copy show-trace Command" onclick="copyCmd(this,'trace-cmd')">
+      <button type="button" data-label="📋 Copy show-trace Command" onclick="copyCmd(this,'trace-cmd');return false;">
         📋 Copy show-trace Command
       </button>
       <script type="text/javascript">
