@@ -24,12 +24,19 @@ function show(id){
   document.querySelectorAll('.card').forEach(e=>e.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));
   document.getElementById('attempt-'+id).classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
 }
 
 function togglePanel(id) {
   const panel = document.getElementById('panel-'+id);
   panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
 }
+
+// 👇 页面加载完成后，自动展示最后一次失败的 Attempt
+window.onload = function () {
+  show(3);
+}
+
 </script>
 </head>
 <body>
@@ -39,15 +46,15 @@ function togglePanel(id) {
 <div class="chain">Attempt 1 ❌ → Attempt 2 ❌ → Attempt 3 ❌</div>
 
 <div>
-        <button type="button" class="tab " onclick="show(1);return false;">
+        <button type="button" id="tab-1" class="tab " onclick="show(1);return false;">
           Attempt 1
         </button>
         
-        <button type="button" class="tab " onclick="show(2);return false;">
+        <button type="button" id="tab-2" class="tab " onclick="show(2);return false;">
           Attempt 2
         </button>
         
-        <button type="button" class="tab active" onclick="show(3);return false;">
+        <button type="button" id="tab-3" class="tab active" onclick="show(3);return false;">
           Attempt 3
         </button>
         </div>
@@ -58,8 +65,8 @@ function togglePanel(id) {
           <h3>Attempt 1 ❌ FAILED</h3>
           <hr class="dashed"/>
           🕑 <b>Duration</b>: 0.04s<br/>
-          💥 <b>Error</b>: self = <tests.check_out_test.TestCheckOut object at 0x7ff4ef984be0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7ff4ef7ee2f0>
+          💥 <b>Error</b>: self = <tests.check_out_test.TestCheckOut object at 0x7fb8b4988b20>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fb8b47f3f40>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -181,8 +188,8 @@ assertions/check_out_assert.py:10: AssertionError<br/>
           <h3>Attempt 2 ❌ FAILED</h3>
           <hr class="dashed"/>
           🕑 <b>Duration</b>: 0.01s<br/>
-          💥 <b>Error</b>: self = <tests.check_out_test.TestCheckOut object at 0x7ff4ef984be0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7ff4ef85bfa0>
+          💥 <b>Error</b>: self = <tests.check_out_test.TestCheckOut object at 0x7fb8b4988b20>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fb8b48799c0>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -304,8 +311,8 @@ assertions/check_out_assert.py:10: AssertionError<br/>
           <h3>Attempt 3 ❌ FAILED</h3>
           <hr class="dashed"/>
           🕑 <b>Duration</b>: 0.01s<br/>
-          💥 <b>Error</b>: self = <tests.check_out_test.TestCheckOut object at 0x7ff4ef984be0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7ff4ed252410>
+          💥 <b>Error</b>: self = <tests.check_out_test.TestCheckOut object at 0x7fb8b4988b20>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fb8b23a41c0>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
