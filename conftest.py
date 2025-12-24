@@ -423,9 +423,9 @@ def attach_attempt_summary(attempts: list[dict]):
           <br/> 
           <h3>Attempt {aid} {'❌ FAILED' if a['status'] == 'FAILED' else '✅ PASSED'}</h3>
           <hr class="dashed"/>
-          🕑 <b>Duration</b>: {a['duration']}s<br/>
-          💥 <b>Error</b>: {a['error'] or '-'}<br/>
-          🌏 <b>URL</b>：{a['url']}<br/><br/>
+          🕑 Duration : {a['duration']}s<br/>
+          💥 Error : {a['error'] or '-'}<br/>
+          🌏 URL ：{a['url']}<br/><br/>
 
           <b>Artifacts</b><br/>
           {'✔️' if a['has_screenshot'] else '❌'} Screenshot<br/>
@@ -455,6 +455,12 @@ def attach_attempt_summary(attempts: list[dict]):
   .card {{ display:none; margin-top:12px; }}
   .card.active {{ display:block; }}
   .panel {{ display:none; margin-top:16px; padding:12px; border:1px solid #ddd; background:#fafafa; }}
+
+  #buttons {{
+    margin-top: 20px; /* 调整这个值可以增加或减少间距 */
+    display: flex;
+    gap: 10px; /* 按钮之间的间距 */
+  }}
 
   hr.dashed {{
     border: none;
@@ -502,3 +508,4 @@ window.onload = function () {{
         name="Attempt Summary",
         attachment_type=allure.attachment_type.HTML
     )
+
