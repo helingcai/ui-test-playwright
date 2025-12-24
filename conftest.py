@@ -449,15 +449,15 @@ def attach_attempt_summary(attempts: list[dict]):
 <head>
 <style>
   body {{ font-family: Arial; }}
-  .chain {{ margin-bottom:12px; font-weight:bold; }}
+  .chain {{ margin-bottom:5px; font-weight:bold; }}
   .tab {{ margin-right:6px; }}
   .tab.active {{ font-weight:bold; }}
   .card {{ display:none; margin-top:12px; }}
   .card.active {{ display:block; }}
   .panel {{ display:none; margin-top:16px; padding:12px; border:1px solid #ddd; background:#fafafa; }}
 
-  #buttons {{
-    margin-top: 20px; /* 调整这个值可以增加或减少间距 */
+  #buttons button {{
+    margin-top:20px;
     display: flex;
     gap: 10px; /* 按钮之间的间距 */
   }}
@@ -508,4 +508,5 @@ window.onload = function () {{
         name="Attempt Summary",
         attachment_type=allure.attachment_type.HTML
     )
+
 
