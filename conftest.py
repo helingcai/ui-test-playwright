@@ -253,22 +253,6 @@ def pytest_runtest_makereport(item, call):
     #     )
 
 
-# @pytest.hookimpl(hookwrapper=True)
-# def pytest_runtest_teardown(item, nextitem):
-#     yield
-#
-#     attempts = getattr(item, "_attempts", [])
-#     if not attempts:
-#         return
-#
-#     # 只有失败用例才生成 Attempt Summary
-#     if not getattr(item, "_failed", False):
-#         return
-#
-#     # ✅ 此时：所有 attempt 的 context teardown 都已完成
-#     attach_attempt_summary(attempts)
-
-
 # def render_trace_open_block(trace_path: Path) -> str:
 def render_trace_open_block() -> str:
     """生成打开trace.zip的命令模板（三端通吃）"""
@@ -300,7 +284,7 @@ def render_trace_open_block() -> str:
         3️⃣ Run in terminal:
       </p>
       <textarea id="trace-cmd" style="display:none;">npx playwright show-trace Playwright-Trace.zip</textarea>
-      <button data-label="📋 Copy show-trace Command" onclick="copyCmd(this,'trace-cmd')">
+      <button type="button" data-label="📋 Copy show-trace Command" onclick="copyCmd(this,'trace-cmd');return false;">
         📋 Copy show-trace Command
       </button>
       <script type="text/javascript">
@@ -409,15 +393,21 @@ def attach_attempt_summary(attempts: list[dict]):
     cards = ""
 
     for i, a in enumerate(attempts):
-        active = "active" if i == len(attempts) - 1 else ""
+        # 默认激活最后一次失败的Attempt
+        last_failed = max(
+            (a["attempt"] for a in attempts if a["status"] == "FAILED"),
+            default=attempts[-1]["attempt"]
+        )
         aid = a["attempt"]
+        active = "active" if aid == last_failed else ""
+
 
         failure_panel_html = ""
         if a["status"] == "FAILED":
             failure_panel_html = render_failure_panel(Path(a["base_dir"]), aid)
 
         tabs += f"""
-        <button class="tab {active}" onclick="show({aid})">
+        <button type="button" class="tab {active}" onclick="show({aid});return false;">
           Attempt {aid}
         </button>
         """
@@ -436,7 +426,7 @@ def attach_attempt_summary(attempts: list[dict]):
           {'✔️' if a['has_video'] else '❌'} Video<br/>
           {'✔️' if a['has_trace'] else '❌'} Trace<br/><br/>
 
-          {'<button onclick="togglePanel(' + str(aid) + ')">🖲️ View Failure Panel (Attempt ' + str(aid) + ')</button>' if a['status'] == 'FAILED' else ''}
+          {'<button type="button" onclick="togglePanel(' + str(aid) + ');return false;">🖲️ View Failure Panel (Attempt ' + str(aid) + ')</button>' if a['status'] == 'FAILED' else ''}
           <div id="panel-{aid}" class="panel">
             {failure_panel_html}
           </div>
