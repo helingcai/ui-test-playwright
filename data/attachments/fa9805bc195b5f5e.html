@@ -11,6 +11,12 @@
   .card.active { display:block; }
   .panel { display:none; margin-top:16px; padding:12px; border:1px solid #ddd; background:#fafafa; }
 
+  #buttons {
+    margin-top: 20px; /* 调整这个值可以增加或减少间距 */
+    display: flex;
+    gap: 10px; /* 按钮之间的间距 */
+  }
+
   hr.dashed {
     border: none;
     border-top: 1px dashed #aaa;
@@ -64,9 +70,9 @@ window.onload = function () {
           <br/> 
           <h3>Attempt 1 ❌ FAILED</h3>
           <hr class="dashed"/>
-          🕑 <b>Duration</b>: 0.03s<br/>
-          💥 <b>Error</b>: self = <tests.check_out_test.TestCheckOut object at 0x7fdd9b8eb310>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fdd9b8ff6d0>
+          🕑 Duration : 0.03s<br/>
+          💥 Error : self = <tests.check_out_test.TestCheckOut object at 0x7fa200ceb250>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fa200ca7430>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -94,7 +100,7 @@ actual_msg = 'Thank you for your order!', expect_msg = '哈哈哈!'
 E       AssertionError: 预期提示信息：哈哈哈!，不存在于Thank you for your order!
 
 assertions/check_out_assert.py:10: AssertionError<br/>
-          🌏 <b>URL</b>：https://www.saucedemo.com/checkout-complete.html<br/><br/>
+          🌏 URL ：https://www.saucedemo.com/checkout-complete.html<br/><br/>
 
           <b>Artifacts</b><br/>
           ✔️ Screenshot<br/>
@@ -188,9 +194,9 @@ assertions/check_out_assert.py:10: AssertionError<br/>
           <br/> 
           <h3>Attempt 2 ❌ FAILED</h3>
           <hr class="dashed"/>
-          🕑 <b>Duration</b>: 0.01s<br/>
-          💥 <b>Error</b>: self = <tests.check_out_test.TestCheckOut object at 0x7fdd9b8eb310>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fdd992d8e50>
+          🕑 Duration : 0.01s<br/>
+          💥 Error : self = <tests.check_out_test.TestCheckOut object at 0x7fa200ceb250>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fa200b070d0>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -218,7 +224,7 @@ actual_msg = 'Thank you for your order!', expect_msg = '哈哈哈!'
 E       AssertionError: 预期提示信息：哈哈哈!，不存在于Thank you for your order!
 
 assertions/check_out_assert.py:10: AssertionError<br/>
-          🌏 <b>URL</b>：https://www.saucedemo.com/checkout-complete.html<br/><br/>
+          🌏 URL ：https://www.saucedemo.com/checkout-complete.html<br/><br/>
 
           <b>Artifacts</b><br/>
           ✔️ Screenshot<br/>
@@ -312,9 +318,9 @@ assertions/check_out_assert.py:10: AssertionError<br/>
           <br/> 
           <h3>Attempt 3 ❌ FAILED</h3>
           <hr class="dashed"/>
-          🕑 <b>Duration</b>: 0.01s<br/>
-          💥 <b>Error</b>: self = <tests.check_out_test.TestCheckOut object at 0x7fdd9b8eb310>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fdd99160be0>
+          🕑 Duration : 0.01s<br/>
+          💥 Error : self = <tests.check_out_test.TestCheckOut object at 0x7fa200ceb250>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fa1fe547940>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -342,7 +348,7 @@ actual_msg = 'Thank you for your order!', expect_msg = '哈哈哈!'
 E       AssertionError: 预期提示信息：哈哈哈!，不存在于Thank you for your order!
 
 assertions/check_out_assert.py:10: AssertionError<br/>
-          🌏 <b>URL</b>：https://www.saucedemo.com/checkout-complete.html<br/><br/>
+          🌏 URL ：https://www.saucedemo.com/checkout-complete.html<br/><br/>
 
           <b>Artifacts</b><br/>
           ✔️ Screenshot<br/>
