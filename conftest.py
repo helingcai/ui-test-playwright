@@ -393,21 +393,15 @@ def attach_attempt_summary(attempts: list[dict]):
     cards = ""
 
     for i, a in enumerate(attempts):
-        # 默认激活最后一次失败的Attempt
-        last_failed = max(
-            (a["attempt"] for a in attempts if a["status"] == "FAILED"),
-            default=attempts[-1]["attempt"]
-        )
+        active = "active" if i == len(attempts) - 1 else ""
         aid = a["attempt"]
-        active = "active" if aid == last_failed else ""
-
 
         failure_panel_html = ""
         if a["status"] == "FAILED":
             failure_panel_html = render_failure_panel(Path(a["base_dir"]), aid)
 
         tabs += f"""
-        <button type="button" class="tab {active}" onclick="show({aid});return false;">
+        <button type="button" id="tab-{aid}" class="tab {active}" onclick="show({aid});return false;">
           Attempt {aid}
         </button>
         """
@@ -432,6 +426,10 @@ def attach_attempt_summary(attempts: list[dict]):
           </div>
         </div>
         """
+    last_failed = max(
+        (a["attempt"] for a in attempts if a["status"] == "FAILED"),
+        default=attempts[-1]["attempt"]
+    )
 
     html = f"""
 <!DOCTYPE html>
@@ -459,12 +457,19 @@ function show(id){{
   document.querySelectorAll('.card').forEach(e=>e.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));
   document.getElementById('attempt-'+id).classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
 }}
 
 function togglePanel(id) {{
   const panel = document.getElementById('panel-'+id);
   panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
 }}
+
+// 👇 页面加载完成后，自动展示最后一次失败的 Attempt
+window.onload = function () {{
+  show({last_failed});
+}}
+
 </script>
 </head>
 <body>
