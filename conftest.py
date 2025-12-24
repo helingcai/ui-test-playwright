@@ -54,8 +54,10 @@ def context(browser, request):
     - 登录态隔离 都基于 login.json
     - 视频 + tracing 每个 attempt 单独目录
     """
-    print("🟡 CONTEXT SETUP ATTEMPT", getattr(request.node, "execution_count", 1))
     attempt = getattr(request.node, "execution_count", 1)
+    # 🔒 锁定本次 context 对应的 attempt（关键）
+    request.node._current_attempt = attempt
+
     attempt_dir = f"attempt_{attempt}"
     record_video_dir = Path("videos") / attempt_dir
     record_tracing_dir = Path("tracing") / attempt_dir
@@ -115,13 +117,21 @@ def context(browser, request):
 
     # 将hook阶段收集的 item._attempts 信息补充到artifacts中
     attempts = getattr(request.node, "_attempts", [])
-    current = attempts[-1]
+    # 🔑 用 setup 阶段锁定的 attempt
+    attempt = request.node._current_attempt
+
+    # 精确找到对应 attempt 的 record（而不是 attempts[-1]）
+    current = next(
+        a for a in attempts
+        if a["attempt"] == attempt
+    )
 
     current.update({  # current 不是一个拷贝，它就是 _attempts[-1] 的引用
         "has_screenshot": (target_dir / "failure.png").exists(),
         "has_video": any(target_dir.glob("*.webm")),
         "has_trace": (target_dir / "trace.zip").exists(),
-        "url": (target_dir / "url.txt").exists(),
+        "url": (target_dir / "url.txt").read_text(encoding="utf-8")
+        if (target_dir / "url.txt").exists() else None,
         "base_dir": str(target_dir)
     })
 
@@ -197,18 +207,16 @@ def pytest_runtest_makereport(item, call):
 
     # 收集失败数据
     attempt = getattr(item, "execution_count", 1)
-    
 
     if not hasattr(item, "_attempts"):
         item._attempts = []
-    record = {
+    item._attempts.append({
         "attempt": attempt,
         "status": "FAILED" if rep.failed else "PASSED",
         "duration": duration,
         "error": str(rep.longrepr) if rep.failed else "",
         "url": None  # 稍后在 teardown 补
-    }
-    item._attempts.append(record)
+    })
 
     # 标记失败（跨fixture通信的关键，告诉 context： 👉 这是一次失败执行）
     item._failed = True
@@ -226,12 +234,6 @@ def pytest_runtest_makereport(item, call):
     (base_dir / "url.txt").write_text(page.url, encoding="utf-8")  # 生成失败用例URL文件
     (base_dir / "console_errors.json").write_text(  # 生成失败用例Console errors文件
         json.dumps(getattr(page, "_console_errors", []), indent=2, ensure_ascii=False), encoding="utf-8")
-
-    allure.attach(
-    f"makereport attempt={attempt}",
-    name="DEBUG: makereport",
-    attachment_type=allure.attachment_type.TEXT
-    )
 
     # # ========= 此处attach的报告，在Allure Report 的Test Body位置显示 =========
     # # Attach 失败用例截图
@@ -499,5 +501,3 @@ window.onload = function () {{
         name="Attempt Summary",
         attachment_type=allure.attachment_type.HTML
     )
-
-
