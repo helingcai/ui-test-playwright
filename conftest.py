@@ -197,7 +197,7 @@ def pytest_runtest_makereport(item, call):
 
     # 收集失败数据
     attempt = getattr(item, "execution_count", 1)
-    print("🔴 MAKEREPORT ATTEMPT", attempt)
+    
 
     if not hasattr(item, "_attempts"):
         item._attempts = []
@@ -226,6 +226,12 @@ def pytest_runtest_makereport(item, call):
     (base_dir / "url.txt").write_text(page.url, encoding="utf-8")  # 生成失败用例URL文件
     (base_dir / "console_errors.json").write_text(  # 生成失败用例Console errors文件
         json.dumps(getattr(page, "_console_errors", []), indent=2, ensure_ascii=False), encoding="utf-8")
+
+    allure.attach(
+    f"makereport attempt={attempt}",
+    name="DEBUG: makereport",
+    attachment_type=allure.attachment_type.TEXT
+    )
 
     # # ========= 此处attach的报告，在Allure Report 的Test Body位置显示 =========
     # # Attach 失败用例截图
@@ -493,4 +499,5 @@ window.onload = function () {{
         name="Attempt Summary",
         attachment_type=allure.attachment_type.HTML
     )
+
 
