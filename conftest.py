@@ -453,9 +453,63 @@ def build_retry_insight(attempts: list[dict]) -> list[str]:
     urls = {a["url"] for a in attempts if a["url"]}
     if len(urls) > 1:
         lines.append("• Failed at different URLs")
-
     return lines
 
+def compare_field(attempts: list[dict], field: str, label: str):
+    """ 比较同一字段在不同 attempts 中的差异
+    :param attempts: 一个包含所有 attempts 信息的列表
+    :param field: 需要比较的字段（例如 error, url, duration）
+    :param label: 用于输出的字段标签（例如 'Error', 'URL'）
+    :return: 差异文本，如果没有差异则返回空字符串 """
+    field_values = [attempt.get(field) for attempt in attempts]
+    unique_values = set(field_values)
+
+    if len(unique_values) > 1:
+        return f"Different {label}: {', '.join(map(str, unique_values))}"
+    return ""
+
+def compare_attachments(attempts: list[dict]):
+    """ 比较所有尝试中生成的附件差异（如截图、视频、trace）
+    :param attempts: 一个包含所有 attempts 信息的列表
+    :return: 差异文本，如果没有差异则返回空字符串 """
+    attachment_diff = []
+
+    for field in ['has_screenshot', 'has_video', 'has_trace']:
+        field_values = [attempt.get(field) for attempt in attempts]
+        unique_values = set(field_values)
+
+        if len(unique_values) > 1:
+            attachment_diff.append(f"{field} difference: {', '.join(map(str, unique_values))}")
+
+    return ", ".join(attachment_diff) if attachment_diff else ""
+
+def calculate_attempt_diff(attempts: list[dict]):
+    """ 计算多个 attempts 之间的差异
+    :param attempts: 一个包含所有 attempts 信息的列表
+    :return: diff_summary: 一个包含 attempts 差异分析的文本"""
+    diff_summary = []
+
+    # 错误信息差异
+    error_diff = compare_field(attempts, 'error', 'Error')
+    if error_diff:
+        diff_summary.append(f"🛑 Error Differences: {error_diff}")
+
+    # 页面 URL 差异
+    url_diff = compare_field(attempts, 'url', 'URL')
+    if url_diff:
+        diff_summary.append(f"🌍 URL Differences: {url_diff}")
+
+    # 持续时间差异
+    duration_diff = compare_field(attempts, 'duration', 'Duration')
+    if duration_diff:
+        diff_summary.append(f"⏱ Duration Differences: {duration_diff}")
+
+    # 附件差异（截图、视频、trace）
+    attachments_diff = compare_attachments(attempts)
+    if attachments_diff:
+        diff_summary.append(f"📎 Attachment Differences: {attachments_diff}")
+
+    return "\n".join(diff_summary)
 
 def attach_attempt_summary(attempts: list[dict]):
     # retry attempt调用链路
@@ -471,7 +525,6 @@ def attach_attempt_summary(attempts: list[dict]):
         for a in attempts
     )
 
-    tabs = ""
     tabs = ""
     cards = ""
 
@@ -491,7 +544,6 @@ def attach_attempt_summary(attempts: list[dict]):
 
         cards += f"""
         <div id="attempt-{aid}" class="card {active}">
-          <br/> 
           <h3 class='card-header'>Attempt {aid} {'❌ FAILED' if a['status'] == 'FAILED' else '✅ PASSED'}</h3>
           <hr class="dashed"/>
           <div class="info-block duration">
@@ -538,7 +590,7 @@ def attach_attempt_summary(attempts: list[dict]):
   
   /* ===== Retry Insight ===== */
   .retry-insight {{
-    margin: 12px 0 20px;
+    margin: 12px 0 12px;
     padding: 12px 16px;
     border-left: 4px solid #f0ad4e;
     background: #fff8e1;}}
@@ -570,9 +622,9 @@ def attach_attempt_summary(attempts: list[dict]):
   
   /* ===== Tabs ===== */
   .tabs {{
-    margin-bottom: 16px;}}
+    margin-bottom: 10px;}}
   .tab {{
-    padding: 10px 20px;
+    padding: 8px 15px;
     margin-right: 8px;
     # background-color: #e0f7fa;
     cursor: pointer;
@@ -583,12 +635,12 @@ def attach_attempt_summary(attempts: list[dict]):
   }}*/
   .tab.active {{
     background-color: #e0f7fa;
-    color: black;}}
+    color: white;}}
     
   /* ===== Attempt Card ===== */
   .card {{
     display: none;
-    margin-top: 20px;
+    margin-top: 3px;
     background-color: #ffffff;
     padding: 20px;
     border: 1px solid #ddd;
@@ -670,16 +722,16 @@ def attach_attempt_summary(attempts: list[dict]):
   
   /* ===== Styling for Buttons ===== */
   button {{
-    padding: 10px 15px;
-    background-color: #4CAF50;
-    color: white;
+    padding: 8px 12px;
+    background-color: #e0f7fa;
+    color: black;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
   }}
   button:hover {{
-    background-color: #45a049;
+    background-color: #00bcd4;
   }}
   
   /* ===== Failure Panel Button ===== */
