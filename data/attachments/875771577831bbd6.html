@@ -175,6 +175,24 @@
     border: 1px solid #ddd;
     background-color: #fafafa;
     border-radius: 5px;}
+    
+  /* ===== Attempt Diff Analysis ===== */
+  .attempt_diff .section {
+    margin-bottom: 15px;
+    }
+  .attempt_diff details {
+    margin-bottom: 10px;
+    }
+  .attempt_diff pre {
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 12px;
+    max-height: 300px;
+    overflow-y: scroll;  /* 滚动条 */
+  }
       
     img { max-width:100%; border:1px solid #ccc; }
 </style>
@@ -226,12 +244,12 @@ window.onload = function () {
           <h3 class='card-header'>Attempt 1 ❌ FAILED</h3>
           <hr class="dashed"/>
           <div class="info-block duration">
-            🕑 Duration: <span>0.04s</span>
+            🕑 Duration: <span>0.03s</span>
           </div>
           
           <div class="info-block error">
-            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f9cf86c52d0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f9cf605ceb0>
+            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f04d17850f0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f04d0175030>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -402,8 +420,8 @@ assertions/check_out_assert.py:10: AssertionError</pre>
           </div>
           
           <div class="info-block error">
-            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f9cf86c52d0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f9cf608b310>
+            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f04d17850f0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f04d01abd00>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -574,8 +592,8 @@ assertions/check_out_assert.py:10: AssertionError</pre>
           </div>
           
           <div class="info-block error">
-            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f9cf86c52d0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f9cf8582770>
+            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f04d17850f0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f04caf55900>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -740,12 +758,103 @@ assertions/check_out_assert.py:10: AssertionError</pre>
         
 
 
+    <div class="attempt_diff">
         <div class="section">
             <details>
               <summary><b>🔍 Attempt Diff Analysis</b></summary>
-              <pre>🛑 Error Differences: Different Error: self = <tests.check_out_test.TestCheckOut object at 0x7f9cf86c52d0> check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f9cf8582770>      def test_finish_submit_order(self, check_out_page):         """验证提交订单"""         check_out_page.prepare(URLS[ENV]["inventory"], ADD_PRODUCT_NUM, "/cart.html", "/checkout-step-one.html")         check_out_page.fill_container(CONTAINER_INFO["first_name"], CONTAINER_INFO["last_name"],                                       CONTAINER_INFO["postal"])         check_out_page.stet_one_continue("/checkout-step-two.html")         check_out_page.verify_order_products_match_added()         check_out_page.verify_order_base_info()         check_out_page.step_two_submit("/checkout-complete.html") >       check_out_page.verify_submit_order(FINISH_PAGE_MESSAGE)  tests/check_out_test.py:50:  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _  pages/check_out_page.py:151: in verify_submit_order     CheckOutAssert.tips_message(self.text(self.finish_message), finish_message) _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _   actual_msg = 'Thank you for your order!', expect_msg = '哈哈哈!'      @staticmethod     def tips_message(actual_msg: str, expect_msg: str):         """收件人为空，点击continue按钮""" >       assert expect_msg in actual_msg, f"预期提示信息：{expect_msg}，不存在于{actual_msg}" E       AssertionError: 预期提示信息：哈哈哈!，不存在于Thank you for your order!  assertions/check_out_assert.py:10: AssertionError self = <tests.check_out_test.TestCheckOut object at 0x7f9cf86c52d0> check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f9cf605ceb0>      def test_finish_submit_order(self, check_out_page):         """验证提交订单"""         check_out_page.prepare(URLS[ENV]["inventory"], ADD_PRODUCT_NUM, "/cart.html", "/checkout-step-one.html")         check_out_page.fill_container(CONTAINER_INFO["first_name"], CONTAINER_INFO["last_name"],                                       CONTAINER_INFO["postal"])         check_out_page.stet_one_continue("/checkout-step-two.html")         check_out_page.verify_order_products_match_added()         check_out_page.verify_order_base_info()         check_out_page.step_two_submit("/checkout-complete.html") >       check_out_page.verify_submit_order(FINISH_PAGE_MESSAGE)  tests/check_out_test.py:50:  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _  pages/check_out_page.py:151: in verify_submit_order     CheckOutAssert.tips_message(self.text(self.finish_message), finish_message) _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _   actual_msg = 'Thank you for your order!', expect_msg = '哈哈哈!'      @staticmethod     def tips_message(actual_msg: str, expect_msg: str):         """收件人为空，点击continue按钮""" >       assert expect_msg in actual_msg, f"预期提示信息：{expect_msg}，不存在于{actual_msg}" E       AssertionError: 预期提示信息：哈哈哈!，不存在于Thank you for your order!  assertions/check_out_assert.py:10: AssertionError self = <tests.check_out_test.TestCheckOut object at 0x7f9cf86c52d0> check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f9cf608b310>      def test_finish_submit_order(self, check_out_page):         """验证提交订单"""         check_out_page.prepare(URLS[ENV]["inventory"], ADD_PRODUCT_NUM, "/cart.html", "/checkout-step-one.html")         check_out_page.fill_container(CONTAINER_INFO["first_name"], CONTAINER_INFO["last_name"],                                       CONTAINER_INFO["postal"])         check_out_page.stet_one_continue("/checkout-step-two.html")         check_out_page.verify_order_products_match_added()         check_out_page.verify_order_base_info()         check_out_page.step_two_submit("/checkout-complete.html") >       check_out_page.verify_submit_order(FINISH_PAGE_MESSAGE)  tests/check_out_test.py:50:  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _  pages/check_out_page.py:151: in verify_submit_order     CheckOutAssert.tips_message(self.text(self.finish_message), finish_message) _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _   actual_msg = 'Thank you for your order!', expect_msg = '哈哈哈!'      @staticmethod     def tips_message(actual_msg: str, expect_msg: str):         """收件人为空，点击continue按钮""" >       assert expect_msg in actual_msg, f"预期提示信息：{expect_msg}，不存在于{actual_msg}" E       AssertionError: 预期提示信息：哈哈哈!，不存在于Thank you for your order!  assertions/check_out_assert.py:10: AssertionError ⏱ Duration Differences: Different Duration: 0.04 0.01</pre>
+              <pre>🛑 Error Differences: <br>Different Error:
+self = <tests.check_out_test.TestCheckOut object at 0x7f04d17850f0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f04d01abd00>
+
+    def test_finish_submit_order(self, check_out_page):
+        """验证提交订单"""
+        check_out_page.prepare(URLS[ENV]["inventory"], ADD_PRODUCT_NUM, "/cart.html", "/checkout-step-one.html")
+        check_out_page.fill_container(CONTAINER_INFO["first_name"], CONTAINER_INFO["last_name"],
+                                      CONTAINER_INFO["postal"])
+        check_out_page.stet_one_continue("/checkout-step-two.html")
+        check_out_page.verify_order_products_match_added()
+        check_out_page.verify_order_base_info()
+        check_out_page.step_two_submit("/checkout-complete.html")
+>       check_out_page.verify_submit_order(FINISH_PAGE_MESSAGE)
+
+tests/check_out_test.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pages/check_out_page.py:151: in verify_submit_order
+    CheckOutAssert.tips_message(self.text(self.finish_message), finish_message)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+actual_msg = 'Thank you for your order!', expect_msg = '哈哈哈!'
+
+    @staticmethod
+    def tips_message(actual_msg: str, expect_msg: str):
+        """收件人为空，点击continue按钮"""
+>       assert expect_msg in actual_msg, f"预期提示信息：{expect_msg}，不存在于{actual_msg}"
+E       AssertionError: 预期提示信息：哈哈哈!，不存在于Thank you for your order!
+
+assertions/check_out_assert.py:10: AssertionError
+self = <tests.check_out_test.TestCheckOut object at 0x7f04d17850f0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f04d0175030>
+
+    def test_finish_submit_order(self, check_out_page):
+        """验证提交订单"""
+        check_out_page.prepare(URLS[ENV]["inventory"], ADD_PRODUCT_NUM, "/cart.html", "/checkout-step-one.html")
+        check_out_page.fill_container(CONTAINER_INFO["first_name"], CONTAINER_INFO["last_name"],
+                                      CONTAINER_INFO["postal"])
+        check_out_page.stet_one_continue("/checkout-step-two.html")
+        check_out_page.verify_order_products_match_added()
+        check_out_page.verify_order_base_info()
+        check_out_page.step_two_submit("/checkout-complete.html")
+>       check_out_page.verify_submit_order(FINISH_PAGE_MESSAGE)
+
+tests/check_out_test.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pages/check_out_page.py:151: in verify_submit_order
+    CheckOutAssert.tips_message(self.text(self.finish_message), finish_message)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+actual_msg = 'Thank you for your order!', expect_msg = '哈哈哈!'
+
+    @staticmethod
+    def tips_message(actual_msg: str, expect_msg: str):
+        """收件人为空，点击continue按钮"""
+>       assert expect_msg in actual_msg, f"预期提示信息：{expect_msg}，不存在于{actual_msg}"
+E       AssertionError: 预期提示信息：哈哈哈!，不存在于Thank you for your order!
+
+assertions/check_out_assert.py:10: AssertionError
+self = <tests.check_out_test.TestCheckOut object at 0x7f04d17850f0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f04caf55900>
+
+    def test_finish_submit_order(self, check_out_page):
+        """验证提交订单"""
+        check_out_page.prepare(URLS[ENV]["inventory"], ADD_PRODUCT_NUM, "/cart.html", "/checkout-step-one.html")
+        check_out_page.fill_container(CONTAINER_INFO["first_name"], CONTAINER_INFO["last_name"],
+                                      CONTAINER_INFO["postal"])
+        check_out_page.stet_one_continue("/checkout-step-two.html")
+        check_out_page.verify_order_products_match_added()
+        check_out_page.verify_order_base_info()
+        check_out_page.step_two_submit("/checkout-complete.html")
+>       check_out_page.verify_submit_order(FINISH_PAGE_MESSAGE)
+
+tests/check_out_test.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pages/check_out_page.py:151: in verify_submit_order
+    CheckOutAssert.tips_message(self.text(self.finish_message), finish_message)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+actual_msg = 'Thank you for your order!', expect_msg = '哈哈哈!'
+
+    @staticmethod
+    def tips_message(actual_msg: str, expect_msg: str):
+        """收件人为空，点击continue按钮"""
+>       assert expect_msg in actual_msg, f"预期提示信息：{expect_msg}，不存在于{actual_msg}"
+E       AssertionError: 预期提示信息：哈哈哈!，不存在于Thank you for your order!
+
+assertions/check_out_assert.py:10: AssertionError<br>⏱ Duration Differences: Different Duration:
+0.03
+0.01</pre>
             </details>
         </div>
+    </div>
      <!-- Add the diff summary here -->
 
 </body>
