@@ -495,7 +495,7 @@ def calculate_attempt_diff(attempts: list[dict]):
     # 错误信息差异
     error_diff = compare_field(attempts, 'error', 'Error')
     if error_diff:
-        diff_summary.append(f"🛑 Error Differences: {error_diff}")
+        diff_summary.append(f"🛑 Error Differences: <br>{error_diff}")
 
     # 页面 URL 差异
     url_diff = compare_field(attempts, 'url', 'URL')
@@ -512,7 +512,7 @@ def calculate_attempt_diff(attempts: list[dict]):
     if attachments_diff:
         diff_summary.append(f"📎 Attachment Differences: {attachments_diff}")
 
-    return "\n".join(diff_summary).replace("\n", " ")
+    return "<br>".join(diff_summary)
 
 
 def attach_attempt_summary(attempts: list[dict]):
@@ -579,17 +579,19 @@ def attach_attempt_summary(attempts: list[dict]):
         """
     # 计算 Attempt Diff
     attempt_diff = calculate_attempt_diff(attempts)
-    attempt_diff_html = attempt_diff.replace("\n", "<br>")
+    # attempt_diff_html = attempt_diff.replace("\n", "<br>")
 
     # 加入 Attempt Diff 分析文本
     diff = ""
     diff += f"""
+    <div class="attempt_diff">
         <div class="section">
             <details>
               <summary><b>🔍 Attempt Diff Analysis</b></summary>
-              <pre>{attempt_diff_html}</pre>
+              <pre>{attempt_diff}</pre>
             </details>
         </div>
+    </div>
     """
 
     last_failed = max(
@@ -774,6 +776,24 @@ def attach_attempt_summary(attempts: list[dict]):
     border: 1px solid #ddd;
     background-color: #fafafa;
     border-radius: 5px;}}
+    
+  /* ===== Attempt Diff Analysis ===== */
+  .attempt_diff .section {{
+    margin-bottom: 15px;
+    }}
+  .attempt_diff details {{
+    margin-bottom: 10px;
+    }}
+  .attempt_diff pre {{
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 12px;
+    max-height: 300px;
+    overflow-y: scroll;  /* 滚动条 */
+  }}
       
     img {{ max-width:100%; border:1px solid #ccc; }}
 </style>
@@ -820,4 +840,3 @@ window.onload = function () {{
         name=" Attempt Summary",
         attachment_type=allure.attachment_type.HTML
     )
-
