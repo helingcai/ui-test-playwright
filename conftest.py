@@ -382,7 +382,7 @@ def render_failure_panel(base_dir: Path, attempt: int) -> str:
     </div>
     <style>
       .failure-panel {{
-        padding: 20px;
+        padding: 0px;
         border: 1px solid #ddd;
         background-color: #fafafa;
         font-family: Arial, sans-serif;
@@ -456,7 +456,7 @@ def build_retry_insight(attempts: list[dict]) -> list[str]:
     return lines
 
 
-def compare_field(attempts: list[dict], field: str, label: str):
+def compare_field(attempts: list[dict], field: str):
     """ 比较同一字段在不同 attempts 中的差异
     :param attempts: 一个包含所有 attempts 信息的列表
     :param field: 需要比较的字段（例如 error, url, duration）
@@ -466,7 +466,7 @@ def compare_field(attempts: list[dict], field: str, label: str):
     unique_values = set(field_values)
 
     if len(unique_values) > 1:
-        return f"Different {label}:\n" + "\n".join(map(str, unique_values))
+        return "\n".join(map(str, unique_values))
     return ""
 
 
@@ -493,19 +493,19 @@ def calculate_attempt_diff(attempts: list[dict]):
     diff_summary = []
 
     # 错误信息差异
-    error_diff = compare_field(attempts, 'error', 'Error')
+    error_diff = compare_field(attempts, 'error')
     if error_diff:
         diff_summary.append(f"🛑 Error Differences: <br>{error_diff}")
 
     # 页面 URL 差异
-    url_diff = compare_field(attempts, 'url', 'URL')
+    url_diff = compare_field(attempts, 'url')
     if url_diff:
         diff_summary.append(f"🌍 URL Differences: {url_diff}")
 
     # 持续时间差异
-    duration_diff = compare_field(attempts, 'duration', 'Duration')
+    duration_diff = compare_field(attempts, 'duration')
     if duration_diff:
-        diff_summary.append(f"⏱ Duration Differences: {duration_diff}")
+        diff_summary.append(f"🕣  Duration Differences: {duration_diff}")
 
     # 附件差异（截图、视频、trace）
     attachments_diff = compare_attachments(attempts)
@@ -523,6 +523,9 @@ def attach_attempt_summary(attempts: list[dict]):
         retry_insight_html = "<ul>" + "".join(
             f"<li>{line}</li>" for line in retry_insight
         ) + "</ul>"
+
+    # 计算 Attempt Diff
+    attempt_diff = calculate_attempt_diff(attempts)
 
     chain = " → ".join(
         f"<span class='attempt-status {'failed' if a['status'] == 'FAILED' else 'passed'}'>Attempt {a['attempt']} {'❌' if a['status'] == 'FAILED' else '✔'}</span>"
@@ -577,22 +580,21 @@ def attach_attempt_summary(attempts: list[dict]):
           </div>
         </div>
         """
-    # 计算 Attempt Diff
-    attempt_diff = calculate_attempt_diff(attempts)
+
     # attempt_diff_html = attempt_diff.replace("\n", "<br>")
 
     # 加入 Attempt Diff 分析文本
-    diff = ""
-    diff += f"""
-    <div class="attempt_diff">
-        <div class="section">
-            <details>
-              <summary><b>🔍 Attempt Diff Analysis</b></summary>
-              <pre>{attempt_diff}</pre>
-            </details>
-        </div>
-    </div>
-    """
+    # diff = ""
+    # diff += f"""
+    # <div class="attempt_diff">
+    #     <div class="section">
+    #         <details>
+    #           <summary><b>🔍 Attempt Diff Analysis</b></summary>
+    #           <pre>{attempt_diff}</pre>
+    #         </details>
+    #     </div>
+    # </div>
+    # """
 
     last_failed = max(
         (a["attempt"] for a in attempts if a["status"] == "FAILED"),
@@ -772,7 +774,7 @@ def attach_attempt_summary(attempts: list[dict]):
   .panel {{
     display: none;
     margin-top: 16px;
-    padding: 12px;
+    padding: 5px;
     border: 1px solid #ddd;
     background-color: #fafafa;
     border-radius: 5px;}}
@@ -824,13 +826,16 @@ window.onload = function () {{
   {retry_insight_html}
 </div>
 
+<div class="retry-insight">
+  <h3>🔍 Attempt Diff Analysis</h3>
+  <pre>{attempt_diff}</pre>
+</div>
+
 <div class="chain">{chain}</div>
 <br/><br/>
 <div class="tabs">{tabs}</div>
 
 {cards}
-
-{diff} <!-- Add the diff summary here -->
 
 </body>
 </html>
