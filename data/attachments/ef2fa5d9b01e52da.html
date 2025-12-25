@@ -223,10 +223,13 @@ window.onload = function () {
   <ul><li>• All 3 attempts failed</li><li>• Error message changed between attempts</li></ul>
 </div>
 
-<div class="retry-insight">
-  <h3>🔍 Attempt Diff Analysis</h3>
-  <pre>🛑 Error Differences: <br>self = <tests.check_out_test.TestCheckOut object at 0x7f0239b68fd0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f02385a0be0>
+<div class="section">
+  <summary><b>🔍 Attempt Diff Analysis</b></summary>
+  <pre>
+                <details>
+                  <summary><button>🛑 Error Differences</button></summary>
+                  <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f5a9b974d00>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f5a9939e260>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -254,8 +257,8 @@ actual_msg = 'Thank you for your order!', expect_msg = '哈哈哈!'
 E       AssertionError: 预期提示信息：哈哈哈!，不存在于Thank you for your order!
 
 assertions/check_out_assert.py:10: AssertionError
-self = <tests.check_out_test.TestCheckOut object at 0x7f0239b68fd0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f0239b87c40>
+self = <tests.check_out_test.TestCheckOut object at 0x7f5a9b974d00>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f5a9936fca0>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -283,8 +286,8 @@ actual_msg = 'Thank you for your order!', expect_msg = '哈哈哈!'
 E       AssertionError: 预期提示信息：哈哈哈!，不存在于Thank you for your order!
 
 assertions/check_out_assert.py:10: AssertionError
-self = <tests.check_out_test.TestCheckOut object at 0x7f0239b68fd0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f0238576200>
+self = <tests.check_out_test.TestCheckOut object at 0x7f5a9b974d00>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f5a9b989db0>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -311,8 +314,15 @@ actual_msg = 'Thank you for your order!', expect_msg = '哈哈哈!'
 >       assert expect_msg in actual_msg, f"预期提示信息：{expect_msg}，不存在于{actual_msg}"
 E       AssertionError: 预期提示信息：哈哈哈!，不存在于Thank you for your order!
 
-assertions/check_out_assert.py:10: AssertionError<br>🕣  Duration Differences: 0.04
+assertions/check_out_assert.py:10: AssertionError</pre>
+                </details>
+                
+                <details>
+                  <summary><button>⏱ Duration Differences</button></summary>
+                  <pre>0.04
 0.01</pre>
+                </details>
+                </pre> 
 </div>
 
 <div class="chain"><span class='attempt-status failed'>Attempt 1 ❌</span> → <span class='attempt-status failed'>Attempt 2 ❌</span> → <span class='attempt-status failed'>Attempt 3 ❌</span></div>
@@ -340,8 +350,8 @@ assertions/check_out_assert.py:10: AssertionError<br>🕣  Duration Differences:
           </div>
           
           <div class="info-block error">
-            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f0239b68fd0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f0239b87c40>
+            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f5a9b974d00>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f5a9b989db0>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -512,8 +522,8 @@ assertions/check_out_assert.py:10: AssertionError</pre>
           </div>
           
           <div class="info-block error">
-            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f0239b68fd0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f02385a0be0>
+            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f5a9b974d00>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f5a9939e260>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -684,8 +694,8 @@ assertions/check_out_assert.py:10: AssertionError</pre>
           </div>
           
           <div class="info-block error">
-            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f0239b68fd0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f0238576200>
+            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f5a9b974d00>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f5a9936fca0>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
