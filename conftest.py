@@ -472,6 +472,7 @@ def attach_attempt_summary(attempts: list[dict]):
     )
 
     tabs = ""
+    tabs = ""
     cards = ""
 
     for i, a in enumerate(attempts):
@@ -554,20 +555,16 @@ def attach_attempt_summary(attempts: list[dict]):
   /* ===== Attempt Chain ===== */
   /* General Styling for the Attempt Chain */
   .attempt-status {{
-    display: inline-block;
     padding: 5px 10px;
     margin-right: 10px;
-    background-color: #f7f7f7;
     border-radius: 5px;
     font-weight: bold;
     color: #333;
   }}
   .attempt-status.failed {{
-    background-color: #ffebee; /* Light red */
     color: #f44336;
   }}
   .attempt-status.passed {{
-    background-color: #e8f5e9; /* Light green */
     color: #4caf50;
   }}
   
@@ -577,19 +574,16 @@ def attach_attempt_summary(attempts: list[dict]):
   .tab {{
     padding: 10px 20px;
     margin-right: 8px;
-    border: 1px solid #ddd;
-    background-color: #f0f0f0;
+    # background-color: #e0f7fa;
     cursor: pointer;
-    font-weight: bold;
     border-radius: 5px;
     transition: background-color 0.3s ease;}}
-  .tab:hover {{
+  /*.tab:hover {{
     background-color: #d1d1d1;
-  }}
+  }}*/
   .tab.active {{
-    background-color: #007bff;
-    color: white;
-    border-color: #0056b3;}}
+    background-color: #e0f7fa;
+    color: black;}}
     
   /* ===== Attempt Card ===== */
   .card {{
