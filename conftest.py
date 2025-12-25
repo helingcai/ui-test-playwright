@@ -481,35 +481,75 @@ def attach_attempt_summary(attempts: list[dict]):
 <html>
 <head>
 <style>
-  body {{ font-family: Arial; }}
-  .chain {{ margin-bottom:12px; font-weight:bold; }}
-  .tab {{ margin-right:6px; }}
-  .tab.active {{ font-weight:bold; margin-top:12px;}}
-  .card {{ display:none; margin-top:12px; }}
-  .card.active {{ display:block; }}
-  .panel {{ display:none; margin-top:16px; padding:12px; border:1px solid #ddd; background:#fafafa; }}
-
-  .retry-insight {{
-  margin: 12px 0 16px 0;
-  padding: 10px 12px;
-  border-left: 4px solid #f0ad4e;
-  background: #fff8e1;
-}}
-
-.retry-insight ul {{
-  margin: 6px 0 0 18px;
-}}
-
-.retry-insight li {{
-  margin: 4px 0;
-}}
-
-  hr.dashed {{
-    border: none;
-    border-top: 1px dashed #aaa;
-    margin: 10px 0;
+  body {{
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial;
+  line-height: 1.6;
+  color: #333;}}
+  
+  /* ===== Attempt Chain ===== */
+  .chain {{
+    margin: 16px 0 12px;
+    font-weight: bold;
+    font-size: 14px;
   }}
-  img {{ max-width:100%; border:1px solid #ccc; }}
+  
+  /* ===== Tabs ===== */
+  .tabs {{
+    margin-bottom: 16px;}}
+  .tab {{
+    padding: 4px 10px;
+    margin-right: 6px;
+    border: 1px solid #ccc;
+    background: #f7f7f7;
+    cursor: pointer;}}
+  .tab.active {{
+    font-weight: bold;
+    background: #e6f2ff;
+    border-color: #4da3ff;}}
+    
+  /* ===== Attempt Card ===== */
+  .card {{
+    display: none;
+    margin-top: 12px;
+    padding: 14px;
+    border: 1px solid #ddd;
+    background: #fafafa;}}
+  .card.active {{
+    display: block;}}
+  .card h3 {{
+    margin-top: 0;}}
+    
+  /* ===== Failure Panel ===== */
+  .panel {{
+    display: none;
+    margin-top: 16px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    background: #ffffff;}}
+    
+  /* ===== Retry Insight ===== */
+  .retry-insight {{
+    margin: 12px 0 20px;
+    padding: 12px 16px;
+    border-left: 4px solid #f0ad4e;
+    background: #fff8e1;}}
+  .retry-insight h3 {{
+    margin: 0 0 6px;
+    font-size: 16px;}}
+  .retry-insight ul {{
+    list-style: none;   /* 去掉 HTML 自带的圆点 */
+    padding-left: 0;
+    margin: 6px 0 0;}}
+  .retry-insight li {{
+    margin: 4px 0;}}
+    
+  /* ===== Common ===== */    
+    hr.dashed {{
+      border: none;
+      border-top: 1px dashed #aaa;
+      margin: 10px 0;}}
+      
+    img {{ max-width:100%; border:1px solid #ccc; }}
 </style>
 
 <script>
@@ -519,21 +559,18 @@ function show(id){{
   document.getElementById('attempt-'+id).classList.add('active');
   document.getElementById('tab-'+id).classList.add('active');
 }}
-
 function togglePanel(id) {{
   const panel = document.getElementById('panel-'+id);
   panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
 }}
-
-// 👇 页面加载完成后，自动展示最后一次失败的 Attempt
+/* 👇 页面加载完成后，自动展示最后一次失败的 Attempt */
 window.onload = function () {{
   show({last_failed});
 }}
-
 </script>
 </head>
-<body>
 
+<body>
 <h2>🔁 Attempt Summary</h2>
 
 <div class="retry-insight">
@@ -543,7 +580,7 @@ window.onload = function () {{
 
 <div class="chain">{chain}</div>
 
-<div>{tabs}</div>
+<div class="tabs">{tabs}</div>
 
 {cards}
 
