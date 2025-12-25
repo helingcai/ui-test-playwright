@@ -466,7 +466,8 @@ def compare_field(attempts: list[dict], field: str, label: str):
     unique_values = set(field_values)
 
     if len(unique_values) > 1:
-        return f"Different {label}: {', '.join(map(str, unique_values))}"
+        # return f"Different {label}: {', '.join(map(str, unique_values))}"
+        return f"Different {label}:\n" + "\n".join(map(str, unique_values))
     return ""
 
 
@@ -813,3 +814,4 @@ window.onload = function () {{
         name=" Attempt Summary",
         attachment_type=allure.attachment_type.HTML
     )
+
