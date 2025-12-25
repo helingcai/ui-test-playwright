@@ -467,7 +467,7 @@ def attach_attempt_summary(attempts: list[dict]):
         ) + "</ul>"
 
     chain = " → ".join(
-        f"Attempt {a['attempt']} {'❌' if a['status'] == 'FAILED' else '✔️'}"
+        f"<span class='attempt-status { 'failed' if a['status'] == 'FAILED' else 'passed' }'>Attempt {a['attempt']} {'❌' if a['status'] == 'FAILED' else '✔'}</span>"
         for a in attempts
     )
 
@@ -491,7 +491,7 @@ def attach_attempt_summary(attempts: list[dict]):
         cards += f"""
         <div id="attempt-{aid}" class="card {active}">
           <br/> 
-          <h3>Attempt {aid} {'❌ FAILED' if a['status'] == 'FAILED' else '✅ PASSED'}</h3>
+          <h3 class='card-header'>Attempt {aid} {'❌ FAILED' if a['status'] == 'FAILED' else '✅ PASSED'}</h3>
           <hr class="dashed"/>
           <div class="info-block duration">
             🕑 Duration: <span>{a['duration']}s</span>
@@ -552,37 +552,68 @@ def attach_attempt_summary(attempts: list[dict]):
     margin: 4px 0;}}
     
   /* ===== Attempt Chain ===== */
-  .chain {{
-    margin: 16px 0 12px;
+  /* General Styling for the Attempt Chain */
+  .attempt-status {{
+    display: inline-block;
+    padding: 5px 10px;
+    margin-right: 10px;
+    background-color: #f7f7f7;
+    border-radius: 5px;
     font-weight: bold;
-    font-size: 14px;
+    color: #333;
+  }}
+  .attempt-status.failed {{
+    background-color: #ffebee; /* Light red */
+    color: #f44336;
+  }}
+  .attempt-status.passed {{
+    background-color: #e8f5e9; /* Light green */
+    color: #4caf50;
   }}
   
   /* ===== Tabs ===== */
   .tabs {{
     margin-bottom: 16px;}}
   .tab {{
-    padding: 4px 10px;
-    margin-right: 6px;
-    border: 1px solid #ccc;
-    background: #f7f7f7;
-    cursor: pointer;}}
-  .tab.active {{
+    padding: 10px 20px;
+    margin-right: 8px;
+    border: 1px solid #ddd;
+    background-color: #f0f0f0;
+    cursor: pointer;
     font-weight: bold;
-    background: #e6f2ff;
-    border-color: #4da3ff;}}
+    border-radius: 5px;
+    transition: background-color 0.3s ease;}}
+  .tab:hover {{
+    background-color: #d1d1d1;
+  }}
+  .tab.active {{
+    background-color: #007bff;
+    color: white;
+    border-color: #0056b3;}}
     
   /* ===== Attempt Card ===== */
   .card {{
     display: none;
-    margin-top: 12px;
-    padding: 14px;
+    margin-top: 20px;
+    background-color: #ffffff;
+    padding: 20px;
     border: 1px solid #ddd;
-    background: #fafafa;}}
+    border-radius: 5px;}}
   .card.active {{
     display: block;}}
+  .card-header {{
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+  }}
   .card h3 {{
     margin-top: 0;}}
+  /* Styling for the Dashed Line */   
+    hr.dashed {{
+      border: none;
+      border-top: 1px dashed #aaa;
+      margin: 10px 0;}}
   
   /* ===== General Info Block Style ===== */
   .info-block {{
@@ -643,6 +674,20 @@ def attach_attempt_summary(attempts: list[dict]):
     font-weight: bold;
   }}
   
+  /* ===== Styling for Buttons ===== */
+  button {{
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }}
+  button:hover {{
+    background-color: #45a049;
+  }}
+  
   /* ===== Failure Panel Button ===== */
   .panel-btn {{
     padding: 8px 16px;
@@ -662,13 +707,8 @@ def attach_attempt_summary(attempts: list[dict]):
     margin-top: 16px;
     padding: 12px;
     border: 1px solid #ddd;
-    background: #ffffff;}}
-      
-  /* ===== Common ===== */    
-    hr.dashed {{
-      border: none;
-      border-top: 1px dashed #aaa;
-      margin: 10px 0;}}
+    background-color: #fafafa;
+    border-radius: 5px;}}
       
     img {{ max-width:100%; border:1px solid #ccc; }}
 </style>
