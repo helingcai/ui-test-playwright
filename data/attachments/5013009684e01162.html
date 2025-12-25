@@ -10,7 +10,7 @@
   
   /* ===== Retry Insight ===== */
   .retry-insight {
-    margin: 12px 0 20px;
+    margin: 12px 0 12px;
     padding: 12px 16px;
     border-left: 4px solid #f0ad4e;
     background: #fff8e1;}
@@ -42,9 +42,9 @@
   
   /* ===== Tabs ===== */
   .tabs {
-    margin-bottom: 16px;}
+    margin-bottom: 10px;}
   .tab {
-    padding: 10px 20px;
+    padding: 8px 15px;
     margin-right: 8px;
     # background-color: #e0f7fa;
     cursor: pointer;
@@ -55,12 +55,12 @@
   }*/
   .tab.active {
     background-color: #e0f7fa;
-    color: black;}
+    color: white;}
     
   /* ===== Attempt Card ===== */
   .card {
     display: none;
-    margin-top: 20px;
+    margin-top: 3px;
     background-color: #ffffff;
     padding: 20px;
     border: 1px solid #ddd;
@@ -142,16 +142,16 @@
   
   /* ===== Styling for Buttons ===== */
   button {
-    padding: 10px 15px;
-    background-color: #4CAF50;
-    color: white;
+    padding: 8px 12px;
+    background-color: #e0f7fa;
+    color: black;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
   }
   button:hover {
-    background-color: #45a049;
+    background-color: #00bcd4;
   }
   
   /* ===== Failure Panel Button ===== */
@@ -223,7 +223,6 @@ window.onload = function () {
 
 
         <div id="attempt-1" class="card ">
-          <br/> 
           <h3 class='card-header'>Attempt 1 ❌ FAILED</h3>
           <hr class="dashed"/>
           <div class="info-block duration">
@@ -231,8 +230,8 @@ window.onload = function () {
           </div>
           
           <div class="info-block error">
-            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f2738d8cb20>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f2738d76f80>
+            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f6cf3ceb130>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f6cf3ca5b10>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -396,7 +395,6 @@ assertions/check_out_assert.py:10: AssertionError</pre>
         </div>
         
         <div id="attempt-2" class="card ">
-          <br/> 
           <h3 class='card-header'>Attempt 2 ❌ FAILED</h3>
           <hr class="dashed"/>
           <div class="info-block duration">
@@ -404,8 +402,8 @@ assertions/check_out_assert.py:10: AssertionError</pre>
           </div>
           
           <div class="info-block error">
-            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f2738d8cb20>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f2736788fd0>
+            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f6cf3ceb130>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f6cf16a76a0>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -569,7 +567,6 @@ assertions/check_out_assert.py:10: AssertionError</pre>
         </div>
         
         <div id="attempt-3" class="card active">
-          <br/> 
           <h3 class='card-header'>Attempt 3 ❌ FAILED</h3>
           <hr class="dashed"/>
           <div class="info-block duration">
@@ -577,8 +574,8 @@ assertions/check_out_assert.py:10: AssertionError</pre>
           </div>
           
           <div class="info-block error">
-            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f2738d8cb20>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f2738bdadd0>
+            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f6cf3ceb130>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f6cf3ca7670>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
