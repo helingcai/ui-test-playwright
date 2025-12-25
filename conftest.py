@@ -264,7 +264,6 @@ def pytest_runtest_makereport(item, call):
     #     )
 
 
-# def render_trace_open_block(trace_path: Path) -> str:
 def render_trace_open_block() -> str:
     """生成打开trace.zip的命令模板（三端通吃）"""
     # project_root = Path.cwd()
@@ -341,12 +340,7 @@ def render_failure_panel(base_dir: Path, attempt: int) -> str:
     console_pretty = json.dumps(console_errors, indent=2, ensure_ascii=False)
 
     # ===== Trace block =====
-    trace_block = (
-        render_trace_open_block()
-        # render_trace_open_block(trace)
-        # if trace.exists()
-        # else "<i>Trace not available</i>"
-    )
+    trace_block = (render_trace_open_block())
 
     return f"""
     <div class="failure-panel">
@@ -394,8 +388,47 @@ def render_failure_panel(base_dir: Path, attempt: int) -> str:
     # )
 
 
+def build_retry_insight(attempts: list[dict]) -> list[str]:
+    """生成RetryInsight文本"""
+    lines = []
+
+    failed = [a for a in attempts if a["status"] == "FAILED"]
+    passed = [a for a in attempts if a["status"] == "PASSED"]
+
+    if failed and passed:
+        lines.append(
+            f"• Failed {len(failed)} times, then passed on retry"
+        )
+        lines.append("• Likely flaky test (unstable behavior)")
+    elif len(failed) == len(attempts):
+        lines.append(
+            f"• All {len(attempts)} attempts failed"
+        )
+
+    errors = {
+        a["error"] for a in failed if a["error"]
+    }
+    if len(errors) == 1 and failed:
+        lines.append("• Same error across failed attempts")
+    elif len(errors) > 1:
+        lines.append("• Error message changed between attempts")
+
+    urls = {a["url"] for a in attempts if a["url"]}
+    if len(urls) > 1:
+        lines.append("• Failed at different URLs")
+
+    return lines
+
+
 def attach_attempt_summary(attempts: list[dict]):
     # retry attempt调用链路
+    retry_insight = build_retry_insight(attempts)
+    retry_insight_html = ""
+    if retry_insight:
+        retry_insight_html = "<ul>" + "".join(
+            f"<li>{line}</li>" for line in retry_insight
+        ) + "</ul>"
+
     chain = " → ".join(
         f"Attempt {a['attempt']} {'❌' if a['status'] == 'FAILED' else '✔️'}"
         for a in attempts
@@ -456,11 +489,20 @@ def attach_attempt_summary(attempts: list[dict]):
   .card.active {{ display:block; }}
   .panel {{ display:none; margin-top:16px; padding:12px; border:1px solid #ddd; background:#fafafa; }}
 
-  # #buttons button {{
-  #   margin-top:20px;
-  #   display: flex;
-  #   gap: 10px; /* 按钮之间的间距 */
-  # }}
+  .retry-insight {{
+  margin: 12px 0 16px 0;
+  padding: 10px 12px;
+  border-left: 4px solid #f0ad4e;
+  background: #fff8e1;
+}}
+
+.retry-insight ul {{
+  margin: 6px 0 0 18px;
+}}
+
+.retry-insight li {{
+  margin: 4px 0;
+}}
 
   hr.dashed {{
     border: none;
@@ -494,6 +536,11 @@ window.onload = function () {{
 
 <h2>🔁 Attempt Summary</h2>
 
+<div class="retry-insight">
+  <h3>🧠 Retry Insight</h3>
+  {retry_insight_html}
+</div>
+
 <div class="chain">{chain}</div>
 
 <div>{tabs}</div>
@@ -508,6 +555,3 @@ window.onload = function () {{
         name="Attempt Summary",
         attachment_type=allure.attachment_type.HTML
     )
-
-
-
