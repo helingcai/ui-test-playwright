@@ -505,13 +505,16 @@ def attach_attempt_summary(attempts: list[dict]):
             🌏 URL: <a href="{a['url']}" target="_blank">{a['url']}</a>
           </div>
           <br/>
+          <!-- Artifacts Block -->
+          <div class="info-block artifacts">
+            <b>Artifacts</b><br/>
+            {'✔️' if a['has_screenshot'] else '❌'} <span>Screenshot</span><br/>
+            {'✔️' if a['has_video'] else '❌'} <span>Video</span><br/>
+            {'✔️' if a['has_trace'] else '❌'} <span>Trace</span><br/><br/>
+          </div>
 
-          <b>Artifacts</b><br/>
-          {'✔️' if a['has_screenshot'] else '❌'} Screenshot<br/>
-          {'✔️' if a['has_video'] else '❌'} Video<br/>
-          {'✔️' if a['has_trace'] else '❌'} Trace<br/><br/>
-
-          {'<button type="button" onclick="togglePanel(' + str(aid) + ');return false;">🖲️ View Failure Panel (Attempt ' + str(aid) + ')</button>' if a['status'] == 'FAILED' else ''}
+          <!-- Failure Panel Button -->
+          {'<button type="button" onclick="togglePanel(' + str(aid) + ');return false;" class="panel-btn">🖲️ View Failure Panel (Attempt ' + str(aid) + ')</button>' if a['status'] == 'FAILED' else ''}
           <div id="panel-{aid}" class="panel">
             {failure_panel_html}
           </div>
@@ -580,33 +583,16 @@ def attach_attempt_summary(attempts: list[dict]):
     display: block;}}
   .card h3 {{
     margin-top: 0;}}
-    
-  /* ===== Failure Panel ===== */
-  .panel {{
-    display: none;
-    margin-top: 16px;
-    padding: 12px;
-    border: 1px solid #ddd;
-    background: #ffffff;}}
-    
-  /* ===== Common ===== */    
-    hr.dashed {{
-      border: none;
-      border-top: 1px dashed #aaa;
-      margin: 10px 0;}}
-      
-    img {{ max-width:100%; border:1px solid #ccc; }}
-    
-    /* General Info Block Style */
+  
+  /* ===== General Info Block Style ===== */
   .info-block {{
-    padding: 10px;
+    padding: 12px;
     margin: 8px 0;
     border-radius: 5px;
     background-color: #f4f4f4;
     font-size: 14px;
     color: #333;
   }}
-  
   /* Duration Style */
   .info-block.duration {{
     background-color: #e0f7fa;  /* Light blue */
@@ -615,7 +601,6 @@ def attach_attempt_summary(attempts: list[dict]):
   .info-block.duration span {{
     font-weight: bold;
   }}
-  
   /* Error Style */
   .info-block.error {{
     background-color: #ffebee;  /* Light red */
@@ -630,7 +615,6 @@ def attach_attempt_summary(attempts: list[dict]):
     color: #d32f2f;
     white-space: pre-wrap;
   }}
-  
   /* URL Style */
   .info-block.url {{
     background-color: #f1f8e9;  /* Light green */
@@ -644,6 +628,49 @@ def attach_attempt_summary(attempts: list[dict]):
   .info-block.url a:hover {{
     text-decoration: underline;
   }}
+  
+  /* Artifacts Style */
+  .info-block.artifacts {{
+    background-color: #fff9c4;  /* Light yellow */
+    border-left: 4px solid #ffeb3b; /* Yellow border */
+  }}
+  .info-block.artifacts span {{
+    font-weight: bold;
+    color: #f57f17;
+  }}
+  .info-block.artifacts b {{
+    font-size: 16px;
+    font-weight: bold;
+  }}
+  
+  /* ===== Failure Panel Button ===== */
+  .panel-btn {{
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+  }}
+  .panel-btn:hover {{
+    background-color: #0056b3;
+  }}
+  /* Panel Style */
+  .panel {{
+    display: none;
+    margin-top: 16px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    background: #ffffff;}}
+      
+  /* ===== Common ===== */    
+    hr.dashed {{
+      border: none;
+      border-top: 1px dashed #aaa;
+      margin: 10px 0;}}
+      
+    img {{ max-width:100%; border:1px solid #ccc; }}
 </style>
 
 <script>
