@@ -11,11 +11,20 @@
   .card.active { display:block; }
   .panel { display:none; margin-top:16px; padding:12px; border:1px solid #ddd; background:#fafafa; }
 
-  # #buttons button {
-  #   margin-top:20px;
-  #   display: flex;
-  #   gap: 10px; /* 按钮之间的间距 */
-  # }
+  .retry-insight {
+  margin: 12px 0 16px 0;
+  padding: 10px 12px;
+  border-left: 4px solid #f0ad4e;
+  background: #fff8e1;
+}
+
+.retry-insight ul {
+  margin: 6px 0 0 18px;
+}
+
+.retry-insight li {
+  margin: 4px 0;
+}
 
   hr.dashed {
     border: none;
@@ -49,6 +58,11 @@ window.onload = function () {
 
 <h2>🔁 Attempt Summary</h2>
 
+<div class="retry-insight">
+  <h3>🧠 Retry Insight</h3>
+  <ul><li>• All 3 attempts failed</li><li>• Error message changed between attempts</li></ul>
+</div>
+
 <div class="chain">Attempt 1 ❌ → Attempt 2 ❌ → Attempt 3 ❌</div>
 
 <div>
@@ -70,9 +84,9 @@ window.onload = function () {
           <br/> 
           <h3>Attempt 1 ❌ FAILED</h3>
           <hr class="dashed"/>
-          🕑 Duration : 0.03s<br/>
-          💥 Error : self = <tests.check_out_test.TestCheckOut object at 0x7fee6ff8d120>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fee6ff9b2b0>
+          🕑 Duration : 0.04s<br/>
+          💥 Error : self = <tests.check_out_test.TestCheckOut object at 0x7fadee4ef460>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fadee4ab010>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -195,8 +209,8 @@ assertions/check_out_assert.py:10: AssertionError<br/>
           <h3>Attempt 2 ❌ FAILED</h3>
           <hr class="dashed"/>
           🕑 Duration : 0.01s<br/>
-          💥 Error : self = <tests.check_out_test.TestCheckOut object at 0x7fee6ff8d120>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fee6fdf69b0>
+          💥 Error : self = <tests.check_out_test.TestCheckOut object at 0x7fadee4ef460>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fadeceb11b0>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -319,8 +333,8 @@ assertions/check_out_assert.py:10: AssertionError<br/>
           <h3>Attempt 3 ❌ FAILED</h3>
           <hr class="dashed"/>
           🕑 Duration : 0.01s<br/>
-          💥 Error : self = <tests.check_out_test.TestCheckOut object at 0x7fee6ff8d120>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fee6d7d17b0>
+          💥 Error : self = <tests.check_out_test.TestCheckOut object at 0x7fadee4ef460>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fadee38b070>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
