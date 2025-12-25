@@ -56,33 +56,16 @@
     display: block;}
   .card h3 {
     margin-top: 0;}
-    
-  /* ===== Failure Panel ===== */
-  .panel {
-    display: none;
-    margin-top: 16px;
-    padding: 12px;
-    border: 1px solid #ddd;
-    background: #ffffff;}
-    
-  /* ===== Common ===== */    
-    hr.dashed {
-      border: none;
-      border-top: 1px dashed #aaa;
-      margin: 10px 0;}
-      
-    img { max-width:100%; border:1px solid #ccc; }
-    
-    /* General Info Block Style */
+  
+  /* ===== General Info Block Style ===== */
   .info-block {
-    padding: 10px;
+    padding: 12px;
     margin: 8px 0;
     border-radius: 5px;
     background-color: #f4f4f4;
     font-size: 14px;
     color: #333;
   }
-  
   /* Duration Style */
   .info-block.duration {
     background-color: #e0f7fa;  /* Light blue */
@@ -91,7 +74,6 @@
   .info-block.duration span {
     font-weight: bold;
   }
-  
   /* Error Style */
   .info-block.error {
     background-color: #ffebee;  /* Light red */
@@ -106,7 +88,6 @@
     color: #d32f2f;
     white-space: pre-wrap;
   }
-  
   /* URL Style */
   .info-block.url {
     background-color: #f1f8e9;  /* Light green */
@@ -120,6 +101,49 @@
   .info-block.url a:hover {
     text-decoration: underline;
   }
+  
+  /* Artifacts Style */
+  .info-block.artifacts {
+    background-color: #fff9c4;  /* Light yellow */
+    border-left: 4px solid #ffeb3b; /* Yellow border */
+  }
+  .info-block.artifacts span {
+    font-weight: bold;
+    color: #f57f17;
+  }
+  .info-block.artifacts b {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  /* ===== Failure Panel Button ===== */
+  .panel-btn {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .panel-btn:hover {
+    background-color: #0056b3;
+  }
+  /* Panel Style */
+  .panel {
+    display: none;
+    margin-top: 16px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    background: #ffffff;}
+      
+  /* ===== Common ===== */    
+    hr.dashed {
+      border: none;
+      border-top: 1px dashed #aaa;
+      margin: 10px 0;}
+      
+    img { max-width:100%; border:1px solid #ccc; }
 </style>
 
 <script>
@@ -170,12 +194,12 @@ window.onload = function () {
           <h3>Attempt 1 ❌ FAILED</h3>
           <hr class="dashed"/>
           <div class="info-block duration">
-            🕑 Duration: <span>0.05s</span>
+            🕑 Duration: <span>0.04s</span>
           </div>
           
           <div class="info-block error">
-            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f7d7fec4ca0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f7d7fd1ceb0>
+            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7fbc242ef370>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fbc242aae30>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -209,13 +233,16 @@ assertions/check_out_assert.py:10: AssertionError</pre>
             🌏 URL: <a href="https://www.saucedemo.com/checkout-complete.html" target="_blank">https://www.saucedemo.com/checkout-complete.html</a>
           </div>
           <br/>
+          <!-- Artifacts Block -->
+          <div class="info-block artifacts">
+            <b>Artifacts</b><br/>
+            ✔️ <span>Screenshot</span><br/>
+            ✔️ <span>Video</span><br/>
+            ✔️ <span>Trace</span><br/><br/>
+          </div>
 
-          <b>Artifacts</b><br/>
-          ✔️ Screenshot<br/>
-          ✔️ Video<br/>
-          ✔️ Trace<br/><br/>
-
-          <button type="button" onclick="togglePanel(1);return false;">🖲️ View Failure Panel (Attempt 1)</button>
+          <!-- Failure Panel Button -->
+          <button type="button" onclick="togglePanel(1);return false;" class="panel-btn">🖲️ View Failure Panel (Attempt 1)</button>
           <div id="panel-1" class="panel">
             
     <div class="failure-panel">
@@ -344,8 +371,8 @@ assertions/check_out_assert.py:10: AssertionError</pre>
           </div>
           
           <div class="info-block error">
-            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f7d7fec4ca0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f7d7fd15870>
+            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7fbc242ef370>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fbc21c80d30>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -379,13 +406,16 @@ assertions/check_out_assert.py:10: AssertionError</pre>
             🌏 URL: <a href="https://www.saucedemo.com/checkout-complete.html" target="_blank">https://www.saucedemo.com/checkout-complete.html</a>
           </div>
           <br/>
+          <!-- Artifacts Block -->
+          <div class="info-block artifacts">
+            <b>Artifacts</b><br/>
+            ✔️ <span>Screenshot</span><br/>
+            ✔️ <span>Video</span><br/>
+            ✔️ <span>Trace</span><br/><br/>
+          </div>
 
-          <b>Artifacts</b><br/>
-          ✔️ Screenshot<br/>
-          ✔️ Video<br/>
-          ✔️ Trace<br/><br/>
-
-          <button type="button" onclick="togglePanel(2);return false;">🖲️ View Failure Panel (Attempt 2)</button>
+          <!-- Failure Panel Button -->
+          <button type="button" onclick="togglePanel(2);return false;" class="panel-btn">🖲️ View Failure Panel (Attempt 2)</button>
           <div id="panel-2" class="panel">
             
     <div class="failure-panel">
@@ -514,8 +544,8 @@ assertions/check_out_assert.py:10: AssertionError</pre>
           </div>
           
           <div class="info-block error">
-            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f7d7fec4ca0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f7d7febe920>
+            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7fbc242ef370>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fbc21c87f40>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -549,13 +579,16 @@ assertions/check_out_assert.py:10: AssertionError</pre>
             🌏 URL: <a href="https://www.saucedemo.com/checkout-complete.html" target="_blank">https://www.saucedemo.com/checkout-complete.html</a>
           </div>
           <br/>
+          <!-- Artifacts Block -->
+          <div class="info-block artifacts">
+            <b>Artifacts</b><br/>
+            ✔️ <span>Screenshot</span><br/>
+            ✔️ <span>Video</span><br/>
+            ✔️ <span>Trace</span><br/><br/>
+          </div>
 
-          <b>Artifacts</b><br/>
-          ✔️ Screenshot<br/>
-          ✔️ Video<br/>
-          ✔️ Trace<br/><br/>
-
-          <button type="button" onclick="togglePanel(3);return false;">🖲️ View Failure Panel (Attempt 3)</button>
+          <!-- Failure Panel Button -->
+          <button type="button" onclick="togglePanel(3);return false;" class="panel-btn">🖲️ View Failure Panel (Attempt 3)</button>
           <div id="panel-3" class="panel">
             
     <div class="failure-panel">
