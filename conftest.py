@@ -583,7 +583,7 @@ def attach_attempt_summary(attempts: list[dict]):
 
     # 加入 Attempt Diff 分析文本
     diff_summary = "<h4>🔍 Attempt Diff Analysis:</h4>"
-    diff_summary += "<p>" + "<br/>".join(attempt_diff) + "</p>"
+    diff_summary += "<ul>" + "".join(f"<li>{line}</li>" for line in attempt_diff) + "</ul>"
 
     last_failed = max(
         (a["attempt"] for a in attempts if a["status"] == "FAILED"),
@@ -646,7 +646,7 @@ def attach_attempt_summary(attempts: list[dict]):
     background-color: #d1d1d1;
   }}*/
   .tab.active {{
-    background-color: #e0f7fa;
+    background-color: #00bcd4;
     color: black;}}
     
   /* ===== Attempt Card ===== */
@@ -743,7 +743,7 @@ def attach_attempt_summary(attempts: list[dict]):
     transition: background-color 0.3s;
   }}
   button:hover {{
-    background-color: #00bcd4;
+    background-color: #00BCED;
   }}
   
   /* ===== Failure Panel Button ===== */
