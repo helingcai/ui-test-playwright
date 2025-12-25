@@ -455,6 +455,7 @@ def build_retry_insight(attempts: list[dict]) -> list[str]:
         lines.append("• Failed at different URLs")
     return lines
 
+
 def compare_field(attempts: list[dict], field: str, label: str):
     """ 比较同一字段在不同 attempts 中的差异
     :param attempts: 一个包含所有 attempts 信息的列表
@@ -467,6 +468,7 @@ def compare_field(attempts: list[dict], field: str, label: str):
     if len(unique_values) > 1:
         return f"Different {label}: {', '.join(map(str, unique_values))}"
     return ""
+
 
 def compare_attachments(attempts: list[dict]):
     """ 比较所有尝试中生成的附件差异（如截图、视频、trace）
@@ -482,6 +484,7 @@ def compare_attachments(attempts: list[dict]):
             attachment_diff.append(f"{field} difference: {', '.join(map(str, unique_values))}")
 
     return ", ".join(attachment_diff) if attachment_diff else ""
+
 
 def calculate_attempt_diff(attempts: list[dict]):
     """ 计算多个 attempts 之间的差异
@@ -511,6 +514,7 @@ def calculate_attempt_diff(attempts: list[dict]):
 
     return "\n".join(diff_summary)
 
+
 def attach_attempt_summary(attempts: list[dict]):
     # retry attempt调用链路
     retry_insight = build_retry_insight(attempts)
@@ -521,12 +525,15 @@ def attach_attempt_summary(attempts: list[dict]):
         ) + "</ul>"
 
     chain = " → ".join(
-        f"<span class='attempt-status { 'failed' if a['status'] == 'FAILED' else 'passed' }'>Attempt {a['attempt']} {'❌' if a['status'] == 'FAILED' else '✔'}</span>"
+        f"<span class='attempt-status {'failed' if a['status'] == 'FAILED' else 'passed'}'>Attempt {a['attempt']} {'❌' if a['status'] == 'FAILED' else '✔'}</span>"
         for a in attempts
     )
 
     tabs = ""
     cards = ""
+
+    # 计算 Attempt Diff
+    attempt_diff = calculate_attempt_diff(attempts)
 
     for i, a in enumerate(attempts):
         active = "active" if i == len(attempts) - 1 else ""
@@ -573,6 +580,11 @@ def attach_attempt_summary(attempts: list[dict]):
           </div>
         </div>
         """
+
+    # 加入 Attempt Diff 分析文本
+    diff_summary = "<h4>🔍 Attempt Diff Analysis:</h4>"
+    diff_summary += "<p>" + "<br/>".join(attempt_diff) + "</p>"
+
     last_failed = max(
         (a["attempt"] for a in attempts if a["status"] == "FAILED"),
         default=attempts[-1]["attempt"]
@@ -635,7 +647,7 @@ def attach_attempt_summary(attempts: list[dict]):
   }}*/
   .tab.active {{
     background-color: #e0f7fa;
-    color: white;}}
+    color: black;}}
     
   /* ===== Attempt Card ===== */
   .card {{
@@ -791,6 +803,8 @@ window.onload = function () {{
 
 {cards}
 
+{diff_summary} <!-- Add the diff summary here -->
+
 </body>
 </html>
 """
@@ -799,4 +813,3 @@ window.onload = function () {{
         name=" Attempt Summary",
         attachment_type=allure.attachment_type.HTML
     )
-
