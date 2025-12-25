@@ -786,7 +786,7 @@ window.onload = function () {{
 </div>
 
 <div class="chain">{chain}</div>
-
+<br/><br/>
 <div class="tabs">{tabs}</div>
 
 {cards}
@@ -799,3 +799,4 @@ window.onload = function () {{
         name=" Attempt Summary",
         attachment_type=allure.attachment_type.HTML
     )
+
