@@ -27,20 +27,16 @@
   /* ===== Attempt Chain ===== */
   /* General Styling for the Attempt Chain */
   .attempt-status {
-    display: inline-block;
     padding: 5px 10px;
     margin-right: 10px;
-    background-color: #f7f7f7;
     border-radius: 5px;
     font-weight: bold;
     color: #333;
   }
   .attempt-status.failed {
-    background-color: #ffebee; /* Light red */
     color: #f44336;
   }
   .attempt-status.passed {
-    background-color: #e8f5e9; /* Light green */
     color: #4caf50;
   }
   
@@ -50,19 +46,16 @@
   .tab {
     padding: 10px 20px;
     margin-right: 8px;
-    border: 1px solid #ddd;
-    background-color: #f0f0f0;
+    # background-color: #e0f7fa;
     cursor: pointer;
-    font-weight: bold;
     border-radius: 5px;
     transition: background-color 0.3s ease;}
-  .tab:hover {
+  /*.tab:hover {
     background-color: #d1d1d1;
-  }
+  }*/
   .tab.active {
-    background-color: #007bff;
-    color: white;
-    border-color: #0056b3;}
+    background-color: #e0f7fa;
+    color: black;}
     
   /* ===== Attempt Card ===== */
   .card {
@@ -238,8 +231,8 @@ window.onload = function () {
           </div>
           
           <div class="info-block error">
-            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7fba178eb100>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fba178a9720>
+            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f2738d8cb20>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f2738d76f80>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -411,8 +404,8 @@ assertions/check_out_assert.py:10: AssertionError</pre>
           </div>
           
           <div class="info-block error">
-            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7fba178eb100>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fba152b8ac0>
+            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f2738d8cb20>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f2736788fd0>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -584,8 +577,8 @@ assertions/check_out_assert.py:10: AssertionError</pre>
           </div>
           
           <div class="info-block error">
-            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7fba178eb100>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fba17707040>
+            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f2738d8cb20>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f2738bdadd0>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
