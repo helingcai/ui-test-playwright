@@ -380,6 +380,43 @@ def render_failure_panel(base_dir: Path, attempt: int) -> str:
         {trace_block}
       </div>
     </div>
+    <style>
+      .failure-panel {{
+        padding: 20px;
+        border: 1px solid #ddd;
+        background-color: #fafafa;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+      }}
+      .failure-panel .section {{
+        margin-bottom: 15px;
+      }}
+      .failure-panel details {{
+        margin-bottom: 10px;
+      }}
+      .failure-panel pre {{
+        background-color: #f4f4f4;
+        padding: 10px;
+        border-radius: 5px;
+        white-space: pre-wrap;  /* Wrap long lines */
+        word-wrap: break-word;   /* Prevent overflow */
+        font-size: 12px;
+      }}
+      .failure-panel img {{
+        max-width: 100%;
+        border: 1px solid #ccc;
+      }}
+      .failure-panel button {{
+        padding: 5px 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }}
+      .failure-panel button:hover {{
+        background-color: #45a049;
+      }}
+    </style>
     """
     # allure.attach(
     #     html,
@@ -456,9 +493,18 @@ def attach_attempt_summary(attempts: list[dict]):
           <br/> 
           <h3>Attempt {aid} {'❌ FAILED' if a['status'] == 'FAILED' else '✅ PASSED'}</h3>
           <hr class="dashed"/>
-          🕑 Duration : {a['duration']}s<br/>
-          💥 Error : {a['error'] or '-'}<br/>
-          🌏 URL ：{a['url']}<br/><br/>
+          <div class="info-block duration">
+            🕑 Duration: <span>{a['duration']}s</span>
+          </div>
+          
+          <div class="info-block error">
+            💥 Error: <pre>{a['error'] or '-'}</pre>
+          </div>
+          
+          <div class="info-block url">
+            🌏 URL: <a href="{a['url']}" target="_blank">{a['url']}</a>
+          </div>
+          <br/>
 
           <b>Artifacts</b><br/>
           {'✔️' if a['has_screenshot'] else '❌'} Screenshot<br/>
@@ -486,6 +532,22 @@ def attach_attempt_summary(attempts: list[dict]):
   line-height: 1.6;
   color: #333;}}
   
+  /* ===== Retry Insight ===== */
+  .retry-insight {{
+    margin: 12px 0 20px;
+    padding: 12px 16px;
+    border-left: 4px solid #f0ad4e;
+    background: #fff8e1;}}
+  .retry-insight h3 {{
+    margin: 0 0 6px;
+    font-size: 16px;}}
+  .retry-insight ul {{
+    list-style: none;   /* 去掉 HTML 自带的圆点 */
+    padding-left: 0;
+    margin: 6px 0 0;}}
+  .retry-insight li {{
+    margin: 4px 0;}}
+    
   /* ===== Attempt Chain ===== */
   .chain {{
     margin: 16px 0 12px;
@@ -527,22 +589,6 @@ def attach_attempt_summary(attempts: list[dict]):
     border: 1px solid #ddd;
     background: #ffffff;}}
     
-  /* ===== Retry Insight ===== */
-  .retry-insight {{
-    margin: 12px 0 20px;
-    padding: 12px 16px;
-    border-left: 4px solid #f0ad4e;
-    background: #fff8e1;}}
-  .retry-insight h3 {{
-    margin: 0 0 6px;
-    font-size: 16px;}}
-  .retry-insight ul {{
-    list-style: none;   /* 去掉 HTML 自带的圆点 */
-    padding-left: 0;
-    margin: 6px 0 0;}}
-  .retry-insight li {{
-    margin: 4px 0;}}
-    
   /* ===== Common ===== */    
     hr.dashed {{
       border: none;
@@ -550,6 +596,54 @@ def attach_attempt_summary(attempts: list[dict]):
       margin: 10px 0;}}
       
     img {{ max-width:100%; border:1px solid #ccc; }}
+    
+    /* General Info Block Style */
+  .info-block {{
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 5px;
+    background-color: #f4f4f4;
+    font-size: 14px;
+    color: #333;
+  }}
+  
+  /* Duration Style */
+  .info-block.duration {{
+    background-color: #e0f7fa;  /* Light blue */
+    border-left: 4px solid #00bcd4;
+  }}
+  .info-block.duration span {{
+    font-weight: bold;
+  }}
+  
+  /* Error Style */
+  .info-block.error {{
+    background-color: #ffebee;  /* Light red */
+    border-left: 4px solid #f44336; /* Red border */
+    color: #d32f2f;
+  }}
+  .info-block.error pre {{
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 12px;
+    color: #d32f2f;
+    white-space: pre-wrap;
+  }}
+  
+  /* URL Style */
+  .info-block.url {{
+    background-color: #f1f8e9;  /* Light green */
+    border-left: 4px solid #8bc34a; /* Green border */
+  }}
+  .info-block.url a {{
+    color: #4caf50;
+    text-decoration: none;
+    font-weight: bold;
+  }}
+  .info-block.url a:hover {{
+    text-decoration: underline;
+  }}
 </style>
 
 <script>
@@ -589,6 +683,6 @@ window.onload = function () {{
 """
     allure.attach(
         html,
-        name="Attempt Summary",
+        name=" Attempt Summary",
         attachment_type=allure.attachment_type.HTML
     )
