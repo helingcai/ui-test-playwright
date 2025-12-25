@@ -495,24 +495,44 @@ def calculate_attempt_diff(attempts: list[dict]):
     # 错误信息差异
     error_diff = compare_field(attempts, 'error')
     if error_diff:
-        diff_summary.append(f"🛑 Error Differences: <br>{error_diff}")
+        diff_summary.append(f"""
+                <details>
+                  <summary><button>🛑 Error Differences</button></summary>
+                  <pre>{error_diff}</pre>
+                </details>
+                """)
 
     # 页面 URL 差异
     url_diff = compare_field(attempts, 'url')
     if url_diff:
-        diff_summary.append(f"🌍 URL Differences: {url_diff}")
+        diff_summary.append(f"""
+               <details>
+                 <summary><button>🌍 URL Differences</button></summary>
+                 <pre>{url_diff}</pre>
+               </details>
+               """)
 
     # 持续时间差异
     duration_diff = compare_field(attempts, 'duration')
     if duration_diff:
-        diff_summary.append(f"🕣  Duration Differences: {duration_diff}")
+        diff_summary.append(f"""
+                <details>
+                  <summary><button>⏱ Duration Differences</button></summary>
+                  <pre>{duration_diff}</pre>
+                </details>
+                """)
 
     # 附件差异（截图、视频、trace）
     attachments_diff = compare_attachments(attempts)
     if attachments_diff:
-        diff_summary.append(f"📎 Attachment Differences: {attachments_diff}")
+        diff_summary.append(f"""
+                <details>
+                  <summary><button>📎 Attachment Differences</button></summary>
+                  <pre>{attachments_diff}</pre>
+                </details>
+                """)
 
-    return "<br>".join(diff_summary)
+    return "".join(diff_summary)
 
 
 def attach_attempt_summary(attempts: list[dict]):
@@ -826,9 +846,9 @@ window.onload = function () {{
   {retry_insight_html}
 </div>
 
-<div class="retry-insight">
-  <h3>🔍 Attempt Diff Analysis</h3>
-  <pre>{attempt_diff}</pre>
+<div class="section">
+  <summary><b>🔍 Attempt Diff Analysis</b></summary>
+  <pre>{attempt_diff}</pre> 
 </div>
 
 <div class="chain">{chain}</div>
