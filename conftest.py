@@ -583,7 +583,7 @@ def attach_attempt_summary(attempts: list[dict]):
 
     # 加入 Attempt Diff 分析文本
     diff = ""
-    diff += """
+    diff += f"""
         <div class="section">
             <details>
               <summary><b>🔍 Attempt Diff Analysis</b></summary>
@@ -820,3 +820,4 @@ window.onload = function () {{
         name=" Attempt Summary",
         attachment_type=allure.attachment_type.HTML
     )
+
