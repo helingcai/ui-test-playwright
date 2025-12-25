@@ -466,7 +466,6 @@ def compare_field(attempts: list[dict], field: str, label: str):
     unique_values = set(field_values)
 
     if len(unique_values) > 1:
-        # return f"Different {label}: {', '.join(map(str, unique_values))}"
         return f"Different {label}:\n" + "\n".join(map(str, unique_values))
     return ""
 
@@ -513,7 +512,7 @@ def calculate_attempt_diff(attempts: list[dict]):
     if attachments_diff:
         diff_summary.append(f"📎 Attachment Differences: {attachments_diff}")
 
-    return "\n".join(diff_summary)
+    return "\n".join(diff_summary).replace("\n", " ")
 
 
 def attach_attempt_summary(attempts: list[dict]):
@@ -532,9 +531,6 @@ def attach_attempt_summary(attempts: list[dict]):
 
     tabs = ""
     cards = ""
-
-    # 计算 Attempt Diff
-    attempt_diff = calculate_attempt_diff(attempts)
 
     for i, a in enumerate(attempts):
         active = "active" if i == len(attempts) - 1 else ""
@@ -581,10 +577,20 @@ def attach_attempt_summary(attempts: list[dict]):
           </div>
         </div>
         """
+    # 计算 Attempt Diff
+    attempt_diff = calculate_attempt_diff(attempts)
+    attempt_diff_html = attempt_diff.replace("\n", "<br>")
 
     # 加入 Attempt Diff 分析文本
-    diff_summary = "<h4>🔍 Attempt Diff Analysis:</h4>"
-    diff_summary += "<ul>" + "".join(f"<li>{line}</li>" for line in attempt_diff) + "</ul>"
+    diff = ""
+    diff += """
+        <div class="section">
+            <details>
+              <summary><b>🔍 Attempt Diff Analysis</b></summary>
+              <pre>{attempt_diff_html}</pre>
+            </details>
+        </div>
+    """
 
     last_failed = max(
         (a["attempt"] for a in attempts if a["status"] == "FAILED"),
@@ -804,7 +810,7 @@ window.onload = function () {{
 
 {cards}
 
-{diff_summary} <!-- Add the diff summary here -->
+{diff} <!-- Add the diff summary here -->
 
 </body>
 </html>
@@ -814,4 +820,3 @@ window.onload = function () {{
         name=" Attempt Summary",
         attachment_type=allure.attachment_type.HTML
     )
-
