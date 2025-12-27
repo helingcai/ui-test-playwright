@@ -6,7 +6,7 @@ CONTAINER_INFO = {
     "postal": "100000"
 }
 
-CONTAINER_EMPTY_ERROR_MSG = "First Name is required"
+# CONTAINER_EMPTY_ERROR_MSG = "First Name is required"
 # FINISH_PAGE_MESSAGE="Thank you for your order!"
 FINISH_PAGE_MESSAGE = "哈哈哈!"
-# CONTAINER_EMPTY_ERROR_MSG = "吼吼吼！"
+CONTAINER_EMPTY_ERROR_MSG = "吼吼吼！"
