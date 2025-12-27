@@ -497,7 +497,7 @@ def calculate_attempt_diff(attempts: list[dict]):
     if error_diff:
         diff_summary.append(f"""
                 <details>
-                  <summary><button>🛑 Error Differences</button></summary>
+                  <summary class="attempt-diff-summary">🛑 Error Differences</summary>
                   <pre>{error_diff}</pre>
                 </details>
                 """)
@@ -507,7 +507,7 @@ def calculate_attempt_diff(attempts: list[dict]):
     if url_diff:
         diff_summary.append(f"""
                <details>
-                 <summary><button>🌍 URL Differences</button></summary>
+                 <summary class="attempt-diff-summary">🌍 URL Differences</summary>
                  <pre>{url_diff}</pre>
                </details>
                """)
@@ -517,7 +517,7 @@ def calculate_attempt_diff(attempts: list[dict]):
     if duration_diff:
         diff_summary.append(f"""
                 <details>
-                  <summary><button>⏱ Duration Differences</button></summary>
+                  <summary class="attempt-diff-summary">🕣 Duration Differences</summary>
                   <pre>{duration_diff}</pre>
                 </details>
                 """)
@@ -527,7 +527,7 @@ def calculate_attempt_diff(attempts: list[dict]):
     if attachments_diff:
         diff_summary.append(f"""
                 <details>
-                  <summary><button>📎 Attachment Differences</button></summary>
+                  <summary class="attempt-diff-summary">📎 Attachment Differences</summary>
                   <pre>{attachments_diff}</pre>
                 </details>
                 """)
@@ -816,25 +816,23 @@ def attach_attempt_summary(attempts: list[dict]):
     margin: 4px 0; 
     }}
   .attempt-diff summary {{
-    list-style: none;       /* 去掉小三角 */
-    cursor: pointer;
-    }}
-  .attempt-diff summary::-webkit-details-marker {{
-    display: none;          /* Chrome */
-    }}
-  .attempt-diff summary button {{
     width: 100%;
     text-align: left;
-    padding: 6px 10px;      /* 👈 压缩高度 */
-    margin: 0;              /* 👈 重要 */
+    padding: 6px 10px;
+    margin: 0;
     background: #ffffff;
     border: 1px solid #e0e0e0;
     border-radius: 4px;
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
+    list-style: none;
     }}
-  .attempt-diff summary button:hover {{
+  .attempt-diff summary::-webkit-details-marker {{
+    display: none;          /* Chrome */
+    }}
+
+  .attempt-diff summary:hover {{
     background: #e3f2fd;
     }}
   .attempt-diff pre {{
@@ -897,4 +895,3 @@ window.onload = function () {{
         name=" Attempt Summary",
         attachment_type=allure.attachment_type.HTML
     )
-
