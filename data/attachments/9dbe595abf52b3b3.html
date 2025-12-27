@@ -26,19 +26,56 @@
     
   /* ===== Attempt Chain ===== */
   /* General Styling for the Attempt Chain */
-  .attempt-status {
-    padding: 5px 10px;
-    margin-right: 10px;
-    border-radius: 5px;
-    font-weight: bold;
-    color: #333;
-  }
-  .attempt-status.failed {
-    color: #f44336;
-  }
-  .attempt-status.passed {
-    color: #4caf50;
-  }
+  .attempt-chain {
+  margin: 12px 0 16px 0;
+  padding: 8px 12px;
+  background: #f7f9fb;
+  border-left: 4px solid #6c8cff;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.attempt-chain .label {
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.attempt-chain .badges {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.attempt-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.attempt-badge.failed {
+  background: #ffe5e5;
+  color: #c62828;
+}
+
+.attempt-badge.passed {
+  background: #e6f4ea;
+  color: #2e7d32;
+}
+
+.arrow {
+  margin: 0 4px;
+  color: #999;
+}
+
+.attempt-chain.muted {
+  background: none;
+  border-left: none;
+  color: #777;
+  padding: 0;
+  font-size: 13px;
+}
   
   /* ===== Tabs ===== */
   .tabs {
@@ -248,6 +285,12 @@ window.onload = function () {
 <body>
 <h2>🔁 Attempt Summary</h2>
 
+
+            <div class="attempt-chain muted">
+              🔁 Attempts: 3 failures
+            </div>
+            
+
 <div class="retry-insight">
   <h3>🧠 Retry Insight</h3>
   <ul><li>• All 3 attempts failed</li><li>• Error message changed between attempts</li></ul>
@@ -258,8 +301,8 @@ window.onload = function () {
   
                 <details>
                   <summary class="attempt-diff-summary">🛑 Error Differences</summary>
-                  <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f9e74ac4d00>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f9e724bb6d0>
+                  <pre>self = <tests.check_out_test.TestCheckOut object at 0x7fa4e4ceb2e0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fa4e4b69090>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -287,8 +330,8 @@ actual_msg = 'Thank you for your order!', expect_msg = '哈哈哈!'
 E       AssertionError: 预期提示信息：哈哈哈!，不存在于Thank you for your order!
 
 assertions/check_out_assert.py:10: AssertionError
-self = <tests.check_out_test.TestCheckOut object at 0x7f9e74ac4d00>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f9e724969b0>
+self = <tests.check_out_test.TestCheckOut object at 0x7fa4e4ceb2e0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fa4e26a7280>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -316,8 +359,8 @@ actual_msg = 'Thank you for your order!', expect_msg = '哈哈哈!'
 E       AssertionError: 预期提示信息：哈哈哈!，不存在于Thank you for your order!
 
 assertions/check_out_assert.py:10: AssertionError
-self = <tests.check_out_test.TestCheckOut object at 0x7f9e74ac4d00>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f9e74abe740>
+self = <tests.check_out_test.TestCheckOut object at 0x7fa4e4ceb2e0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fa4e2680f70>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -355,7 +398,6 @@ assertions/check_out_assert.py:10: AssertionError</pre>
                 
 </div>
 
-<div class="chain"><span class='attempt-status failed'>Attempt 1 ❌</span> → <span class='attempt-status failed'>Attempt 2 ❌</span> → <span class='attempt-status failed'>Attempt 3 ❌</span></div>
 <br/><br/>
 <div class="tabs">
         <button type="button" id="tab-1" class="tab " onclick="show(1);return false;">
@@ -380,8 +422,8 @@ assertions/check_out_assert.py:10: AssertionError</pre>
           </div>
           
           <div class="info-block error">
-            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f9e74ac4d00>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f9e74abe740>
+            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7fa4e4ceb2e0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fa4e2680f70>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -552,8 +594,8 @@ assertions/check_out_assert.py:10: AssertionError</pre>
           </div>
           
           <div class="info-block error">
-            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f9e74ac4d00>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f9e724bb6d0>
+            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7fa4e4ceb2e0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fa4e26a7280>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -724,8 +766,8 @@ assertions/check_out_assert.py:10: AssertionError</pre>
           </div>
           
           <div class="info-block error">
-            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f9e74ac4d00>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f9e724969b0>
+            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7fa4e4ceb2e0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7fa4e4b69090>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
