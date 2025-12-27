@@ -343,7 +343,7 @@ def render_failure_panel(base_dir: Path, attempt: int) -> str:
     trace_block = (render_trace_open_block())
 
     return f"""
-    <div class="failure-panel">
+    <div class="failure-panel retry-style">
       <h4>❌ Failure Panel (Attempt{attempt}) </h4>
 
       <div class="section">
@@ -380,43 +380,6 @@ def render_failure_panel(base_dir: Path, attempt: int) -> str:
         {trace_block}
       </div>
     </div>
-    <style>
-      .failure-panel {{
-        padding: 0px;
-        border: 1px solid #ddd;
-        background-color: #fafafa;
-        font-family: Arial, sans-serif;
-        font-size: 14px;
-      }}
-      .failure-panel .section {{
-        margin-bottom: 15px;
-      }}
-      .failure-panel details {{
-        margin-bottom: 10px;
-      }}
-      .failure-panel pre {{
-        background-color: #f4f4f4;
-        padding: 10px;
-        border-radius: 5px;
-        white-space: pre-wrap;  /* Wrap long lines */
-        word-wrap: break-word;   /* Prevent overflow */
-        font-size: 12px;
-      }}
-      .failure-panel img {{
-        max-width: 100%;
-        border: 1px solid #ccc;
-      }}
-      .failure-panel button {{
-        padding: 5px 10px;
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        cursor: pointer;
-      }}
-      .failure-panel button:hover {{
-        background-color: #45a049;
-      }}
-    </style>
     """
     # allure.attach(
     #     html,
@@ -671,10 +634,11 @@ def attach_attempt_summary(attempts: list[dict]):
   
   /* ===== Retry Insight ===== */
   .retry-insight {{
-    margin: 12px 0 12px;
-    padding: 12px 16px;
+    margin: 16px 0;
+    padding: 12px 14px;
     border-left: 4px solid #f0ad4e;
-    background: #fff8e1;}}
+    background: #fff8e1;
+    border-radius: 6px;}}
   .retry-insight h3 {{
     margin: 0 0 6px;
     font-size: 16px;}}
@@ -760,7 +724,7 @@ def attach_attempt_summary(attempts: list[dict]):
     display: none;
     margin-top: 3px;
     background-color: #ffffff;
-    padding: 20px;
+    padding: 12px 14px;
     border: 1px solid #ddd;
     border-radius: 5px;}}
   .card.active {{
@@ -773,6 +737,7 @@ def attach_attempt_summary(attempts: list[dict]):
   }}
   .card h3 {{
     margin-top: 0;}}
+    
   /* Styling for the Dashed Line */   
     hr.dashed {{
       border: none;
@@ -808,8 +773,16 @@ def attach_attempt_summary(attempts: list[dict]):
     padding: 8px;
     font-size: 12px;
     color: #d32f2f;
-    white-space: pre-wrap;
+    /* 核心三行 */
+    max-height: 120px;      /* 👈 控制可视高度（推荐 100~160） */
+    overflow-y: auto;       /* 👈 超出显示滚动条 */
+    white-space: pre-wrap;  /* 自动换行 */
+    word-break: break-word;
+    margin-top: 6px;
   }}
+  .info-block.error pre:hover {{
+    outline: 1px solid #f44336;
+}}
   /* URL Style */
   .info-block.url {{
     background-color: #f1f8e9;  /* Light green */
@@ -879,7 +852,6 @@ def attach_attempt_summary(attempts: list[dict]):
     margin: 16px 0;
     padding: 12px 14px;
     background: #f5f7fa;
-    border: 1px solid #dce3ea;
     border-left: 4px solid #64b5f6;
     border-radius: 6px;
     }}
@@ -891,7 +863,7 @@ def attach_attempt_summary(attempts: list[dict]):
     margin: 4px 0; 
     }}
   .attempt-diff summary {{
-    width: 100%;
+    width: 98.2%;
     text-align: left;
     padding: 6px 10px;
     margin: 0;
@@ -923,6 +895,63 @@ def attach_attempt_summary(attempts: list[dict]):
     }}
       
     img {{ max-width:100%; border:1px solid #ccc; }}
+
+  /* ===== Failure Panel ===== */
+   .failure-panel {{
+    padding: 0px;
+    border: 1px solid #ddd;
+    background-color: #fafafa;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+      }}
+     
+  .failure-panel details {{
+    margin-bottom: 10px;
+  }}
+  .failure-panel pre {{
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+    white-space: pre-wrap;  /* Wrap long lines */
+    word-wrap: break-word;   /* Prevent overflow */
+    font-size: 12px;
+  }}
+  .failure-panel img {{
+    max-width: 100%;
+    border: 1px solid #ccc;
+  }}
+  .failure-panel button {{
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }}
+  .failure-panel button:hover {{
+    background-color: #45a049;
+  }}
+  /* == (Retry Insight Style) == */
+  .failure-panel.retry-style {{
+    margin-top: 16px;
+    padding: 14px 16px;
+    border-left: 4px solid #f44336;   /* ❌ failure 红 */
+    background-color: #fff5f5;       /* 柔和红底 */
+    border-radius: 6px;
+  }}
+
+  /* Failure Panel 标题 */
+  .failure-panel.retry-style h4 {{
+    margin: 0 0 10px;
+    font-size: 15px;
+    font-weight: bold;
+    color: #d32f2f;
+  }}
+
+  /* 内部 section 间距收紧 */
+  .failure-panel.retry-style .section {{
+    margin-bottom: 10px;
+  }}
+
 </style>
 
 <script>
@@ -958,7 +987,6 @@ window.onload = function () {{
   {attempt_diff}
 </div>
 
-<br/><br/>
 <div class="tabs">{tabs}</div>
 
 {cards}
