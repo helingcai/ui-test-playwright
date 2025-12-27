@@ -800,22 +800,54 @@ def attach_attempt_summary(attempts: list[dict]):
     border-radius: 5px;}}
     
   /* ===== Attempt Diff Analysis ===== */
-  .attempt_diff .section {{
-    margin-bottom: 15px;
+  .attempt-diff {{
+    margin: 16px 0;
+    padding: 12px 14px;
+    background: #f5f7fa;
+    border: 1px solid #dce3ea;
+    border-left: 4px solid #64b5f6;
+    border-radius: 6px;
     }}
-  .attempt_diff details {{
-    margin-bottom: 10px;
+  .attempt-diff h3 {{
+    margin: 0 0 8px 0;
+    font-size: 16px;
     }}
-  .attempt_diff pre {{
-    background-color: #f4f4f4;
+  .attempt-diff details {{
+    margin: 4px 0; 
+    }}
+  .attempt-diff summary {{
+    list-style: none;       /* 去掉小三角 */
+    cursor: pointer;
+    }}
+  .attempt-diff summary::-webkit-details-marker {{
+    display: none;          /* Chrome */
+    }}
+  .attempt-diff summary button {{
+    width: 100%;
+    text-align: left;
+    padding: 6px 10px;      /* 👈 压缩高度 */
+    margin: 0;              /* 👈 重要 */
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    }}
+  .attempt-diff summary button:hover {{
+    background: #e3f2fd;
+    }}
+  .attempt-diff pre {{
+    margin: 6px 0 8px 0;
     padding: 10px;
-    border-radius: 5px;
-    white-space: pre-wrap;
-    word-wrap: break-word;
+    background: #f8f9fa;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
     font-size: 12px;
-    max-height: 300px;
-    overflow-y: scroll;  /* 滚动条 */
-  }}
+    white-space: pre-wrap;
+    max-height: 260px;
+    overflow-y: auto;
+    }}
       
     img {{ max-width:100%; border:1px solid #ccc; }}
 </style>
@@ -846,9 +878,14 @@ window.onload = function () {{
   {retry_insight_html}
 </div>
 
-<div class="section">
-  <summary><b>🔍 Attempt Diff Analysis</b></summary>
-  <pre>{attempt_diff}</pre> 
+# <div class="section">
+#   <summary><b>🔍 Attempt Diff Analysis</b></summary>
+#   <pre>{attempt_diff}</pre> 
+# </div>
+
+<div class="attempt-diff">
+  <h3>🔍 Attempt Diff Analysis</h3>
+  {attempt_diff}
 </div>
 
 <div class="chain">{chain}</div>
