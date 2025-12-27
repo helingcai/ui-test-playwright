@@ -376,7 +376,7 @@ def render_failure_panel(base_dir: Path, attempt: int) -> str:
         </details>
       </div>
 
-      <div class="section">
+      <div class="section class="trace-block">
         {trace_block}
       </div>
     </div>
@@ -585,13 +585,12 @@ def attach_attempt_summary(attempts: list[dict]):
           <div class="info-block url">
             🌏 URL: <a href="{a['url']}" target="_blank">{a['url']}</a>
           </div>
-          <br/>
           <!-- Artifacts Block -->
           <div class="info-block artifacts">
             <b>Artifacts</b><br/>
             {'✔️' if a['has_screenshot'] else '❌'} <span>Screenshot</span><br/>
             {'✔️' if a['has_video'] else '❌'} <span>Video</span><br/>
-            {'✔️' if a['has_trace'] else '❌'} <span>Trace</span><br/><br/>
+            {'✔️' if a['has_trace'] else '❌'} <span>Trace</span>
           </div>
 
           <!-- Failure Panel Button -->
@@ -841,9 +840,6 @@ def attach_attempt_summary(attempts: list[dict]):
   /* Panel Style */
   .panel {{
     display: none;
-    margin-top: 16px;
-    padding: 5px;
-    border: 1px solid #ddd;
     background-color: #fafafa;
     border-radius: 5px;}}
     
@@ -950,6 +946,10 @@ def attach_attempt_summary(attempts: list[dict]):
   /* 内部 section 间距收紧 */
   .failure-panel.retry-style .section {{
     margin-bottom: 10px;
+  }}
+  /* trace特殊添加 */
+  .failure-panel.retry-style .section.trace-block {{
+    margin-bottom: 0px;
   }}
 
 </style>
