@@ -878,11 +878,6 @@ window.onload = function () {{
   {retry_insight_html}
 </div>
 
-# <div class="section">
-#   <summary><b>🔍 Attempt Diff Analysis</b></summary>
-#   <pre>{attempt_diff}</pre> 
-# </div>
-
 <div class="attempt-diff">
   <h3>🔍 Attempt Diff Analysis</h3>
   {attempt_diff}
@@ -902,3 +897,4 @@ window.onload = function () {{
         name=" Attempt Summary",
         attachment_type=allure.attachment_type.HTML
     )
+
