@@ -177,22 +177,54 @@
     border-radius: 5px;}
     
   /* ===== Attempt Diff Analysis ===== */
-  .attempt_diff .section {
-    margin-bottom: 15px;
+  .attempt-diff {
+    margin: 16px 0;
+    padding: 12px 14px;
+    background: #f5f7fa;
+    border: 1px solid #dce3ea;
+    border-left: 4px solid #64b5f6;
+    border-radius: 6px;
     }
-  .attempt_diff details {
-    margin-bottom: 10px;
+  .attempt-diff h3 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
     }
-  .attempt_diff pre {
-    background-color: #f4f4f4;
+  .attempt-diff details {
+    margin: 4px 0; 
+    }
+  .attempt-diff summary {
+    list-style: none;       /* 去掉小三角 */
+    cursor: pointer;
+    }
+  .attempt-diff summary::-webkit-details-marker {
+    display: none;          /* Chrome */
+    }
+  .attempt-diff summary button {
+    width: 100%;
+    text-align: left;
+    padding: 6px 10px;      /* 👈 压缩高度 */
+    margin: 0;              /* 👈 重要 */
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    }
+  .attempt-diff summary button:hover {
+    background: #e3f2fd;
+    }
+  .attempt-diff pre {
+    margin: 6px 0 8px 0;
     padding: 10px;
-    border-radius: 5px;
-    white-space: pre-wrap;
-    word-wrap: break-word;
+    background: #f8f9fa;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
     font-size: 12px;
-    max-height: 300px;
-    overflow-y: scroll;  /* 滚动条 */
-  }
+    white-space: pre-wrap;
+    max-height: 260px;
+    overflow-y: auto;
+    }
       
     img { max-width:100%; border:1px solid #ccc; }
 </style>
@@ -223,13 +255,13 @@ window.onload = function () {
   <ul><li>• All 3 attempts failed</li><li>• Error message changed between attempts</li></ul>
 </div>
 
-<div class="section">
-  <summary><b>🔍 Attempt Diff Analysis</b></summary>
-  <pre>
+# <div class="section">
+#   <summary><b>🔍 Attempt Diff Analysis</b></summary>
+#   <pre>
                 <details>
                   <summary><button>🛑 Error Differences</button></summary>
-                  <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f5a9b974d00>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f5a9939e260>
+                  <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f3de2eeb250>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f3de2ea4880>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -257,8 +289,8 @@ actual_msg = 'Thank you for your order!', expect_msg = '哈哈哈!'
 E       AssertionError: 预期提示信息：哈哈哈!，不存在于Thank you for your order!
 
 assertions/check_out_assert.py:10: AssertionError
-self = <tests.check_out_test.TestCheckOut object at 0x7f5a9b974d00>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f5a9936fca0>
+self = <tests.check_out_test.TestCheckOut object at 0x7f3de2eeb250>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f3de08870d0>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -286,8 +318,8 @@ actual_msg = 'Thank you for your order!', expect_msg = '哈哈哈!'
 E       AssertionError: 预期提示信息：哈哈哈!，不存在于Thank you for your order!
 
 assertions/check_out_assert.py:10: AssertionError
-self = <tests.check_out_test.TestCheckOut object at 0x7f5a9b974d00>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f5a9b989db0>
+self = <tests.check_out_test.TestCheckOut object at 0x7f3de2eeb250>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f3de2d6bbb0>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -319,10 +351,112 @@ assertions/check_out_assert.py:10: AssertionError</pre>
                 
                 <details>
                   <summary><button>⏱ Duration Differences</button></summary>
-                  <pre>0.04
+                  <pre>0.03
 0.01</pre>
                 </details>
                 </pre> 
+# </div>
+
+<div class="attempt-diff">
+  <h3>🔍 Attempt Diff Analysis</h3>
+  
+                <details>
+                  <summary><button>🛑 Error Differences</button></summary>
+                  <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f3de2eeb250>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f3de2ea4880>
+
+    def test_finish_submit_order(self, check_out_page):
+        """验证提交订单"""
+        check_out_page.prepare(URLS[ENV]["inventory"], ADD_PRODUCT_NUM, "/cart.html", "/checkout-step-one.html")
+        check_out_page.fill_container(CONTAINER_INFO["first_name"], CONTAINER_INFO["last_name"],
+                                      CONTAINER_INFO["postal"])
+        check_out_page.stet_one_continue("/checkout-step-two.html")
+        check_out_page.verify_order_products_match_added()
+        check_out_page.verify_order_base_info()
+        check_out_page.step_two_submit("/checkout-complete.html")
+>       check_out_page.verify_submit_order(FINISH_PAGE_MESSAGE)
+
+tests/check_out_test.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pages/check_out_page.py:151: in verify_submit_order
+    CheckOutAssert.tips_message(self.text(self.finish_message), finish_message)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+actual_msg = 'Thank you for your order!', expect_msg = '哈哈哈!'
+
+    @staticmethod
+    def tips_message(actual_msg: str, expect_msg: str):
+        """收件人为空，点击continue按钮"""
+>       assert expect_msg in actual_msg, f"预期提示信息：{expect_msg}，不存在于{actual_msg}"
+E       AssertionError: 预期提示信息：哈哈哈!，不存在于Thank you for your order!
+
+assertions/check_out_assert.py:10: AssertionError
+self = <tests.check_out_test.TestCheckOut object at 0x7f3de2eeb250>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f3de08870d0>
+
+    def test_finish_submit_order(self, check_out_page):
+        """验证提交订单"""
+        check_out_page.prepare(URLS[ENV]["inventory"], ADD_PRODUCT_NUM, "/cart.html", "/checkout-step-one.html")
+        check_out_page.fill_container(CONTAINER_INFO["first_name"], CONTAINER_INFO["last_name"],
+                                      CONTAINER_INFO["postal"])
+        check_out_page.stet_one_continue("/checkout-step-two.html")
+        check_out_page.verify_order_products_match_added()
+        check_out_page.verify_order_base_info()
+        check_out_page.step_two_submit("/checkout-complete.html")
+>       check_out_page.verify_submit_order(FINISH_PAGE_MESSAGE)
+
+tests/check_out_test.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pages/check_out_page.py:151: in verify_submit_order
+    CheckOutAssert.tips_message(self.text(self.finish_message), finish_message)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+actual_msg = 'Thank you for your order!', expect_msg = '哈哈哈!'
+
+    @staticmethod
+    def tips_message(actual_msg: str, expect_msg: str):
+        """收件人为空，点击continue按钮"""
+>       assert expect_msg in actual_msg, f"预期提示信息：{expect_msg}，不存在于{actual_msg}"
+E       AssertionError: 预期提示信息：哈哈哈!，不存在于Thank you for your order!
+
+assertions/check_out_assert.py:10: AssertionError
+self = <tests.check_out_test.TestCheckOut object at 0x7f3de2eeb250>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f3de2d6bbb0>
+
+    def test_finish_submit_order(self, check_out_page):
+        """验证提交订单"""
+        check_out_page.prepare(URLS[ENV]["inventory"], ADD_PRODUCT_NUM, "/cart.html", "/checkout-step-one.html")
+        check_out_page.fill_container(CONTAINER_INFO["first_name"], CONTAINER_INFO["last_name"],
+                                      CONTAINER_INFO["postal"])
+        check_out_page.stet_one_continue("/checkout-step-two.html")
+        check_out_page.verify_order_products_match_added()
+        check_out_page.verify_order_base_info()
+        check_out_page.step_two_submit("/checkout-complete.html")
+>       check_out_page.verify_submit_order(FINISH_PAGE_MESSAGE)
+
+tests/check_out_test.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pages/check_out_page.py:151: in verify_submit_order
+    CheckOutAssert.tips_message(self.text(self.finish_message), finish_message)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+actual_msg = 'Thank you for your order!', expect_msg = '哈哈哈!'
+
+    @staticmethod
+    def tips_message(actual_msg: str, expect_msg: str):
+        """收件人为空，点击continue按钮"""
+>       assert expect_msg in actual_msg, f"预期提示信息：{expect_msg}，不存在于{actual_msg}"
+E       AssertionError: 预期提示信息：哈哈哈!，不存在于Thank you for your order!
+
+assertions/check_out_assert.py:10: AssertionError</pre>
+                </details>
+                
+                <details>
+                  <summary><button>⏱ Duration Differences</button></summary>
+                  <pre>0.03
+0.01</pre>
+                </details>
+                
 </div>
 
 <div class="chain"><span class='attempt-status failed'>Attempt 1 ❌</span> → <span class='attempt-status failed'>Attempt 2 ❌</span> → <span class='attempt-status failed'>Attempt 3 ❌</span></div>
@@ -346,12 +480,12 @@ assertions/check_out_assert.py:10: AssertionError</pre>
           <h3 class='card-header'>Attempt 1 ❌ FAILED</h3>
           <hr class="dashed"/>
           <div class="info-block duration">
-            🕑 Duration: <span>0.04s</span>
+            🕑 Duration: <span>0.03s</span>
           </div>
           
           <div class="info-block error">
-            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f5a9b974d00>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f5a9b989db0>
+            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f3de2eeb250>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f3de2ea4880>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -522,8 +656,8 @@ assertions/check_out_assert.py:10: AssertionError</pre>
           </div>
           
           <div class="info-block error">
-            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f5a9b974d00>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f5a9939e260>
+            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f3de2eeb250>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f3de2d6bbb0>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -694,8 +828,8 @@ assertions/check_out_assert.py:10: AssertionError</pre>
           </div>
           
           <div class="info-block error">
-            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f5a9b974d00>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f5a9936fca0>
+            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f3de2eeb250>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f3de08870d0>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
