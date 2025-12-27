@@ -285,40 +285,85 @@ def render_trace_open_block() -> str:
     #   <textarea id="cmd" style="display:none;">{windows_cmd}</textarea>
     #   <textarea id="unix" style="display:none;">{macos_linux}</textarea>
 
-    return f"""
-    <details>
-      <summary><b>🧭 Playwright Trace</b></summary>
-      <p class="hint">
-        1️⃣ Click<b>📎 Playwright-Trace.zip (used by Failure Panel)</b><br/>
-        2️⃣ Download <b>Playwright-Trace.zip</b><br/>
-        3️⃣ Run in terminal:
-      </p>
-      <textarea id="trace-cmd" style="display:none;">npx playwright show-trace Playwright-Trace.zip</textarea>
-      <button type="button" data-label="📋 Copy show-trace Command" onclick="copyCmd(this,'trace-cmd');return false;">
-        📋 Copy show-trace Command
-      </button>
-      <script type="text/javascript">
-        function copyCmd(button,id) {{
-          const el = document.getElementById(id);
+    # return f"""
+    # <details>
+    #   <summary><b>🧭 Playwright Trace</b></summary>
+    #   <p class="hint">
+    #     1️⃣ Click<b>📎 Playwright-Trace.zip (used by Failure Panel)</b><br/>
+    #     2️⃣ Download <b>Playwright-Trace.zip</b><br/>
+    #     3️⃣ Run in terminal:
+    #   </p>
+    #   <textarea id="trace-cmd" style="display:none;">npx playwright show-trace Playwright-Trace.zip</textarea>
+    #   <button type="button" data-label="📋 Copy show-trace Command" onclick="copyCmd(this,'trace-cmd');return false;">
+    #     📋 Copy show-trace Command
+    #   </button>
+    #   <script type="text/javascript">
+    #     function copyCmd(button,id) {{
+    #       const el = document.getElementById(id);
+    #
+    #       el.style.display = 'block';
+    #       el.select();
+    #       document.execCommand('copy');
+    #       el.style.display = 'none';
+    #
+    #       // 修改按钮状态
+    #       const original = button.getAttribute('data-label');
+    #       button.innerText = '✅ Copied';
+    #       button.disabled = true;
+    #
+    #       // 2 秒后恢复
+    #       setTimeout(() => {{
+    #       button.innerText = original;
+    #       button.disabled = false;}}, 2000);
+    #     }}
+    #   </script>
+    # </details>
+    # """
+    return """
+        <details>
+          <summary><b>🧭 Playwright Trace</b></summary>
+          <p class="hint">
+            1️⃣ Click <b>📎 Playwright-Trace.zip (used by Failure Panel)</b><br/>
+            2️⃣ Download <b>Playwright-Trace.zip</b><br/>
+            3️⃣ Run in terminal:
+          </p>
 
-          el.style.display = 'block';
-          el.select();
-          document.execCommand('copy');
-          el.style.display = 'none';
+          <pre id="trace-cmd" class="trace-cmd">npx playwright show-trace Playwright-Trace.zip</pre>
 
-          // 修改按钮状态
-          const original = button.getAttribute('data-label');
-          button.innerText = '✅ Copied';
-          button.disabled = true;
+          <button
+            type="button"
+            class="copy-btn"
+            onclick="copyTraceCmd(this);return false;">
+            📋 Copy show-trace Command
+          </button>
 
-          // 2 秒后恢复
-          setTimeout(() => {{
-          button.innerText = original;
-          button.disabled = false;}}, 2000);
-        }}
-      </script>
-    </details>
-    """
+          <script type="text/javascript">
+            function copyTraceCmd(button) {
+              const cmd = document.getElementById('trace-cmd');
+
+              navigator.clipboard.writeText(cmd.innerText).then(() => {
+                //按钮状态
+                const original = button.innerText;
+                button.innerText = '✅ Copied';
+                button.classList.add('copied');
+                button.disabled = true;
+                
+                //命令闪光
+                cmd.classList.add('flash');
+
+                setTimeout(() => {
+                  button.innerText = original;
+                  button.classList.remove('copied');
+                  button.disabled = false;
+                  button.classList.remove('flash');
+                }, 2000);
+              }).catch(err => {
+                alert('❌ Copy failed: ' + err);
+              });
+            }
+          </script>
+        </details>
+        """
 
 
 def render_failure_panel(base_dir: Path, attempt: int) -> str:
@@ -496,6 +541,7 @@ def calculate_attempt_diff(attempts: list[dict]):
 
     return "".join(diff_summary)
 
+
 def render_attempt_chain(attempts: list[dict]) -> str:
     statuses = [a["status"] for a in attempts]
     unique = set(statuses)
@@ -534,8 +580,9 @@ def render_attempt_chain(attempts: list[dict]) -> str:
     </div>
     """
 
+
 def attach_attempt_summary(attempts: list[dict]):
-    attempt_chain=render_attempt_chain(attempts)
+    attempt_chain = render_attempt_chain(attempts)
     # retry attempt调用链路
     retry_insight = build_retry_insight(attempts)
     retry_insight_html = ""
@@ -551,7 +598,6 @@ def attach_attempt_summary(attempts: list[dict]):
     #     f"<span class='attempt-status {'failed' if a['status'] == 'FAILED' else 'passed'}'>Attempt {a['attempt']} {'❌' if a['status'] == 'FAILED' else '✔'}</span>"
     #     for a in attempts
     # )
-
 
     tabs = ""
     cards = ""
@@ -950,6 +996,35 @@ def attach_attempt_summary(attempts: list[dict]):
   /* trace特殊添加 */
   .failure-panel.retry-style .section.trace-block {{
     margin-bottom: 0px;
+  }}
+
+  /* Copy button */
+  .copy-btn {{
+    padding: 8px 14px;
+    border-radius: 5px;
+    background-color: #e0f7fa;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }}
+    
+  .copy-btn.copied {{
+    background-color: #4caf50;
+    color: white;
+  }}
+    
+  /* Command block */
+  .trace-cmd {{
+    background: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.6s ease, box-shadow 0.6s ease;
+  }}
+    
+  /* ✨ Green flash effect */
+  .trace-cmd.flash {{
+    background-color: #e8f5e9;
+    box-shadow: 0 0 0 2px #4caf50 inset;
   }}
 
 </style>
