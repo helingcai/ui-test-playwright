@@ -3,3 +3,4 @@ allure-report/
 .pytest_cache/
 __pycache__/
 *.log
+.idea
