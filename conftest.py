@@ -460,7 +460,6 @@ def compare_field(attempts: list[dict], field: str):
     """ 比较同一字段在不同 attempts 中的差异
     :param attempts: 一个包含所有 attempts 信息的列表
     :param field: 需要比较的字段（例如 error, url, duration）
-    :param label: 用于输出的字段标签（例如 'Error', 'URL'）
     :return: 差异文本，如果没有差异则返回空字符串 """
     field_values = [attempt.get(field) for attempt in attempts]
     unique_values = set(field_values)
@@ -534,8 +533,46 @@ def calculate_attempt_diff(attempts: list[dict]):
 
     return "".join(diff_summary)
 
+def render_attempt_chain(attempts: list[dict]) -> str:
+    statuses = [a["status"] for a in attempts]
+    unique = set(statuses)
+
+    # 全部同状态（比如全失败）
+    if len(unique) == 1:
+        status = statuses[0]
+        if status == "FAILED":
+            return f"""
+            <div class="attempt-chain muted">
+              🔁 Attempts: {len(attempts)} failures
+            </div>
+            """
+        else:
+            return f"""
+            <div class="attempt-chain muted">
+              🔁 Attempts: passed
+            </div>
+            """
+
+    # 有状态变化（重要）
+    badges = []
+    for a in attempts:
+        cls = "failed" if a["status"] == "FAILED" else "passed"
+        icon = "❌" if a["status"] == "FAILED" else "✅"
+        badges.append(
+            f'<span class="attempt-badge {cls}">Attempt {a["attempt"]} {icon}</span>'
+        )
+
+    chain = '<span class="arrow">→</span>'.join(badges)
+
+    return f"""
+    <div class="attempt-chain">
+      <div class="label">🔁 Attempts</div>
+      <div class="badges">{chain}</div>
+    </div>
+    """
 
 def attach_attempt_summary(attempts: list[dict]):
+    attempt_chain=render_attempt_chain(attempts)
     # retry attempt调用链路
     retry_insight = build_retry_insight(attempts)
     retry_insight_html = ""
@@ -547,10 +584,11 @@ def attach_attempt_summary(attempts: list[dict]):
     # 计算 Attempt Diff
     attempt_diff = calculate_attempt_diff(attempts)
 
-    chain = " → ".join(
-        f"<span class='attempt-status {'failed' if a['status'] == 'FAILED' else 'passed'}'>Attempt {a['attempt']} {'❌' if a['status'] == 'FAILED' else '✔'}</span>"
-        for a in attempts
-    )
+    # chain = " → ".join(
+    #     f"<span class='attempt-status {'failed' if a['status'] == 'FAILED' else 'passed'}'>Attempt {a['attempt']} {'❌' if a['status'] == 'FAILED' else '✔'}</span>"
+    #     for a in attempts
+    # )
+
 
     tabs = ""
     cards = ""
@@ -649,19 +687,56 @@ def attach_attempt_summary(attempts: list[dict]):
     
   /* ===== Attempt Chain ===== */
   /* General Styling for the Attempt Chain */
-  .attempt-status {{
-    padding: 5px 10px;
-    margin-right: 10px;
-    border-radius: 5px;
-    font-weight: bold;
-    color: #333;
-  }}
-  .attempt-status.failed {{
-    color: #f44336;
-  }}
-  .attempt-status.passed {{
-    color: #4caf50;
-  }}
+  .attempt-chain {{
+  margin: 12px 0 16px 0;
+  padding: 8px 12px;
+  background: #f7f9fb;
+  border-left: 4px solid #6c8cff;
+  border-radius: 4px;
+  font-size: 13px;
+}}
+
+.attempt-chain .label {{
+  font-weight: bold;
+  margin-bottom: 6px;
+}}
+
+.attempt-chain .badges {{
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}}
+
+.attempt-badge {{
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+}}
+
+.attempt-badge.failed {{
+  background: #ffe5e5;
+  color: #c62828;
+}}
+
+.attempt-badge.passed {{
+  background: #e6f4ea;
+  color: #2e7d32;
+}}
+
+.arrow {{
+  margin: 0 4px;
+  color: #999;
+}}
+
+.attempt-chain.muted {{
+  background: none;
+  border-left: none;
+  color: #777;
+  padding: 0;
+  font-size: 13px;
+}}
   
   /* ===== Tabs ===== */
   .tabs {{
@@ -871,6 +946,8 @@ window.onload = function () {{
 <body>
 <h2>🔁 Attempt Summary</h2>
 
+{attempt_chain}
+
 <div class="retry-insight">
   <h3>🧠 Retry Insight</h3>
   {retry_insight_html}
@@ -881,7 +958,6 @@ window.onload = function () {{
   {attempt_diff}
 </div>
 
-<div class="chain">{chain}</div>
 <br/><br/>
 <div class="tabs">{tabs}</div>
 
