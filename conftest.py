@@ -328,7 +328,7 @@ def render_trace_open_block() -> str:
             3️⃣ Run in terminal:
           </p>
 
-          <pre id="trace-cmd" class="trace-cmd">npx playwright show-trace Playwright-Trace.zip</pre>
+          <pre id="trace-cmd" class="trace-cmd" style="display:none;">npx playwright show-trace Playwright-Trace.zip</pre>
 
           <button
             type="button"
@@ -1074,3 +1074,4 @@ window.onload = function () {{
         name=" Attempt Summary",
         attachment_type=allure.attachment_type.HTML
     )
+
