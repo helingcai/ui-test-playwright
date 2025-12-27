@@ -217,9 +217,6 @@
   /* Panel Style */
   .panel {
     display: none;
-    margin-top: 16px;
-    padding: 5px;
-    border: 1px solid #ddd;
     background-color: #fafafa;
     border-radius: 5px;}
     
@@ -327,6 +324,10 @@
   .failure-panel.retry-style .section {
     margin-bottom: 10px;
   }
+  /* trace特殊添加 */
+  .failure-panel.retry-style .section.trace-block {
+    margin-bottom: 0px;
+  }
 
 </style>
 
@@ -367,8 +368,8 @@ window.onload = function () {
   
                 <details>
                   <summary class="attempt-diff-summary">🛑 Error Differences</summary>
-                  <pre>self = <tests.check_out_test.TestCheckOut object at 0x7faeb9344cd0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7faeb6d90ee0>
+                  <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f161d2d0ca0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f161d2bb400>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -396,8 +397,8 @@ actual_msg = 'Thank you for your order!', expect_msg = '哈哈哈!'
 E       AssertionError: 预期提示信息：哈哈哈!，不存在于Thank you for your order!
 
 assertions/check_out_assert.py:10: AssertionError
-self = <tests.check_out_test.TestCheckOut object at 0x7faeb9344cd0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7faeb6d6b850>
+self = <tests.check_out_test.TestCheckOut object at 0x7f161d2d0ca0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f161accb460>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -425,8 +426,8 @@ actual_msg = 'Thank you for your order!', expect_msg = '哈哈哈!'
 E       AssertionError: 预期提示信息：哈哈哈!，不存在于Thank you for your order!
 
 assertions/check_out_assert.py:10: AssertionError
-self = <tests.check_out_test.TestCheckOut object at 0x7faeb9344cd0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7faeb937e770>
+self = <tests.check_out_test.TestCheckOut object at 0x7f161d2d0ca0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f161ab3fb80>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -487,8 +488,8 @@ assertions/check_out_assert.py:10: AssertionError</pre>
           </div>
           
           <div class="info-block error">
-            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7faeb9344cd0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7faeb937e770>
+            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f161d2d0ca0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f161d2bb400>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -521,13 +522,12 @@ assertions/check_out_assert.py:10: AssertionError</pre>
           <div class="info-block url">
             🌏 URL: <a href="https://www.saucedemo.com/checkout-complete.html" target="_blank">https://www.saucedemo.com/checkout-complete.html</a>
           </div>
-          <br/>
           <!-- Artifacts Block -->
           <div class="info-block artifacts">
             <b>Artifacts</b><br/>
             ✔️ <span>Screenshot</span><br/>
             ✔️ <span>Video</span><br/>
-            ✔️ <span>Trace</span><br/><br/>
+            ✔️ <span>Trace</span>
           </div>
 
           <!-- Failure Panel Button -->
@@ -573,7 +573,7 @@ assertions/check_out_assert.py:10: AssertionError</pre>
         </details>
       </div>
 
-      <div class="section">
+      <div class="section class="trace-block">
         
     <details>
       <summary><b>🧭 Playwright Trace</b></summary>
@@ -622,8 +622,8 @@ assertions/check_out_assert.py:10: AssertionError</pre>
           </div>
           
           <div class="info-block error">
-            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7faeb9344cd0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7faeb6d90ee0>
+            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f161d2d0ca0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f161accb460>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -656,13 +656,12 @@ assertions/check_out_assert.py:10: AssertionError</pre>
           <div class="info-block url">
             🌏 URL: <a href="https://www.saucedemo.com/checkout-complete.html" target="_blank">https://www.saucedemo.com/checkout-complete.html</a>
           </div>
-          <br/>
           <!-- Artifacts Block -->
           <div class="info-block artifacts">
             <b>Artifacts</b><br/>
             ✔️ <span>Screenshot</span><br/>
             ✔️ <span>Video</span><br/>
-            ✔️ <span>Trace</span><br/><br/>
+            ✔️ <span>Trace</span>
           </div>
 
           <!-- Failure Panel Button -->
@@ -708,7 +707,7 @@ assertions/check_out_assert.py:10: AssertionError</pre>
         </details>
       </div>
 
-      <div class="section">
+      <div class="section class="trace-block">
         
     <details>
       <summary><b>🧭 Playwright Trace</b></summary>
@@ -757,8 +756,8 @@ assertions/check_out_assert.py:10: AssertionError</pre>
           </div>
           
           <div class="info-block error">
-            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7faeb9344cd0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7faeb6d6b850>
+            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f161d2d0ca0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f161ab3fb80>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -791,13 +790,12 @@ assertions/check_out_assert.py:10: AssertionError</pre>
           <div class="info-block url">
             🌏 URL: <a href="https://www.saucedemo.com/checkout-complete.html" target="_blank">https://www.saucedemo.com/checkout-complete.html</a>
           </div>
-          <br/>
           <!-- Artifacts Block -->
           <div class="info-block artifacts">
             <b>Artifacts</b><br/>
             ✔️ <span>Screenshot</span><br/>
             ✔️ <span>Video</span><br/>
-            ✔️ <span>Trace</span><br/><br/>
+            ✔️ <span>Trace</span>
           </div>
 
           <!-- Failure Panel Button -->
@@ -843,7 +841,7 @@ assertions/check_out_assert.py:10: AssertionError</pre>
         </details>
       </div>
 
-      <div class="section">
+      <div class="section class="trace-block">
         
     <details>
       <summary><b>🧭 Playwright Trace</b></summary>
