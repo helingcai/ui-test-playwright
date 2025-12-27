@@ -329,6 +329,35 @@
     margin-bottom: 0px;
   }
 
+  /* Copy button */
+  .copy-btn {
+    padding: 8px 14px;
+    border-radius: 5px;
+    background-color: #e0f7fa;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+    
+  .copy-btn.copied {
+    background-color: #4caf50;
+    color: white;
+  }
+    
+  /* Command block */
+  .trace-cmd {
+    background: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.6s ease, box-shadow 0.6s ease;
+  }
+    
+  /* ✨ Green flash effect */
+  .trace-cmd.flash {
+    background-color: #e8f5e9;
+    box-shadow: 0 0 0 2px #4caf50 inset;
+  }
+
 </style>
 
 <script>
@@ -368,8 +397,8 @@ window.onload = function () {
   
                 <details>
                   <summary class="attempt-diff-summary">🛑 Error Differences</summary>
-                  <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f161d2d0ca0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f161d2bb400>
+                  <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f7c62774cd0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f7c60169120>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -397,8 +426,8 @@ actual_msg = 'Thank you for your order!', expect_msg = '哈哈哈!'
 E       AssertionError: 预期提示信息：哈哈哈!，不存在于Thank you for your order!
 
 assertions/check_out_assert.py:10: AssertionError
-self = <tests.check_out_test.TestCheckOut object at 0x7f161d2d0ca0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f161accb460>
+self = <tests.check_out_test.TestCheckOut object at 0x7f7c62774cd0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f7c625ed750>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -426,8 +455,8 @@ actual_msg = 'Thank you for your order!', expect_msg = '哈哈哈!'
 E       AssertionError: 预期提示信息：哈哈哈!，不存在于Thank you for your order!
 
 assertions/check_out_assert.py:10: AssertionError
-self = <tests.check_out_test.TestCheckOut object at 0x7f161d2d0ca0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f161ab3fb80>
+self = <tests.check_out_test.TestCheckOut object at 0x7f7c62774cd0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f7c60197520>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -488,8 +517,8 @@ assertions/check_out_assert.py:10: AssertionError</pre>
           </div>
           
           <div class="info-block error">
-            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f161d2d0ca0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f161d2bb400>
+            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f7c62774cd0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f7c60169120>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -575,39 +604,50 @@ assertions/check_out_assert.py:10: AssertionError</pre>
 
       <div class="section class="trace-block">
         
-    <details>
-      <summary><b>🧭 Playwright Trace</b></summary>
-      <p class="hint">
-        1️⃣ Click<b>📎 Playwright-Trace.zip (used by Failure Panel)</b><br/>
-        2️⃣ Download <b>Playwright-Trace.zip</b><br/>
-        3️⃣ Run in terminal:
-      </p>
-      <textarea id="trace-cmd" style="display:none;">npx playwright show-trace Playwright-Trace.zip</textarea>
-      <button type="button" data-label="📋 Copy show-trace Command" onclick="copyCmd(this,'trace-cmd');return false;">
-        📋 Copy show-trace Command
-      </button>
-      <script type="text/javascript">
-        function copyCmd(button,id) {
-          const el = document.getElementById(id);
+        <details>
+          <summary><b>🧭 Playwright Trace</b></summary>
+          <p class="hint">
+            1️⃣ Click <b>📎 Playwright-Trace.zip (used by Failure Panel)</b><br/>
+            2️⃣ Download <b>Playwright-Trace.zip</b><br/>
+            3️⃣ Run in terminal:
+          </p>
 
-          el.style.display = 'block';
-          el.select();
-          document.execCommand('copy');
-          el.style.display = 'none';
+          <pre id="trace-cmd" class="trace-cmd">npx playwright show-trace Playwright-Trace.zip</pre>
 
-          // 修改按钮状态
-          const original = button.getAttribute('data-label');
-          button.innerText = '✅ Copied';
-          button.disabled = true;
+          <button
+            type="button"
+            class="copy-btn"
+            onclick="copyTraceCmd(this);return false;">
+            📋 Copy show-trace Command
+          </button>
 
-          // 2 秒后恢复
-          setTimeout(() => {
-          button.innerText = original;
-          button.disabled = false;}, 2000);
-        }
-      </script>
-    </details>
-    
+          <script type="text/javascript">
+            function copyTraceCmd(button) {
+              const cmd = document.getElementById('trace-cmd');
+
+              navigator.clipboard.writeText(cmd.innerText).then(() => {
+                //按钮状态
+                const original = button.innerText;
+                button.innerText = '✅ Copied';
+                button.classList.add('copied');
+                button.disabled = true;
+                
+                //命令闪光
+                cmd.classList.add('flash');
+
+                setTimeout(() => {
+                  button.innerText = original;
+                  button.classList.remove('copied');
+                  button.disabled = false;
+                  button.classList.remove('flash');
+                }, 2000);
+              }).catch(err => {
+                alert('❌ Copy failed: ' + err);
+              });
+            }
+          </script>
+        </details>
+        
       </div>
     </div>
     
@@ -622,8 +662,8 @@ assertions/check_out_assert.py:10: AssertionError</pre>
           </div>
           
           <div class="info-block error">
-            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f161d2d0ca0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f161accb460>
+            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f7c62774cd0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f7c60197520>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -709,39 +749,50 @@ assertions/check_out_assert.py:10: AssertionError</pre>
 
       <div class="section class="trace-block">
         
-    <details>
-      <summary><b>🧭 Playwright Trace</b></summary>
-      <p class="hint">
-        1️⃣ Click<b>📎 Playwright-Trace.zip (used by Failure Panel)</b><br/>
-        2️⃣ Download <b>Playwright-Trace.zip</b><br/>
-        3️⃣ Run in terminal:
-      </p>
-      <textarea id="trace-cmd" style="display:none;">npx playwright show-trace Playwright-Trace.zip</textarea>
-      <button type="button" data-label="📋 Copy show-trace Command" onclick="copyCmd(this,'trace-cmd');return false;">
-        📋 Copy show-trace Command
-      </button>
-      <script type="text/javascript">
-        function copyCmd(button,id) {
-          const el = document.getElementById(id);
+        <details>
+          <summary><b>🧭 Playwright Trace</b></summary>
+          <p class="hint">
+            1️⃣ Click <b>📎 Playwright-Trace.zip (used by Failure Panel)</b><br/>
+            2️⃣ Download <b>Playwright-Trace.zip</b><br/>
+            3️⃣ Run in terminal:
+          </p>
 
-          el.style.display = 'block';
-          el.select();
-          document.execCommand('copy');
-          el.style.display = 'none';
+          <pre id="trace-cmd" class="trace-cmd">npx playwright show-trace Playwright-Trace.zip</pre>
 
-          // 修改按钮状态
-          const original = button.getAttribute('data-label');
-          button.innerText = '✅ Copied';
-          button.disabled = true;
+          <button
+            type="button"
+            class="copy-btn"
+            onclick="copyTraceCmd(this);return false;">
+            📋 Copy show-trace Command
+          </button>
 
-          // 2 秒后恢复
-          setTimeout(() => {
-          button.innerText = original;
-          button.disabled = false;}, 2000);
-        }
-      </script>
-    </details>
-    
+          <script type="text/javascript">
+            function copyTraceCmd(button) {
+              const cmd = document.getElementById('trace-cmd');
+
+              navigator.clipboard.writeText(cmd.innerText).then(() => {
+                //按钮状态
+                const original = button.innerText;
+                button.innerText = '✅ Copied';
+                button.classList.add('copied');
+                button.disabled = true;
+                
+                //命令闪光
+                cmd.classList.add('flash');
+
+                setTimeout(() => {
+                  button.innerText = original;
+                  button.classList.remove('copied');
+                  button.disabled = false;
+                  button.classList.remove('flash');
+                }, 2000);
+              }).catch(err => {
+                alert('❌ Copy failed: ' + err);
+              });
+            }
+          </script>
+        </details>
+        
       </div>
     </div>
     
@@ -756,8 +807,8 @@ assertions/check_out_assert.py:10: AssertionError</pre>
           </div>
           
           <div class="info-block error">
-            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f161d2d0ca0>
-check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f161ab3fb80>
+            💥 Error: <pre>self = <tests.check_out_test.TestCheckOut object at 0x7f7c62774cd0>
+check_out_page = <pages.check_out_page.CheckOutPage object at 0x7f7c625ed750>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -843,39 +894,50 @@ assertions/check_out_assert.py:10: AssertionError</pre>
 
       <div class="section class="trace-block">
         
-    <details>
-      <summary><b>🧭 Playwright Trace</b></summary>
-      <p class="hint">
-        1️⃣ Click<b>📎 Playwright-Trace.zip (used by Failure Panel)</b><br/>
-        2️⃣ Download <b>Playwright-Trace.zip</b><br/>
-        3️⃣ Run in terminal:
-      </p>
-      <textarea id="trace-cmd" style="display:none;">npx playwright show-trace Playwright-Trace.zip</textarea>
-      <button type="button" data-label="📋 Copy show-trace Command" onclick="copyCmd(this,'trace-cmd');return false;">
-        📋 Copy show-trace Command
-      </button>
-      <script type="text/javascript">
-        function copyCmd(button,id) {
-          const el = document.getElementById(id);
+        <details>
+          <summary><b>🧭 Playwright Trace</b></summary>
+          <p class="hint">
+            1️⃣ Click <b>📎 Playwright-Trace.zip (used by Failure Panel)</b><br/>
+            2️⃣ Download <b>Playwright-Trace.zip</b><br/>
+            3️⃣ Run in terminal:
+          </p>
 
-          el.style.display = 'block';
-          el.select();
-          document.execCommand('copy');
-          el.style.display = 'none';
+          <pre id="trace-cmd" class="trace-cmd">npx playwright show-trace Playwright-Trace.zip</pre>
 
-          // 修改按钮状态
-          const original = button.getAttribute('data-label');
-          button.innerText = '✅ Copied';
-          button.disabled = true;
+          <button
+            type="button"
+            class="copy-btn"
+            onclick="copyTraceCmd(this);return false;">
+            📋 Copy show-trace Command
+          </button>
 
-          // 2 秒后恢复
-          setTimeout(() => {
-          button.innerText = original;
-          button.disabled = false;}, 2000);
-        }
-      </script>
-    </details>
-    
+          <script type="text/javascript">
+            function copyTraceCmd(button) {
+              const cmd = document.getElementById('trace-cmd');
+
+              navigator.clipboard.writeText(cmd.innerText).then(() => {
+                //按钮状态
+                const original = button.innerText;
+                button.innerText = '✅ Copied';
+                button.classList.add('copied');
+                button.disabled = true;
+                
+                //命令闪光
+                cmd.classList.add('flash');
+
+                setTimeout(() => {
+                  button.innerText = original;
+                  button.classList.remove('copied');
+                  button.disabled = false;
+                  button.classList.remove('flash');
+                }, 2000);
+              }).catch(err => {
+                alert('❌ Copy failed: ' + err);
+              });
+            }
+          </script>
+        </details>
+        
       </div>
     </div>
     
