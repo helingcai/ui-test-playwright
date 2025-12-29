@@ -11,7 +11,9 @@ def render_attempt_chain(attempts: list[dict]) -> str:
     # 全部同状态（比如全失败）
     if len(unique) == 1:
         status = statuses[0]
-        return f'<div class="attempt-chain muted">🔁 Attempts: {"passed" if status == "PASSED" else len(attempts) + "failures"}</div>'
+        return (f'<div class="attempt-chain muted">'
+        f'🔁 Attempts: {"passed" if status == "PASSED" else str(len(attempts)) + "failures"}'
+        f'</div>')
 
     # 有状态变化（重要）
     badges = []
