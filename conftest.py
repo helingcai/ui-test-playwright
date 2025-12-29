@@ -177,7 +177,6 @@ def clean_directories(paths=None):
 def ensure_login_state_exists(path="storage/login.json"):
     """确保 login.json 存在且有效"""
     login_file = Path(path)
-
     if not login_file.exists() or login_file.stat().st_size == 0:
         print("🔐 login.json不存在或无效，重新生成")
         save_login_state()
@@ -201,26 +200,19 @@ def save_failure_artifacts(page, base_dir):
 
 def move_artifacts(src_video_dir, src_trace, dst_dir):
     """移动视频和trace到目标目录"""
-    # 移动视频
     for video_file in src_video_dir.glob("*.webm"):
         shutil.move(str(video_file), dst_dir / video_file.name)
-    # 移动trace
     if src_trace.exists():
         shutil.move(str(src_trace), dst_dir / "trace.zip")
 
 def attach_artifacts_to_allure(target_dir):
-    """将执行失败的 video / trace 附件到 Allure"""
+    """将 video / trace 附件到 Allure"""
     for video in target_dir.glob("*.webm"):
-        allure.attach.file(
-            video,
-            name="📎 Video (used by Failure Panel)",
-            attachment_type=allure.attachment_type.WEBM
-        )
+        allure.attach.file(video, name="📎 Video (used by Failure Panel)",
+                           attachment_type=allure.attachment_type.WEBM)
     trace = target_dir / "trace.zip"
     if trace.exists():
-        allure.attach.file(
-            trace,
-            name="📎 Playwright-Trace.zip (used by Failure Panel)")
+        allure.attach.file(trace, name="📎 Playwright-Trace.zip (used by Failure Panel)")
 
 def record_failed_attempt(item, attempt, status, duration, error=""):
     """记录一次失败的 attempt"""
