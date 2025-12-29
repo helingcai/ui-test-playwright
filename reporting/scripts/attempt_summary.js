@@ -12,7 +12,7 @@ function togglePanel(id) {
 
 /* 👇 页面加载完成后，自动展示最后一次失败的 Attempt */
 window.onload = function () {
-    show({last_failed});
+    show({{last_failed}});
 }
 
 function copyTraceCmd(button) {

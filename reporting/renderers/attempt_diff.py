@@ -11,50 +11,26 @@ def calculate_attempt_diff(attempts: list[dict]):
     error_summary = "🛑 Error Differences"
     error_diff = compare_field(attempts, 'error')
     if error_diff:
-        diff_summary.append(template_attempt_diff.replace("{{summary}}",error_summary).replace("{{content}}",error_diff))
-        # f"""
-        #                 <details>
-        #                   <summary class="attempt-diff-summary">🛑 Error Differences</summary>
-        #                   <pre>{error_diff}</pre>
-        #                 </details>
-        #                 """
+        diff_summary.append(template_attempt_diff.replace("{{summary}}",str(error_summary)).replace("{{content}}",str(error_diff)))
 
     # 页面 URL 差异
     url_summary = "🌍 URL Differences"
     url_diff = compare_field(attempts, 'url')
     if url_diff:
-        diff_summary.append(template_attempt_diff.replace("{{summary}}", url_summary).replace("{{content}}", url_diff))
-        # diff_summary.append(f"""
-        #        <details>
-        #          <summary class="attempt-diff-summary">🌍 URL Differences</summary>
-        #          <pre>{url_diff}</pre>
-        #        </details>
-        #        """)
+        diff_summary.append(template_attempt_diff.replace("{{summary}}", str(url_summary)).replace("{{content}}", str(url_diff)))
 
     # 持续时间差异
     duration_summary = "🕣 Duration Differences"
     duration_diff = compare_field(attempts, 'duration')
     if duration_diff:
-        diff_summary.append(template_attempt_diff.replace("{{summary}}", duration_summary).replace("{{content}}", duration_diff))
-        # diff_summary.append(f"""
-        #         <details>
-        #           <summary class="attempt-diff-summary">🕣 Duration Differences</summary>
-        #           <pre>{duration_diff}</pre>
-        #         </details>
-        #         """)
+        diff_summary.append(template_attempt_diff.replace("{{summary}}", str(duration_summary)).replace("{{content}}", str(duration_diff)))
 
     # 附件差异（截图、视频、trace）
     attachments_summary = "📎 Attachment Differences"
     attachments_diff = compare_attachments(attempts)
     if attachments_diff:
         diff_summary.append(
-            template_attempt_diff.replace("{{summary}}", attachments_summary).replace("{{content}}", attachments_diff))
-        # diff_summary.append(f"""
-        #         <details>
-        #           <summary class="attempt-diff-summary">📎 Attachment Differences</summary>
-        #           <pre>{attachments_diff}</pre>
-        #         </details>
-        #         """)
+            template_attempt_diff.replace("{{summary}}", str(attachments_summary)).replace("{{content}}", str(attachments_diff)))
 
     return "".join(diff_summary)
 

@@ -1,28 +1,30 @@
 <div id="attempt-{{aid}}" class="card {{active}}">
-  <h3 class='card-header'>Attempt {{aid}} {'❌ FAILED' if {{a['status']}} == 'FAILED' else '✅ PASSED'}</h3>
-  <hr class="dashed"/>
-  <div class="info-block duration">
-    🕑 Duration: <span>{{a['duration']}}s</span>
-  </div>
+    <h3 class='card-header'>Attempt {{aid}} {{status_icon}}</h3>
+    <hr class="dashed"/>
+    <div class="info-block duration">
+        🕑 Duration: <span>{{duration}}s</span>
+    </div>
 
-  <div class="info-block error">
-    💥 Error: <pre>{{a['error']}} or '-'</pre>
-  </div>
+    <div class="info-block error">
+        💥 Error:
+        <pre>{{error}}</pre>
+    </div>
 
-  <div class="info-block url">
-    🌏 URL: <a href="{{a['url']}}" target="_blank">{{a['url']}}</a>
-  </div>
-  <!-- Artifacts Block -->
-  <div class="info-block artifacts">
-    <b>Artifacts</b><br/>
-    {'✔️' if {{a['has_screenshot']}} else '❌'} <span>Screenshot</span><br/>
-    {'✔️' if {{a['has_video']}} else '❌'} <span>Video</span><br/>
-    {'✔️' if {{a['has_trace']}} else '❌'} <span>Trace</span>
-  </div>
+    <div class="info-block url">
+        🌏 URL: <a href="{{url}}" target="_blank">{{url}}</a>
+    </div>
+    <!-- Artifacts Block -->
+    <div class="info-block artifacts">
+        <b>Artifacts</b><br/>
+        {{screenshot}} <span>Screenshot</span><br/>
+        {{video}} <span>Video</span><br/>
+        {{trace}} <span>Trace</span>
+    </div>
 
-  <!-- Failure Panel Button -->
-  {'<button type="button" onclick="togglePanel(' + str({{aid}}) + ');return false;" class="panel-btn">🖲️ View Failure Panel (Attempt ' + str({{aid}}) + ')</button>' if {{a['status']}} == 'FAILED' else ''}
-  <div id="panel-{{aid}}" class="panel">
-    {{failure_panel_html}}
-  </div>
+    <!-- Failure Panel Button -->
+    {{view_failure_panel}}
+
+    <div id="panel-{{aid}}" class="panel">
+        {{failure_panel_html}}
+    </div>
 </div>

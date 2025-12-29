@@ -24,14 +24,14 @@ def attach_attempt_summary(attempts: list[dict]):
         default=attempts[-1]["attempt"]
     )
 
-    html = (template.replace("{{css}}", css)
-            .replace("{{js}}", js)
-            .replace("{{tabs}}", tabs)
-            .replace("{{cards}}",cards)
-            .replace("{{attempt_diff}}", attempt_diff)
-            .replace("{{last_failed}}", last_failed)
-            .replace("{{attempt_chain}}",attempt_chain)
-            .replace("{{retry_insight_html}}",retry_insight_html))
+    html = (template.replace("{{css}}", str(css))
+            .replace("{{js}}", str(js))
+            .replace("{{tabs}}", str(tabs))
+            .replace("{{cards}}",str(cards))
+            .replace("{{attempt_diff}}", str(attempt_diff))
+            .replace("{{last_failed}}", str(last_failed))
+            .replace("{{attempt_chain}}",str(attempt_chain))
+            .replace("{{retry_insight_html}}",str(retry_insight_html)))
     allure.attach(
         html,
         name=" Attempt Summary",

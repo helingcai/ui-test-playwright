@@ -23,7 +23,7 @@ def render_failure_panel(base_dir: Path, attempt: int) -> str:
     # trace_block = (render_trace_open_block())
 
     return (template_failure_panel.replace("{{attempt}}", str(attempt))
-            .replace("{{page_url}}", page_url)
-            .replace("{{console_pretty}}", console_pretty)
-            .replace("{{screenshot_base64}}", screenshot_base64)
-            .replace("{{trace_block}}", template_trace_block))
+            .replace("{{page_url}}", str(page_url))
+            .replace("{{console_pretty}}", str(console_pretty))
+            .replace("{{screenshot_base64}}", str(screenshot_base64))
+            .replace("{{trace_block}}", str(template_trace_block)))

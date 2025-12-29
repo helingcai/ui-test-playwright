@@ -12,8 +12,8 @@ def render_attempt_chain(attempts: list[dict]) -> str:
     if len(unique) == 1:
         status = statuses[0]
         return (f'<div class="attempt-chain muted">'
-        f'🔁 Attempts: {"passed" if status == "PASSED" else str(len(attempts)) + "failures"}'
-        f'</div>')
+                f'🔁 Attempts: {"passed" if status == "PASSED" else str(len(attempts)) + "failures"}'
+                f'</div>')
 
     # 有状态变化（重要）
     badges = []
@@ -24,7 +24,7 @@ def render_attempt_chain(attempts: list[dict]) -> str:
             f'<span class="attempt-badge {cls}">Attempt {a["attempt"]} {icon}</span>')
     chain = '<span class="arrow">→</span>'.join(badges)
 
-    return template_chain.replace("{{chain}}", chain)
+    return template_chain.replace("{{chain}}", str(chain))
 
 
 def render_attempt_tabs(attempts):
@@ -38,9 +38,21 @@ def render_attempt_tabs(attempts):
         aid = a["attempt"]
         failure_panel_html = render_failure_panel(Path(a["base_dir"]), aid) if a["status"] == "FAILED" else ""
 
-        tabs += template_tabs.replace("{{aid}}", aid).replace("{{active}}", active)
-        cards += (template_cards.replace("{{aid}}", aid)
-                                .replace("{{active}}", active)
-                                .replace("{{a}}", a)
-                                .replace("{{failure_panel_html}}", failure_panel_html))
+        tabs += template_tabs.replace("{{aid}}", str(aid)).replace("{{active}}", str(active))
+
+        failure_panel = (
+            f'<button type="button" onclick="togglePanel({aid});return false;" class="panel-btn">🖲️ View Failure Panel (Attempt {aid})</button>'
+            if a['status'] == 'FAILED' else ''
+        )
+        cards += (template_cards.replace("{{aid}}", str(aid))
+                  .replace("{{active}}", str(active))
+                  .replace("{{status_icon}}", "❌ FAILED" if a['status'] == 'FAILED' else "✅ PASSED")
+                  .replace("{{duration}}", str(a.get('duration', '-')))
+                  .replace("{{error}}", str(a.get('error', '-')))
+                  .replace("{{url}}", str(a.get('url', '-')))
+                  .replace("{{screenshot}}", "✔️" if a['has_screenshot'] else "❌")
+                  .replace("{{video}}", "✔️" if a['has_video'] else "❌")
+                  .replace("{{trace}}", "✔️" if a['has_trace'] else "❌")
+                  .replace("{{view_failure_panel}}", failure_panel)
+                  .replace("{{failure_panel_html}}", str(failure_panel_html)))
     return tabs, cards

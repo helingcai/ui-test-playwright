@@ -6,11 +6,10 @@ def build_retry_insight(attempts: list[dict]) -> list[str]:
     passed = [a for a in attempts if a["status"] == "PASSED"]
 
     if failed and passed:
-        lines += [f"• Failed {len(failed)} times, then passed on retry", "• Likely flaky test (unstable behavior)"]
-        # lines.append(
-        #     f"• Failed {len(failed)} times, then passed on retry"
-        # )
-        # lines.append("• Likely flaky test (unstable behavior)")
+        lines.append(
+            f"• Failed {len(failed)} times, then passed on retry"
+        )
+        lines.append("• Likely flaky test (unstable behavior)")
     elif len(failed) == len(attempts):
         lines.append(
             f"• All {len(attempts)} attempts failed"
