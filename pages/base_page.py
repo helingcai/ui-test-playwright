@@ -4,7 +4,6 @@ from pathlib import Path
 
 
 class BasePage:
-    # SCREENSHOT_DIR = Path("screenshots")
 
     def __init__(self, page: Page):
         self.page = page

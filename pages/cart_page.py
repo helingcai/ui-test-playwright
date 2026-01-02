@@ -79,19 +79,15 @@ class CartPage(BasePage):
     def verify_add_product(self, add_count: int):
         CartAssert.cart_badge_count(self.get_cart_badge_count(), add_count)
         CartAssert.remove_count(self.get_remove_count(), add_count)
-        # self.screenshot(screen_path)
 
     def verify_delete(self, add_count: int, delete_count: int):
         CartAssert.cart_badge_count(self.get_cart_badge_count(), add_count - delete_count)
         CartAssert.remove_count(self.get_remove_count(), add_count - delete_count)
-        # self.screenshot(screen_path)
 
     def verify_continue_shopping(self, first_add_count: int, second_add_count: int):
         CartAssert.cart_badge_count(self.get_cart_badge_count(), first_add_count + second_add_count)
         CartAssert.remove_count(self.get_remove_count(), first_add_count + second_add_count)
-        # self.screenshot(screen_path)
 
     def verify_cart_product_info_match_inventory(self, added_products: list):
         CartAssert.added_product_count(added_products, self.get_cart_products_info())
         CartAssert.product_detail_info(added_products, self.get_cart_products_info())
-        # self.screenshot(screen_path)

@@ -1,6 +1,3 @@
-from decimal import Decimal
-
-
 class CartAssert:
 
     @staticmethod
@@ -19,7 +16,6 @@ class CartAssert:
         assert len(
             added_products) == len(
             cart_products), f"已加购商品数量{len(added_products)} !=购物车页面商品数量 {len(cart_products)}"
-
 
     @staticmethod
     def product_detail_info(added_products: list, cart_products: list):

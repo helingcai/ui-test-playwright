@@ -11,7 +11,6 @@ from decimal import Decimal
 class InventoryPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
-        # self.page = page
         # 商品列表
         self.item_product = page.locator(INVENTORY_LOCATORS["item_product"])
 

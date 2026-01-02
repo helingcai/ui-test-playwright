@@ -3,7 +3,6 @@ from playwright.sync_api import sync_playwright
 from pathlib import Path
 import pytest, shutil, json, allure
 from scripts.save_login_state import save_login_state
-from reporting.renderers.attempt_summary import attach_attempt_summary
 
 
 # ================== Session Fixtures ==================
@@ -11,6 +10,7 @@ from reporting.renderers.attempt_summary import attach_attempt_summary
 def playwright_instance():
     with sync_playwright() as p:
         yield p
+
 
 @pytest.fixture(scope="session")
 def browser(playwright_instance):
@@ -20,9 +20,11 @@ def browser(playwright_instance):
     # print("🔥 browser started", id(browser))
     browser.close()
 
+
 @pytest.fixture(scope="session", autouse=True)
 def clean_screenshot():
     clean_directories()
+
 
 @pytest.fixture(scope="session", autouse=True)
 def ensure_login_state(request):
@@ -48,8 +50,8 @@ def context(browser, request):
         storage_state="storage/login.json" if need_login else None,
         record_video_dir=str(record_video_dir),
         # Playwright只知道videos/，不会关系artifacts，video文件只有在context.close()后才会真正落盘
-        record_video_size={"width": 1280, "height": 720},
-        no_viewport=True)
+        record_video_size={"width": 1920, "height": 1080},
+        viewport={"width": 1920, "height": 1080})
 
     #  ======== 手动开启tracing ========
     #  为啥手动开启：
@@ -82,8 +84,8 @@ def context(browser, request):
     cls = request.node.cls.__name__ if request.node.cls else "no_class"
     name = request.node.name
 
-    target_dir=get_attempt_dir(module, cls, name,attempt) #构建artifacts目录
-    move_artifacts(record_video_dir,trace_path,target_dir) #移动video、trace到artifacts
+    target_dir = get_attempt_dir(module, cls, name, attempt)  # 构建artifacts目录
+    move_artifacts(record_video_dir, trace_path, target_dir)  # 移动video、trace到artifacts
 
     # 更新_attempts信息
     attempts = getattr(request.node, "_attempts", [])
@@ -106,22 +108,23 @@ def context(browser, request):
 
     # 只在最后一次 attempt attach Attempt Summary
     max_attempts = getattr(request.node.config.option, "reruns", 0) + 1
-    if attempt == max_attempts:
-        attach_attempt_summary(attempts)
+    # if attempt == max_attempts:
+    #     attach_attempt_summary(attempts)
+
 
 @pytest.fixture(scope="function")
 def page(context):
     """每个测试方法一个新 page"""
     page = context.new_page()
-    console_error = []  # 这是内存中的list，所有console.error都会被收集
 
-    # 捕获console errors, page.on("console")是浏览器级别监听,不会因为跳转丢失
-    page.on(
+    # ------------浏览器控制台报错----------
+    console_error = []
+    page.on(  # page.on() 是Playwright 浏览器事件的 API，它只能监听浏览器事件，比如 console、dialog、response 等。
         "console",
         lambda msg: console_error.append({
             "type": msg.type,
             "text": msg.text,
-            "location": str(msg.location)
+            "location": msg.location
         }) if msg.type == "error" else None
     )
     page._console_errors = console_error  # 挂到page上，方便hook里取
@@ -138,19 +141,39 @@ def pytest_runtest_makereport(item, call):
     rep = outcome.get_result()
     duration = round(time.time() - start, 2)
 
-    # 只处理 call 阶段失败
-    if rep.when != "call" or not rep.failed:
+    # 只处理 call 阶段
+    if rep.when != "call":
+        return
+    # 🔑 让插件统一维护 attempts
+    if not hasattr(item, "_attempts"):
+        item._attempts = []
+
+    attempt = len(item._attempts) + 1
+
+    item._attempts.append({
+        "attempt": attempt,
+        "status": "FAILED" if rep.failed else "PASSED",
+        "duration": duration,
+        "error": str(rep.longrepr) if rep.failed else ""
+    })
+
+    if not rep.failed:
         return
 
+    # ========= UI 项目的职责 =========
     page = item.funcargs.get("page")
     if not page:
         return
 
-    # 收集失败数据
-    attempt = getattr(item, "execution_count", 1)
-    record_failed_attempt(item, attempt, "FAILED" if rep.failed else "PASSED", duration,str(rep.longrepr) if rep.failed else "")
-    # 标记失败（跨fixture通信的关键，告诉 context： 👉 这是一次失败执行）
+    # 保存 Python 端的断言错误到 page
+    page._test_error = str(rep.longrepr) if rep.failed else ""
+
     item._failed = True
+
+    # 收集失败数据
+    # attempt = getattr(item, "execution_count", 1)
+    # record_failed_attempt(item, attempt, "FAILED" if rep.failed else "PASSED", duration,
+    #                       str(rep.longrepr) if rep.failed else "")
 
     # 构建artifacts 目录,报错错误证据
     module_name = item.module.__name__.split(".")[-1]
@@ -160,7 +183,7 @@ def pytest_runtest_makereport(item, call):
     base_dir = Path("artifacts") / module_name / class_name / test_name / attempt_dir
     base_dir.mkdir(parents=True, exist_ok=True)
 
-    save_failure_artifacts(page,base_dir)
+    save_failure_artifacts(page, base_dir)
 
 
 # ================== Utility Functions ==================
@@ -174,6 +197,7 @@ def clean_directories(paths=None):
             shutil.rmtree(p)
         p.mkdir()
 
+
 def ensure_login_state_exists(path="storage/login.json"):
     """确保 login.json 存在且有效"""
     login_file = Path(path)
@@ -183,6 +207,7 @@ def ensure_login_state_exists(path="storage/login.json"):
     else:
         print("✅ login.json已存在且有效，跳过生成")
 
+
 def get_attempt_dir(module, cls, test_name, attempt):
     """构建 attempt artifacts 目录"""
     attempt_dir = f"attempt_{attempt}"
@@ -190,13 +215,21 @@ def get_attempt_dir(module, cls, test_name, attempt):
     target_dir.mkdir(parents=True, exist_ok=True)
     return target_dir
 
+
 def save_failure_artifacts(page, base_dir):
     """保存失败截图、URL、console errors"""
     page.screenshot(path=base_dir / "failure.png", full_page=True)  # 生成失败用例截图
+
     (base_dir / "url.txt").write_text(page.url, encoding="utf-8")  # 生成失败用例URL文件
+
     console_errors = getattr(page, "_console_errors", [])
-    (base_dir / "console_errors.json").write_text(  # 生成失败用例Console errors文件
+    (base_dir / "browser_console_errors.json").write_text(  # 生成失败用例Console errors文件
         json.dumps(console_errors, indent=2, ensure_ascii=False), encoding="utf-8")
+
+    error_file = base_dir / "test_failure_errors.txt"
+    if getattr(page, "_test_error", None):
+        (error_file).write_text(page._test_error, encoding="utf-8")
+
 
 def move_artifacts(src_video_dir, src_trace, dst_dir):
     """移动视频和trace到目标目录"""
@@ -205,14 +238,16 @@ def move_artifacts(src_video_dir, src_trace, dst_dir):
     if src_trace.exists():
         shutil.move(str(src_trace), dst_dir / "trace.zip")
 
+
 def attach_artifacts_to_allure(target_dir):
     """将 video / trace 附件到 Allure"""
     for video in target_dir.glob("*.webm"):
-        allure.attach.file(video, name="📎 Video (used by Failure Panel)",
+        allure.attach.file(video, name="📎 Video",
                            attachment_type=allure.attachment_type.WEBM)
     trace = target_dir / "trace.zip"
     if trace.exists():
-        allure.attach.file(trace, name="📎 Playwright-Trace.zip (used by Failure Panel)")
+        allure.attach.file(trace, name="📎 Playwright-Trace.zip")
+
 
 def record_failed_attempt(item, attempt, status, duration, error=""):
     """记录一次失败的 attempt"""

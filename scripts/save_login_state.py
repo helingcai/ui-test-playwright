@@ -23,8 +23,6 @@ def save_login_state():
         login_page.open_login(URLS[ENV]["login"])
         login_page.login(LOGIN_USERS["success_login"]["username"], LOGIN_USERS["success_login"]["password"])
         login_page.verify_login_success(LOGIN_SUCCESS_URL)
-        # if not login_page.verify_login_success(LOGIN_SUCCESS_URL):
-        #     raise RuntimeError("‼️登录态生成失败，没有跳转到登录成功页面")
 
 
         Path("storage").mkdir(exist_ok=True) # 确保storage目录一直存在

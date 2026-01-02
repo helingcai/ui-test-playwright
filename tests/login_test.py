@@ -16,7 +16,6 @@ class TestLogin:
         login_page.open_login(URLS[ENV]["login"])
         login_page.login(LOGIN_USERS["success_login"]["username"], LOGIN_USERS["success_login"]["password"])
         login_page.verify_login_success(LOGIN_SUCCESS_URL)
-        print("测试完成！")
 
     # 测试登录失败（场景参数化）
     @pytest.mark.parametrize(
@@ -33,4 +32,3 @@ class TestLogin:
         data = LOGIN_USERS[case_key]
         login_page.login(data["username"], data["password"])
         login_page.verify_login_fail(data["error_msg"])
-        print("测试完成！")

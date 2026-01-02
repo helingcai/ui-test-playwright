@@ -121,7 +121,6 @@ class CheckOutPage(BasePage):
     # ========== checkout-step-one 基本验证 ==========
     def verify_container_empty(self, expect_error_msg: str):
         CheckOutAssert.tips_message(self.text(self.container_empty_error_msg), expect_error_msg)
-        # self.screenshot(screenshot_path)
 
     # ========== checkout-step-two 基本验证 ==========
     def verify_order_products_match_added(self):
@@ -149,4 +148,3 @@ class CheckOutPage(BasePage):
     # ========== 提交订单页面 ==========
     def verify_submit_order(self, finish_message: str):
         CheckOutAssert.tips_message(self.text(self.finish_message), finish_message)
-        # self.screenshot(screenshot_path)

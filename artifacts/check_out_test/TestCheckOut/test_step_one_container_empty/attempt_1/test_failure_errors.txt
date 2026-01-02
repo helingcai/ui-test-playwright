@@ -1,0 +1,25 @@
+self = <tests.check_out_test.TestCheckOut object at 0x000001CD90C8A8A0>, check_out_page = <pages.check_out_page.CheckOutPage object at 0x000001CD910D1AF0>
+
+    def test_step_one_container_empty(self, check_out_page):
+        """验证checkout_step_one.html页面收货人空"""
+        check_out_page.prepare(URLS[ENV]["inventory"], ADD_PRODUCT_NUM, "/cart.html", "/checkout-step-one.html")
+        check_out_page.fill_container("", "", "")
+        check_out_page.stet_one_continue("/checkout-step-one.html")
+>       check_out_page.verify_container_empty(CONTAINER_EMPTY_ERROR_MSG)
+
+tests\check_out_test.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pages\check_out_page.py:123: in verify_container_empty
+    CheckOutAssert.tips_message(self.text(self.container_empty_error_msg), expect_error_msg)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+actual_msg = 'Error: First Name is required', expect_msg = '吼吼吼！'
+
+    @staticmethod
+    def tips_message(actual_msg: str, expect_msg: str):
+        """收件人为空，点击continue按钮"""
+>       assert expect_msg in actual_msg, f"预期提示信息：{expect_msg}，不存在于{actual_msg}"
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: 预期提示信息：吼吼吼！，不存在于Error: First Name is required
+
+assertions\check_out_assert.py:10: AssertionError

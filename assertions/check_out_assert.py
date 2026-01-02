@@ -18,8 +18,6 @@ class CheckOutAssert:
         """只关心price格式，不关心具体 label 文案
            UI 改文案测试不炸"""
         assert re.match(r"^[A-Za-z ]+: \$\d+(\.\d{2})$", price), f"价格格式错误：{price}"
-        # assert isinstance(price, Decimal), f"不是 Decimal: {price}"
-        # assert price > 0, f"必须大于 0: {price}"
 
     @staticmethod
     def price_equal(expect: Decimal, actual: Decimal):
