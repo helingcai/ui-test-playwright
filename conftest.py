@@ -246,7 +246,7 @@ def attach_artifacts_to_allure(target_dir):
                            attachment_type=allure.attachment_type.WEBM)
     trace = target_dir / "trace.zip"
     if trace.exists():
-        allure.attach.file(trace, name="📎 Playwright-Trace.zip")
+        allure.attach.file(trace, name="Playwright-Trace.zip")
 
 
 def record_failed_attempt(item, attempt, status, duration, error=""):

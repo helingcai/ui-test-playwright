@@ -1,4 +1,4 @@
-self = <tests.check_out_test.TestCheckOut object at 0x000001D9C23B1A60>, check_out_page = <pages.check_out_page.CheckOutPage object at 0x000001D9C27E8CE0>
+self = <tests.check_out_test.TestCheckOut object at 0x000002B638FF51F0>, check_out_page = <pages.check_out_page.CheckOutPage object at 0x000002B6393AB800>
 
     def test_step_one_container_empty(self, check_out_page):
         """验证checkout_step_one.html页面收货人空"""
