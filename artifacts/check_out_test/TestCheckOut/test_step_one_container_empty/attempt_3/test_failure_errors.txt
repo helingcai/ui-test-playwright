@@ -1,4 +1,4 @@
-self = <tests.check_out_test.TestCheckOut object at 0x000001CD90C8A8A0>, check_out_page = <pages.check_out_page.CheckOutPage object at 0x000001CD911F6D80>
+self = <tests.check_out_test.TestCheckOut object at 0x000001D9C23B1A60>, check_out_page = <pages.check_out_page.CheckOutPage object at 0x000001D9C27E8290>
 
     def test_step_one_container_empty(self, check_out_page):
         """验证checkout_step_one.html页面收货人空"""
@@ -8,10 +8,10 @@ self = <tests.check_out_test.TestCheckOut object at 0x000001CD90C8A8A0>, check_o
 >       check_out_page.verify_container_empty(CONTAINER_EMPTY_ERROR_MSG)
 
 tests\check_out_test.py:21: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 pages\check_out_page.py:123: in verify_container_empty
     CheckOutAssert.tips_message(self.text(self.container_empty_error_msg), expect_error_msg)
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 actual_msg = 'Error: First Name is required', expect_msg = '吼吼吼！'
 

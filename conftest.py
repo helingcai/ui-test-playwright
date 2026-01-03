@@ -144,7 +144,7 @@ def pytest_runtest_makereport(item, call):
     # 只处理 call 阶段
     if rep.when != "call":
         return
-    # 🔑 让插件统一维护 attempts
+
     if not hasattr(item, "_attempts"):
         item._attempts = []
 

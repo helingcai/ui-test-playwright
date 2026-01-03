@@ -1,4 +1,4 @@
-self = <tests.check_out_test.TestCheckOut object at 0x000001CD90C8BF20>, check_out_page = <pages.check_out_page.CheckOutPage object at 0x000001CD91176A50>
+self = <tests.check_out_test.TestCheckOut object at 0x000001D9C23B27E0>, check_out_page = <pages.check_out_page.CheckOutPage object at 0x000001D9C28920F0>
 
     def test_finish_submit_order(self, check_out_page):
         """验证提交订单"""
@@ -12,10 +12,10 @@ self = <tests.check_out_test.TestCheckOut object at 0x000001CD90C8BF20>, check_o
 >       check_out_page.verify_submit_order(FINISH_PAGE_MESSAGE)
 
 tests\check_out_test.py:47: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 pages\check_out_page.py:150: in verify_submit_order
     CheckOutAssert.tips_message(self.text(self.finish_message), finish_message)
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 actual_msg = 'Thank you for your order!', expect_msg = '哈哈哈!'
 

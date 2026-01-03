@@ -4,3 +4,4 @@ allure-report/
 __pycache__/
 *.log
 .idea
+.venv/

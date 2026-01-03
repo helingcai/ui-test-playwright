@@ -4,3 +4,4 @@ pytest-rerunfailures
 playwright
 allure-pytest
 ghp-import
+pytest-attempt-summary
